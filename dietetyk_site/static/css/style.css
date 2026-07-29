@@ -1,0 +1,13 @@
+:root {
+    --primary-color: #98a17a;
+    --secondary-color: #102f3a;
+    --background-color: #f5f3e8;
+}
+
+.hero-title {
+    color: var(--primary-color);
+}
+
+.hero-image {
+    max-height: 700px;
+}
