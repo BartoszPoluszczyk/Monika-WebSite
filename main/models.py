@@ -8,8 +8,22 @@ class AboutPage(models.Model):
         verbose_name="Tytuł",
     )
 
+    subtitle = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name="Krótki nagłówek",
+        help_text="Krótki tekst wyświetlany pod głównym tytułem.",
+    )
+
     description = models.TextField(
         verbose_name="Opis",
+    )
+
+    photo = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        null=True,
+        verbose_name="Zdjęcie",
     )
 
     def __str__(self):
