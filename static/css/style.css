@@ -27,3 +27,50 @@ body {
     background-color: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(8px);
 }
+
+.about-section {
+    min-height: 70vh;
+}
+
+.about-photo {
+    width: 100%;
+    max-height: 650px;
+    object-fit: cover;
+    border-radius: 24px;
+}
+
+.about-label {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.about-description {
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.specialization-card {
+    padding: 1.25rem;
+    background-color: var(--card-background);
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+}
+
+.about-cta {
+    padding: 3rem 1.5rem;
+    background-color: var(--secondary-color);
+    border-radius: 24px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #5f7864;
+    border-color: #5f7864;
+}

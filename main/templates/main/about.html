@@ -1,5 +1,7 @@
 {% extends "main/base.html" %}
 
+{% load static %}
+
 {% block title %}
     {% if about_page %}
         {{ about_page.title }} | Dietetyk Monika
@@ -10,47 +12,123 @@
 
 {% block content %}
 
-<section class="py-5">
+<section class="about-section py-5">
     <div class="container">
 
         {% if about_page %}
 
-            <h1>{{ about_page.title }}</h1>
+            <div class="row align-items-center g-5">
 
-            <div class="lead mt-4">
-                {{ about_page.description|linebreaks }}
+                <div class="col-lg-5">
+
+                    {% if about_page.photo %}
+
+                        <img
+                            src="{{ about_page.photo.url }}"
+                            class="img-fluid about-photo"
+                            alt="{{ about_page.title }}"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{% static 'images/monika.png' %}"
+                            class="img-fluid about-photo"
+                            alt="Dietetyk Monika"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+                <div class="col-lg-7">
+
+                    <p class="about-label mb-2">
+                        Poznajmy się
+                    </p>
+
+                    <h1 class="display-5 fw-semibold">
+                        {{ about_page.title }}
+                    </h1>
+
+                    {% if about_page.subtitle %}
+
+                        <p class="lead mt-3">
+                            {{ about_page.subtitle }}
+                        </p>
+
+                    {% endif %}
+
+                    <div class="about-description mt-4">
+                        {{ about_page.description|linebreaks }}
+                    </div>
+
+                </div>
+
             </div>
 
         {% else %}
 
-            <h1>O mnie</h1>
-
-            <div class="alert alert-warning mt-4">
+            <div class="alert alert-warning">
                 Treść strony „O mnie” nie została jeszcze dodana
                 w panelu administratora.
             </div>
 
         {% endif %}
 
-        <h2 class="mt-5">
-            Obszary pracy
-        </h2>
+        <div class="mt-5 pt-4">
 
-        {% if specializations %}
-
-            <ul class="mt-3">
-                {% for specialization in specializations %}
-                    <li>{{ specialization.name }}</li>
-                {% endfor %}
-            </ul>
-
-        {% else %}
-
-            <p>
-                Nie dodano jeszcze żadnych specjalizacji.
+            <p class="about-label mb-2">
+                W czym mogę pomóc
             </p>
 
-        {% endif %}
+            <h2>
+                Obszary pracy
+            </h2>
+
+            {% if specializations %}
+
+                <div class="row g-3 mt-3">
+
+                    {% for specialization in specializations %}
+
+                        <div class="col-md-6 col-lg-4">
+
+                            <div class="specialization-card h-100">
+                                {{ specialization.name }}
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="mt-3">
+                    Nie dodano jeszcze żadnych specjalizacji.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="about-cta mt-5 text-center">
+
+            <h2>
+                Chcesz poprawić swoje zdrowie i samopoczucie?
+            </h2>
+
+            <p class="mt-3">
+                Umów konsultację i sprawdźmy, jak mogę Ci pomóc.
+            </p>
+
+            <a href="#" class="btn btn-primary mt-2">
+                Skontaktuj się
+            </a>
+
+        </div>
 
     </div>
 </section>
