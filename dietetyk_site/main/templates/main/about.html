@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+O mnie | Dietetyk Monika
+{% endblock %}
+
+{% block content %}
+
+<div class="py-5">
+
+    <h1>{{ title }}</h1>
+
+    <p class="lead">
+        {{ description }}
+    </p>
+
+    <h3 class="mt-4">
+        Obszary pracy
+    </h3>
+
+    <ul>
+        {% for specialization in specializations %}
+            <li>{{ specialization }}</li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+{% endblock %}

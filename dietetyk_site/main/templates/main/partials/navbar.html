@@ -1,15 +1,42 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg py-3 custom-navbar">
     <div class="container">
 
         <a class="navbar-brand" href="/">
             Dietetyk Monika
         </a>
 
-        <div class="navbar-nav">
-            <a class="nav-link" href="#">O mnie</a>
-            <a class="nav-link" href="#">Współpraca</a>
-            <a class="nav-link" href="#">Edukacja</a>
-            <a class="nav-link" href="#">Kontakt</a>
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarMain">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="{% url 'about' %}">
+                    O mnie
+                </a>
+
+                <a class="nav-link" href="#">
+                    Współpraca
+                </a>
+
+                <a class="nav-link" href="#">
+                    Edukacja
+                </a>
+
+                <a class="nav-link" href="#">
+                    Kontakt
+                </a>
+
+            </div>
+
         </div>
 
     </div>

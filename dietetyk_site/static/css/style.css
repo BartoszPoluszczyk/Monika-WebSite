@@ -1,7 +1,12 @@
 :root {
-    --primary-color: #98a17a;
-    --secondary-color: #102f3a;
-    --background-color: #f5f3e8;
+    --primary-color: #6f8b74;
+    --secondary-color: #d8c9b5;
+    --background-color: #e4d8c6;
+    --card-background: #2b0909;
+}
+
+body {
+    background-color: var(--background-color);
 }
 
 .hero-title {
@@ -10,4 +15,15 @@
 
 .hero-image {
     max-height: 700px;
+}
+
+.process-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.custom-navbar {
+    background-color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
 }
