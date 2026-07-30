@@ -1,29 +1,58 @@
 {% extends "main/base.html" %}
 
 {% block title %}
-O mnie | Dietetyk Monika
+    {% if about_page %}
+        {{ about_page.title }} | Dietetyk Monika
+    {% else %}
+        O mnie | Dietetyk Monika
+    {% endif %}
 {% endblock %}
 
 {% block content %}
 
-<div class="py-5">
+<section class="py-5">
+    <div class="container">
 
-    <h1>{{ title }}</h1>
+        {% if about_page %}
 
-    <p class="lead">
-        {{ description }}
-    </p>
+            <h1>{{ about_page.title }}</h1>
 
-    <h3 class="mt-4">
-        Obszary pracy
-    </h3>
+            <div class="lead mt-4">
+                {{ about_page.description|linebreaks }}
+            </div>
 
-    <ul>
-        {% for specialization in specializations %}
-            <li>{{ specialization }}</li>
-        {% endfor %}
-    </ul>
+        {% else %}
 
-</div>
+            <h1>O mnie</h1>
+
+            <div class="alert alert-warning mt-4">
+                Treść strony „O mnie” nie została jeszcze dodana
+                w panelu administratora.
+            </div>
+
+        {% endif %}
+
+        <h2 class="mt-5">
+            Obszary pracy
+        </h2>
+
+        {% if specializations %}
+
+            <ul class="mt-3">
+                {% for specialization in specializations %}
+                    <li>{{ specialization.name }}</li>
+                {% endfor %}
+            </ul>
+
+        {% else %}
+
+            <p>
+                Nie dodano jeszcze żadnych specjalizacji.
+            </p>
+
+        {% endif %}
+
+    </div>
+</section>
 
 {% endblock %}
