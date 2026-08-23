@@ -47,3 +47,4 @@ class Specialization(models.Model):
         verbose_name = "Specjalizacja"
         verbose_name_plural = "Specjalizacje"
         ordering = ["name"]
+
