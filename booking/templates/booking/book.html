@@ -1,0 +1,186 @@
+{% extends "main/base.html" %}
+
+{% block title %}Umów wizytę | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="booking-page">
+    <div class="site-container booking-container">
+        <header class="booking-heading">
+            <p class="section-eyebrow">Rezerwacja wizyty</p>
+            <h1 class="section-title">Wybierz dogodny <span>termin konsultacji</span></h1>
+            <p class="section-description">
+                Zarezerwuj wizytę w kilku prostych krokach. Pokazujemy wyłącznie aktualnie wolne godziny.
+            </p>
+        </header>
+
+        <div class="booking-progress" aria-label="Etapy rezerwacji">
+            <span class="is-complete"><b>1</b> Usługa</span>
+            <span class="{% if selected_service %}is-complete{% endif %}"><b>2</b> Termin</span>
+            <span class="{% if selected_date %}is-complete{% endif %}"><b>3</b> Dane</span>
+        </div>
+
+        <section class="booking-panel">
+            <div class="booking-panel-heading">
+                <span class="booking-step-number">01</span>
+                <div>
+                    <h2>Wybierz usługę</h2>
+                    <p>Czas wizyty zostanie dopasowany automatycznie.</p>
+                </div>
+            </div>
+
+            {% if services %}
+                <div class="booking-service-grid">
+                    {% for service in services %}
+                        <a
+                            class="booking-service{% if selected_service.pk == service.pk %} is-selected{% endif %}"
+                            href="{% url 'booking:book' %}?service={{ service.pk }}"
+                        >
+                            <span class="booking-service-check" aria-hidden="true"></span>
+                            <strong>{{ service.name }}</strong>
+                            <small>
+                                {{ service.duration_minutes }} min
+                                {% if service.price %} · {{ service.price|floatformat:0 }} zł{% endif %}
+                            </small>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="booking-empty">Najpierw dodaj aktywną usługę z określonym czasem trwania.</p>
+            {% endif %}
+        </section>
+
+        {% if selected_service %}
+            <div class="booking-main-grid">
+                <section class="booking-panel booking-calendar-panel">
+                    <div class="booking-panel-heading">
+                        <span class="booking-step-number">02</span>
+                        <div>
+                            <h2>Wybierz dzień</h2>
+                            <p>Dostępne dni są oznaczone oliwkową kropką.</p>
+                        </div>
+                    </div>
+
+                    <div class="booking-calendar-nav">
+                        <a href="?service={{ selected_service.pk }}&month={{ previous_month }}" aria-label="Poprzedni miesiąc">←</a>
+                        <strong>{{ month_label }}</strong>
+                        <a href="?service={{ selected_service.pk }}&month={{ next_month }}" aria-label="Następny miesiąc">→</a>
+                    </div>
+
+                    <div class="booking-calendar" role="grid" aria-label="Kalendarz dostępnych terminów">
+                        <div class="booking-calendar-weekdays" role="row">
+                            <span>Pn</span><span>Wt</span><span>Śr</span><span>Cz</span><span>Pt</span><span>So</span><span>Nd</span>
+                        </div>
+                        {% for week in calendar_weeks %}
+                            <div class="booking-calendar-week" role="row">
+                                {% for day in week %}
+                                    {% if day.is_current_month %}
+                                        {% if day.is_available %}
+                                            <a
+                                                class="booking-day is-available{% if day.is_selected %} is-selected{% endif %}{% if day.is_today %} is-today{% endif %}"
+                                                href="?service={{ selected_service.pk }}&month={{ displayed_month|date:'Y-m' }}&date={{ day.date|date:'Y-m-d' }}"
+                                                aria-label="Wybierz {{ day.date|date:'d.m.Y' }}"
+                                            >
+                                                {{ day.date.day }}
+                                                <span></span>
+                                            </a>
+                                        {% else %}
+                                            <span class="booking-day is-unavailable{% if day.is_today %} is-today{% endif %}">{{ day.date.day }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="booking-day is-outside"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="booking-panel booking-details-panel">
+                    <div class="booking-panel-heading">
+                        <span class="booking-step-number">03</span>
+                        <div>
+                            <h2>Godzina i dane</h2>
+                            {% if selected_date %}
+                                <p>{{ selected_date|date:"l, d E Y" }}</p>
+                            {% else %}
+                                <p>Najpierw wybierz dostępny dzień w kalendarzu.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if selected_date and available_slots and form %}
+                        <form method="post" class="booking-form" novalidate>
+                            {% csrf_token %}
+                            <input type="hidden" name="service" value="{{ selected_service.pk }}">
+                            {{ form.appointment_date }}
+
+                            <fieldset class="booking-time-fieldset">
+                                <legend>Wolne godziny</legend>
+                                <div class="booking-time-grid">
+                                    {% for choice in form.appointment_time %}
+                                        <label class="booking-time-option">
+                                            {{ choice.tag }}
+                                            <span>{{ choice.choice_label }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                {{ form.appointment_time.errors }}
+                            </fieldset>
+
+                            <div class="booking-fields">
+                                <div class="booking-field">
+                                    <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                                    {{ form.first_name }}{{ form.first_name.errors }}
+                                </div>
+                                <div class="booking-field">
+                                    <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                                    {{ form.last_name }}{{ form.last_name.errors }}
+                                </div>
+                                <div class="booking-field">
+                                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                                    {{ form.email }}{{ form.email.errors }}
+                                </div>
+                                <div class="booking-field">
+                                    <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                                    {{ form.phone }}{{ form.phone.errors }}
+                                </div>
+                                <div class="booking-field booking-field-full">
+                                    <label for="{{ form.visit_type.id_for_label }}">{{ form.visit_type.label }}</label>
+                                    {{ form.visit_type }}{{ form.visit_type.errors }}
+                                </div>
+                                <div class="booking-field booking-field-full">
+                                    <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+                                    {{ form.notes }}
+                                    <small>{{ form.notes.help_text }}</small>
+                                    {{ form.notes.errors }}
+                                </div>
+                            </div>
+
+                            <label class="booking-consent">
+                                {{ form.consent_privacy }}
+                                <span>{{ form.consent_privacy.label }}</span>
+                            </label>
+                            {{ form.consent_privacy.errors }}
+                            {{ form.non_field_errors }}
+
+                            <button type="submit" class="booking-submit">Potwierdź rezerwację <span>→</span></button>
+                        </form>
+                    {% elif selected_date %}
+                        <div class="booking-empty">
+                            Ten dzień nie ma już wolnych godzin. Wybierz inny termin w kalendarzu.
+                        </div>
+                    {% else %}
+                        <div class="booking-placeholder" aria-hidden="true">
+                            <svg viewBox="0 0 48 48">
+                                <rect x="8" y="11" width="32" height="29" rx="5" />
+                                <path d="M15 7v8M33 7v8M8 20h32M16 27h3M23 27h3M30 27h3M16 33h3M23 33h3" />
+                            </svg>
+                            <p>Po wybraniu dnia pojawią się tutaj dostępne godziny i formularz.</p>
+                        </div>
+                    {% endif %}
+                </section>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

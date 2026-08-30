@@ -1,0 +1,37 @@
+{% extends "main/base.html" %}
+
+{% block title %}Potwierdzenie rezerwacji | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="booking-result-page">
+    <div class="site-container booking-result-card">
+        {% if appointment.status == 'cancelled' %}
+            <div class="booking-result-icon is-cancelled">×</div>
+            <p class="section-eyebrow">Rezerwacja anulowana</p>
+            <h1 class="section-title">Termin został <span>zwolniony</span></h1>
+            <p class="section-description">Jeśli chcesz, możesz od razu wybrać nową datę wizyty.</p>
+        {% else %}
+            <div class="booking-result-icon">✓</div>
+            <p class="section-eyebrow">Dziękuję za rezerwację</p>
+            <h1 class="section-title">Termin został <span>zarezerwowany</span></h1>
+            <p class="section-description">Monika widzi już wizytę w swoim kalendarzu.</p>
+        {% endif %}
+
+        <dl class="booking-summary">
+            <div><dt>Usługa</dt><dd>{{ appointment.service.name }}</dd></div>
+            <div><dt>Termin</dt><dd>{{ appointment.start_at|date:"d.m.Y" }}, {{ appointment.start_at|time:"H:i" }}</dd></div>
+            <div><dt>Forma</dt><dd>{{ appointment.get_visit_type_display }}</dd></div>
+            <div><dt>Status</dt><dd>{{ appointment.get_status_display }}</dd></div>
+        </dl>
+
+        <div class="booking-result-actions">
+            {% if appointment.status != 'cancelled' %}
+                <a class="button-secondary" href="{% url 'booking:cancel' appointment.public_id %}">Anuluj wizytę</a>
+            {% else %}
+                <a class="button-primary" href="{% url 'booking:book' %}?service={{ appointment.service.pk }}">Wybierz nowy termin</a>
+            {% endif %}
+            <a class="button-secondary" href="{% url 'home' %}">Wróć na stronę główną</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

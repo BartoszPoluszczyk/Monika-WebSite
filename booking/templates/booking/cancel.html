@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+
+{% block title %}Anulowanie wizyty | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="booking-result-page">
+    <div class="site-container booking-result-card">
+        <p class="section-eyebrow">Anulowanie rezerwacji</p>
+        <h1 class="section-title">Czy na pewno chcesz <span>zwolnić termin?</span></h1>
+
+        <dl class="booking-summary">
+            <div><dt>Usługa</dt><dd>{{ appointment.service.name }}</dd></div>
+            <div><dt>Termin</dt><dd>{{ appointment.start_at|date:"d.m.Y" }}, {{ appointment.start_at|time:"H:i" }}</dd></div>
+        </dl>
+
+        {% if can_cancel %}
+            <form method="post" class="booking-result-actions">
+                {% csrf_token %}
+                <button class="booking-cancel-button" type="submit">Tak, anuluję wizytę</button>
+                <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Zachowaj termin</a>
+            </form>
+        {% else %}
+            <p class="booking-empty">Tej wizyty nie można już anulować przez stronę. Skontaktuj się bezpośrednio z Moniką.</p>
+            <div class="booking-result-actions">
+                <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Wróć</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

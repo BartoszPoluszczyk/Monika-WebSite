@@ -108,8 +108,8 @@
 
                             {% endif %}
 
-                            <a href="#wspolpraca" class="service-link">
-                                Szczegóły
+                            <a href="{% url 'booking:book' %}?service={{ service.pk }}" class="service-link">
+                                Umów wizytę
                                 <span>→</span>
                             </a>
 
