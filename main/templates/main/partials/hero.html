@@ -1,51 +1,144 @@
 {% load static %}
-<section class="py-5">
-    <div class="container">
 
-        <div class="row align-items-center">
+<section class="hero">
 
-            <div class="col-lg-6">
+    <div class="site-container hero-container">
 
-                <h1 class="display-4 fw-bold hero-title">
-                    Holistycznie wspieram proces powrotu do zdrowia
+        <div class="hero-content">
+
+            {% if home_page %}
+
+                <p class="section-eyebrow">
+                    {{ home_page.hero_eyebrow }}
+                </p>
+
+                <h1 class="hero-title">
+                    {{ home_page.hero_title }}
                 </h1>
 
-                <p class="lead mt-4">
-                    Analiza i interpretacja wyników badań laboratoryjnych,
-                </p>
-                    
-                <p class="lead mt-4">
-                    Dobór suplementacji idiety dopasowanej do Twoich potrzeb,
+                <p class="hero-description">
+                    {{ home_page.hero_description }}
                 </p>
 
-                <p class="lead mt-4">
-                    Pomoc w budowaniu trwałych zmian nawyków żywieniowych
+            {% else %}
+
+                <p class="section-eyebrow">
+                    Dietetyka dopasowana do Ciebie
                 </p>
 
-                <div class="mt-4">
+                <h1 class="hero-title">
+                    Zdrowie zaczyna się od dobrych wyborów
+                </h1>
 
-                    <a href="#" class="btn btn-success btn-lg me-2">
-                        Umów konsultację
-                    </a>
+                <p class="hero-description">
+                    Pomagam odzyskać równowagę między zdrowiem,
+                    samopoczuciem i codziennym stylem życia.
+                </p>
 
-                    <a href="#" class="btn btn-outline-secondary btn-lg">
-                        Dowiedz się więcej
-                    </a>
+            {% endif %}
+
+
+            <div class="hero-buttons">
+
+                <a href="#" class="button-primary">
+                    Umów wizytę
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+                </a>
+
+                <a href="#" class="button-secondary">
+                    Poznaj ofertę
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+                </a>
+
+            </div>
+
+
+            <div class="hero-benefits">
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon">
+                        ♧
+                    </div>
+
+                    <p>
+                        Indywidualne podejście
+                        <span>do każdej osoby</span>
+                    </p>
+
+                </div>
+
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon">
+                        ♡
+                    </div>
+
+                    <p>
+                        Zdrowie oparte
+                        <span>na nauce</span>
+                    </p>
+
+                </div>
+
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon">
+                        ✦
+                    </div>
+
+                    <p>
+                        Realne efekty
+                        <span>i stałe wsparcie</span>
+                    </p>
 
                 </div>
 
             </div>
 
-            <div class="col-lg-6 text-center">
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="hero-image-background"></div>
+
+
+            {% if home_page and home_page.hero_photo %}
 
                 <img
-                    src="{% static 'images/monika2.png' %}"
-                    class="img-fluid hero-image"
-                    alt="Monika">
+                    src="{{ home_page.hero_photo.url }}"
+                    class="hero-person"
+                    alt="Dietetyk Monika"
+                >
 
+            {% else %}
+
+                <img
+                    src="{% static 'images/monika.png' %}"
+                    class="hero-person"
+                    alt="Dietetyk Monika"
+                >
+
+            {% endif %}
+
+
+            <div class="hero-decoration hero-decoration-one">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
 
         </div>
 
     </div>
+
 </section>

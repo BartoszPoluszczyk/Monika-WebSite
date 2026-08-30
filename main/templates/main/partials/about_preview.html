@@ -1,0 +1,94 @@
+{% load static %}
+
+<section class="home-about">
+
+    <div class="site-container home-about-container">
+
+        <div class="home-about-visual">
+
+            <div class="home-about-image-wrapper">
+
+                {% if about_page and about_page.photo %}
+
+                    <img
+                        src="{{ about_page.photo.url }}"
+                        alt="Dietetyk Monika"
+                        class="home-about-image"
+                    >
+
+                {% else %}
+
+                    <img
+                        src="{% static 'images/monika.png' %}"
+                        alt="Dietetyk Monika"
+                        class="home-about-image"
+                    >
+
+                {% endif %}
+
+            </div>
+
+            <div class="home-about-decoration">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </div>
+
+
+        <div class="home-about-content">
+
+            <p class="section-eyebrow">
+                O mnie
+            </p>
+
+            <h2 class="home-about-title">
+                Cześć, jestem
+                <span>Monika</span>
+            </h2>
+
+
+            {% if about_page %}
+
+                {% if about_page.subtitle %}
+
+                    <p class="home-about-lead">
+                        {{ about_page.subtitle }}
+                    </p>
+
+                {% endif %}
+
+
+                <div class="home-about-description">
+
+                    {{ about_page.description|truncatewords:45|linebreaks }}
+
+                </div>
+
+            {% else %}
+
+                <p class="home-about-description">
+                    Tutaj pojawi się krótka informacja o Monice
+                    po dodaniu treści w panelu administratora.
+                </p>
+
+            {% endif %}
+
+
+            <a
+                href="{% url 'about' %}"
+                class="button-primary home-about-button"
+            >
+                Dowiedz się więcej o mnie
+
+                <span class="button-arrow">
+                    →
+                </span>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>

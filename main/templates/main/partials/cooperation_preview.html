@@ -1,0 +1,80 @@
+<section class="cooperation-section">
+
+    <div class="site-container">
+
+        <div class="cooperation-heading">
+
+            <p class="section-eyebrow">
+                Współpraca
+            </p>
+
+            <h2 class="section-title">
+                Jak wygląda
+                <span>proces współpracy?</span>
+            </h2>
+
+            <p class="section-description">
+                Od pierwszego kontaktu aż po dalsze wsparcie —
+                każdy etap ma jasno określony cel.
+            </p>
+
+        </div>
+
+
+        {% if cooperation_steps %}
+
+            <div class="cooperation-steps">
+
+                {% for step in cooperation_steps %}
+
+                    <article class="cooperation-step">
+
+                        <div class="cooperation-step-top">
+
+                            <div class="cooperation-step-icon">
+                                <span></span>
+                            </div>
+
+                            <div class="cooperation-step-number">
+                                {% if forloop.counter < 10 %}
+                                    0{{ forloop.counter }}
+                                {% else %}
+                                    {{ forloop.counter }}
+                                {% endif %}
+                            </div>
+
+                        </div>
+
+
+                        <h3>
+                            {{ step.title }}
+                        </h3>
+
+                        <p>
+                            {{ step.description }}
+                        </p>
+
+
+                        {% if not forloop.last %}
+
+                            <div class="cooperation-line"></div>
+
+                        {% endif %}
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                Etapy współpracy nie zostały jeszcze dodane.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>

@@ -1,0 +1,130 @@
+<section class="offer-section">
+
+    <div class="site-container">
+
+        <div class="offer-heading">
+
+            <p class="section-eyebrow">
+                Oferta
+            </p>
+
+            <h2 class="section-title">
+                Wybierz formę współpracy
+                <span>dopasowaną do siebie</span>
+            </h2>
+
+            <p class="section-description">
+                Wybierz rozwiązanie najlepiej odpowiadające
+                Twoim potrzebom i celom.
+            </p>
+
+        </div>
+
+
+        {% if services %}
+
+            <div class="service-grid">
+
+                {% for service in services %}
+
+                    <article
+                        class="service-card
+                        {% if service.is_featured %}
+                            service-card-featured
+                        {% endif %}"
+                    >
+
+                        {% if service.is_featured %}
+
+                            <div class="service-badge">
+                                Polecane
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="service-number">
+                            0{{ forloop.counter }}
+                        </div>
+
+
+                        {% if service.image %}
+
+                            <div class="service-image-wrapper">
+
+                                <img
+                                    src="{{ service.image.url }}"
+                                    alt="{{ service.name }}"
+                                    class="service-image"
+                                >
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="service-symbol">
+                                <span></span>
+                            </div>
+
+                        {% endif %}
+
+
+                        <h3 class="service-name">
+                            {{ service.name }}
+                        </h3>
+
+
+                        {% if service.short_description %}
+
+                            <p class="service-description">
+                                {{ service.short_description }}
+                            </p>
+
+                        {% endif %}
+
+
+                        {% if service.duration_minutes %}
+
+                            <p class="service-duration">
+                                Czas konsultacji:
+                                {{ service.duration_minutes }} min
+                            </p>
+
+                        {% endif %}
+
+
+                        <div class="service-bottom">
+
+                            {% if service.price %}
+
+                                <p class="service-price">
+                                    {{ service.price|floatformat:0 }}
+                                    <span>zł</span>
+                                </p>
+
+                            {% endif %}
+
+                            <a href="#" class="service-link">
+                                Szczegóły
+                                <span>→</span>
+                            </a>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p class="offer-empty">
+                Oferta nie została jeszcze dodana.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>

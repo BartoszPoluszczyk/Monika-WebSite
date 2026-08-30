@@ -1,0 +1,72 @@
+<section class="help-section">
+
+    <div class="site-container">
+
+        <div class="help-heading">
+
+            <p class="section-eyebrow">
+                Wsparcie dopasowane do Ciebie
+            </p>
+
+            <h2 class="section-title">
+                W czym mogę
+                <span>Ci pomóc?</span>
+            </h2>
+
+            <p class="section-description">
+                Każda osoba ma inne potrzeby, dlatego sposób
+                współpracy dobieramy indywidualnie.
+            </p>
+
+        </div>
+
+
+        {% if specializations %}
+
+            <div class="help-grid">
+
+                {% for specialization in specializations %}
+
+                    <article class="help-card">
+
+                        <div class="help-card-number">
+                            0{{ forloop.counter }}
+                        </div>
+
+                        <div class="help-card-icon">
+                            <span></span>
+                        </div>
+
+                        <h3>
+                            {{ specialization.name }}
+                        </h3>
+
+                        {% if specialization.description %}
+
+                            <p>
+                                {{ specialization.description }}
+                            </p>
+
+                        {% endif %}
+
+                        <div class="help-card-arrow">
+                            →
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>
+                Nie dodano jeszcze obszarów pracy.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>

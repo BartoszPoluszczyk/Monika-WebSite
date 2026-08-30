@@ -1,41 +1,72 @@
-<nav class="navbar navbar-expand-lg py-3 custom-navbar">
-    <div class="container">
+<nav class="site-navbar">
+    <div class="site-container navbar-inner">
 
-        <a class="navbar-brand" href="/">
-            Dietetyk Monika
+        <a class="brand" href="{% url 'home' %}">
+
+            {% if site_settings and site_settings.logo %}
+
+                <img
+                    src="{{ site_settings.logo.url }}"
+                    alt="{{ site_settings.site_name }}"
+                    class="navbar-logo"
+                >
+
+            {% else %}
+
+                <div class="brand-text">
+                    <span class="brand-name">Monika</span>
+                    <span class="brand-subtitle">dietetyk kliniczny</span>
+                </div>
+
+            {% endif %}
+
         </a>
 
         <button
             class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarMain">
-
+            data-bs-target="#mainNavigation"
+            aria-controls="mainNavigation"
+            aria-expanded="false"
+            aria-label="Otwórz menu"
+        >
             <span class="navbar-toggler-icon"></span>
-
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarMain">
+        <div class="collapse navbar-collapse custom-navigation" id="mainNavigation">
 
-            <div class="navbar-nav ms-auto">
+            <div class="navigation-links">
 
-                <a class="nav-link" href="{% url 'about' %}">
+                <a class="navigation-link" href="{% url 'home' %}">
+                    Strona główna
+                </a>
+
+                <a class="navigation-link" href="{% url 'about' %}">
                     O mnie
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="navigation-link" href="#">
+                    Oferta
+                </a>
+
+                <a class="navigation-link" href="#">
                     Współpraca
                 </a>
 
-                <a class="nav-link" href="#">
-                    Edukacja
+                <a class="navigation-link" href="#">
+                    Blog
                 </a>
 
-                <a class="nav-link" href="#">
+                <a class="navigation-link" href="#">
                     Kontakt
                 </a>
 
             </div>
+
+            <a class="navbar-cta" href="#">
+                Umów wizytę
+            </a>
 
         </div>
 
