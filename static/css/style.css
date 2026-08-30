@@ -918,7 +918,7 @@ a {
     max-width: 650px;
     margin: 0 auto 30px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     color: var(--color-text-soft);
     font-size: 0.67rem;
 }
@@ -1308,6 +1308,64 @@ a {
     transform: translateY(-1px);
 }
 
+.booking-submit:disabled {
+    border-color: var(--color-border-strong);
+    background: #aaa69d;
+    cursor: not-allowed;
+    opacity: 0.72;
+    transform: none;
+}
+
+.booking-payment-box {
+    margin-top: 18px;
+    padding: 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface-muted);
+}
+
+.booking-payment-box strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.booking-payment-box small {
+    margin-top: 4px;
+    display: block;
+    color: var(--color-text-soft);
+    font-size: 0.6rem;
+    line-height: 1.5;
+}
+
+.booking-payment-methods {
+    margin-top: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.booking-payment-methods span {
+    padding: 6px 9px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: var(--color-surface);
+    color: var(--color-primary-dark);
+    font-size: 0.58rem;
+    font-weight: 600;
+}
+
+.booking-payment-warning {
+    margin: 14px 0 0;
+    padding: 10px 12px;
+    border-left: 3px solid var(--color-primary-light);
+    background: var(--color-background-soft);
+    color: var(--color-text-soft);
+    font-size: 0.64rem;
+    line-height: 1.55;
+}
+
 .booking-empty {
     margin: 0;
     padding: 15px 17px;
@@ -1386,6 +1444,11 @@ a {
     border-color: var(--color-border-strong);
     background: transparent;
     color: var(--color-text-soft);
+}
+
+.booking-result-icon.is-pending {
+    background: var(--color-surface);
+    color: var(--color-primary-dark);
 }
 
 .booking-summary {
@@ -1636,6 +1699,11 @@ a {
     .booking-result-actions .button-primary,
     .booking-result-actions .button-secondary,
     .booking-result-actions .booking-cancel-button { width: 100%; }
+}
+
+@media (max-width: 430px) {
+    .booking-progress span { font-size: 0; }
+    .booking-progress b { font-size: 0.58rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

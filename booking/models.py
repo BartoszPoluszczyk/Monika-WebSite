@@ -23,6 +23,11 @@ class BookingSettings(models.Model):
         default=90,
         verbose_name="Maksymalny okres rezerwacji (dni)",
     )
+    payment_hold_minutes = models.PositiveIntegerField(
+        default=30,
+        verbose_name="Czas na opłacenie rezerwacji (minuty)",
+        help_text="Stripe Checkout wymaga co najmniej 30 minut.",
+    )
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -120,6 +125,7 @@ class BlockedTime(models.Model):
 
 class Appointment(models.Model):
     class Status(models.TextChoices):
+        PENDING_PAYMENT = "pending_payment", "Oczekuje na płatność"
         PENDING = "pending", "Oczekuje"
         CONFIRMED = "confirmed", "Potwierdzona"
         COMPLETED = "completed", "Odbyta"
@@ -129,6 +135,13 @@ class Appointment(models.Model):
     class VisitType(models.TextChoices):
         ONLINE = "online", "Online"
         IN_PERSON = "in_person", "Stacjonarnie"
+
+    class PaymentStatus(models.TextChoices):
+        NOT_REQUIRED = "not_required", "Nie dotyczy"
+        PENDING = "pending", "Oczekuje na płatność"
+        PAID = "paid", "Opłacona"
+        FAILED = "failed", "Nieudana / wygasła"
+        REFUNDED = "refunded", "Zwrócona"
 
     public_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     service = models.ForeignKey(
@@ -164,6 +177,46 @@ class Appointment(models.Model):
         default=Status.PENDING,
         verbose_name="Status",
     )
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.NOT_REQUIRED,
+        verbose_name="Status płatności",
+    )
+    payment_amount = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Kwota płatności",
+    )
+    payment_currency = models.CharField(
+        max_length=3,
+        default="PLN",
+        verbose_name="Waluta",
+    )
+    payment_expires_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Blokada terminu wygasa",
+    )
+    paid_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Opłacono",
+    )
+    stripe_checkout_session_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        unique=True,
+        verbose_name="Identyfikator sesji Stripe",
+    )
+    stripe_payment_intent_id = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Identyfikator płatności Stripe",
+    )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Zaktualizowano")
 
@@ -198,7 +251,7 @@ class Appointment(models.Model):
 
     @classmethod
     def active_statuses(cls):
-        return [cls.Status.PENDING, cls.Status.CONFIRMED]
+        return [cls.Status.PENDING_PAYMENT, cls.Status.PENDING, cls.Status.CONFIRMED]
 
     def __str__(self):
         return f"{self.start_at:%d.%m.%Y %H:%M} — {self.patient_name}"
@@ -214,7 +267,7 @@ class Appointment(models.Model):
             ),
             models.UniqueConstraint(
                 fields=["start_at"],
-                condition=Q(status__in=["pending", "confirmed"]),
+                condition=Q(status__in=["pending_payment", "pending", "confirmed"]),
                 name="unique_active_appointment_start",
             ),
         ]

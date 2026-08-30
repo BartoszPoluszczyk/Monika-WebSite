@@ -17,12 +17,25 @@ def _aware_datetime(day, value):
     return timezone.make_aware(naive_value, timezone.get_current_timezone())
 
 
+def release_expired_payment_reservations(now=None):
+    now = now or timezone.now()
+    return Appointment.objects.filter(
+        status=Appointment.Status.PENDING_PAYMENT,
+        payment_status=Appointment.PaymentStatus.PENDING,
+        payment_expires_at__lte=now,
+    ).update(
+        status=Appointment.Status.CANCELLED,
+        payment_status=Appointment.PaymentStatus.FAILED,
+    )
+
+
 def get_available_slots(service, day, now=None):
     if not service or not service.duration_minutes:
         return []
 
     booking_settings = get_booking_settings()
     now = timezone.localtime(now or timezone.now())
+    release_expired_payment_reservations(now)
     today = now.date()
     last_bookable_day = today + timedelta(days=booking_settings.booking_window_days)
 
@@ -83,12 +96,18 @@ def get_available_slots(service, day, now=None):
     return sorted(set(slots))
 
 
-def create_appointment(*, service, day, start_time, **patient_data):
+def create_appointment(*, service, day, start_time, payment_required=False, **patient_data):
     start_at = _aware_datetime(day, start_time)
     end_at = start_at + timedelta(minutes=service.duration_minutes)
+    booking_settings = get_booking_settings()
+    payment_hold_minutes = max(30, booking_settings.payment_hold_minutes) + 1
+
+    if payment_required and service.price is None:
+        raise ValidationError("Ta usługa nie ma ustawionej ceny i nie może zostać opłacona online.")
 
     try:
         with transaction.atomic():
+            release_expired_payment_reservations()
             list(
                 Appointment.objects.select_for_update().filter(
                     status__in=Appointment.active_statuses(),
@@ -103,6 +122,22 @@ def create_appointment(*, service, day, start_time, **patient_data):
                 service=service,
                 start_at=start_at,
                 end_at=end_at,
+                status=(
+                    Appointment.Status.PENDING_PAYMENT
+                    if payment_required
+                    else Appointment.Status.PENDING
+                ),
+                payment_status=(
+                    Appointment.PaymentStatus.PENDING
+                    if payment_required
+                    else Appointment.PaymentStatus.NOT_REQUIRED
+                ),
+                payment_amount=service.price if payment_required else None,
+                payment_expires_at=(
+                    timezone.now() + timedelta(minutes=payment_hold_minutes)
+                    if payment_required
+                    else None
+                ),
                 **patient_data,
             )
             appointment.full_clean()

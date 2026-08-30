@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+
+{% block title %}Płatność anulowana | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="booking-result-page">
+    <div class="site-container booking-result-card">
+        <div class="booking-result-icon is-cancelled">×</div>
+        <p class="section-eyebrow">Płatność nie została zakończona</p>
+        <h1 class="section-title">Termin został <span>zwolniony</span></h1>
+        <p class="section-description">
+            Żadne środki nie zostały pobrane. Możesz wrócić do kalendarza i rozpocząć rezerwację ponownie.
+        </p>
+
+        <div class="booking-result-actions">
+            <a class="button-primary" href="{% url 'booking:book' %}?service={{ appointment.service.pk }}">Wybierz termin ponownie</a>
+            <a class="button-secondary" href="{% url 'home' %}">Wróć na stronę główną</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,4 +1,6 @@
 from datetime import datetime, time, timedelta
+from types import SimpleNamespace
+from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -8,7 +10,8 @@ from django.utils import timezone
 from main.models import Service
 
 from .models import Appointment, BlockedTime, BookingSettings, WorkingHours
-from .services import get_available_slots
+from .payments import mark_checkout_paid
+from .services import get_available_slots, release_expired_payment_reservations
 
 
 class BookingTestMixin:
@@ -16,6 +19,7 @@ class BookingTestMixin:
         self.service = Service.objects.create(
             name="Konsultacja indywidualna",
             duration_minutes=60,
+            price=250,
             is_active=True,
         )
         self.day = timezone.localdate() + timedelta(days=3)
@@ -84,28 +88,58 @@ class PublicBookingTests(BookingTestMixin, TestCase):
         self.assertContains(response, self.service.name)
 
     def test_patient_can_book_available_slot(self):
-        response = self.client.post(
-            reverse("booking:book"),
-            {
-                "service": self.service.pk,
-                "appointment_date": self.day.isoformat(),
-                "appointment_time": "09:00",
-                "first_name": "Jan",
-                "last_name": "Kowalski",
-                "email": "jan@example.com",
-                "phone": "600700800",
-                "visit_type": Appointment.VisitType.ONLINE,
-                "notes": "",
-                "consent_privacy": "on",
-            },
-        )
+        with (
+            patch("booking.views.payments_configured", return_value=True),
+            patch(
+                "booking.views.create_checkout_session",
+                return_value=SimpleNamespace(url="https://checkout.stripe.test/session"),
+            ),
+        ):
+            response = self.client.post(
+                reverse("booking:book"),
+                {
+                    "service": self.service.pk,
+                    "appointment_date": self.day.isoformat(),
+                    "appointment_time": "09:00",
+                    "first_name": "Jan",
+                    "last_name": "Kowalski",
+                    "email": "jan@example.com",
+                    "phone": "600700800",
+                    "visit_type": Appointment.VisitType.ONLINE,
+                    "notes": "",
+                    "consent_privacy": "on",
+                },
+            )
 
         appointment = Appointment.objects.get()
-        self.assertRedirects(
-            response,
-            reverse("booking:confirmation", args=[appointment.public_id]),
-        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "https://checkout.stripe.test/session")
         self.assertEqual(appointment.patient_name, "Jan Kowalski")
+        self.assertEqual(appointment.status, Appointment.Status.PENDING_PAYMENT)
+        self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.PENDING)
+        self.assertEqual(appointment.payment_amount, self.service.price)
+
+    def test_booking_is_not_created_before_stripe_is_configured(self):
+        with patch("booking.views.payments_configured", return_value=False):
+            response = self.client.post(
+                reverse("booking:book"),
+                {
+                    "service": self.service.pk,
+                    "appointment_date": self.day.isoformat(),
+                    "appointment_time": "09:00",
+                    "first_name": "Jan",
+                    "last_name": "Kowalski",
+                    "email": "jan@example.com",
+                    "phone": "600700800",
+                    "visit_type": Appointment.VisitType.ONLINE,
+                    "notes": "",
+                    "consent_privacy": "on",
+                },
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Appointment.objects.count(), 0)
+        self.assertContains(response, "Płatności testowe nie są jeszcze skonfigurowane")
 
     def test_taken_slot_cannot_be_booked_again(self):
         Appointment.objects.create(
@@ -176,3 +210,56 @@ class AppointmentAdminTests(BookingTestMixin, TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Kalendarz wizyt")
+
+
+class PaymentLifecycleTests(BookingTestMixin, TestCase):
+    def create_payment_appointment(self, expires_at=None):
+        return Appointment.objects.create(
+            service=self.service,
+            start_at=self.aware(time(9, 0)),
+            end_at=self.aware(time(10, 0)),
+            first_name="Jan",
+            last_name="Kowalski",
+            email="jan@example.com",
+            phone="600700800",
+            consent_privacy=True,
+            status=Appointment.Status.PENDING_PAYMENT,
+            payment_status=Appointment.PaymentStatus.PENDING,
+            payment_amount=self.service.price,
+            payment_currency="PLN",
+            payment_expires_at=expires_at or timezone.now() + timedelta(minutes=30),
+            stripe_checkout_session_id="cs_test_123",
+        )
+
+    def test_paid_checkout_confirms_appointment(self):
+        appointment = self.create_payment_appointment()
+
+        changed = mark_checkout_paid(
+            {
+                "id": "cs_test_123",
+                "metadata": {"appointment_public_id": str(appointment.public_id)},
+                "payment_status": "paid",
+                "amount_total": int(self.service.price * 100),
+                "currency": "pln",
+                "payment_intent": "pi_test_123",
+            }
+        )
+
+        appointment.refresh_from_db()
+        self.assertTrue(changed)
+        self.assertEqual(appointment.status, Appointment.Status.CONFIRMED)
+        self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.PAID)
+        self.assertEqual(appointment.stripe_payment_intent_id, "pi_test_123")
+        self.assertIsNotNone(appointment.paid_at)
+
+    def test_expired_payment_releases_slot(self):
+        appointment = self.create_payment_appointment(
+            expires_at=timezone.now() - timedelta(minutes=1)
+        )
+
+        released = release_expired_payment_reservations()
+
+        appointment.refresh_from_db()
+        self.assertEqual(released, 1)
+        self.assertEqual(appointment.status, Appointment.Status.CANCELLED)
+        self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.FAILED)

@@ -10,18 +10,25 @@
             <p class="section-eyebrow">Rezerwacja anulowana</p>
             <h1 class="section-title">Termin został <span>zwolniony</span></h1>
             <p class="section-description">Jeśli chcesz, możesz od razu wybrać nową datę wizyty.</p>
-        {% else %}
+        {% elif appointment.payment_status == 'paid' %}
             <div class="booking-result-icon">✓</div>
-            <p class="section-eyebrow">Dziękuję za rezerwację</p>
-            <h1 class="section-title">Termin został <span>zarezerwowany</span></h1>
-            <p class="section-description">Monika widzi już wizytę w swoim kalendarzu.</p>
+            <p class="section-eyebrow">Płatność przyjęta</p>
+            <h1 class="section-title">Wizyta została <span>potwierdzona</span></h1>
+            <p class="section-description">Monika widzi już opłaconą wizytę w swoim kalendarzu.</p>
+        {% else %}
+            <div class="booking-result-icon is-pending">…</div>
+            <p class="section-eyebrow">Weryfikujemy płatność</p>
+            <h1 class="section-title">Potwierdzenie może potrwać <span>kilka sekund</span></h1>
+            <p class="section-description">Odśwież stronę za chwilę. Termin pozostaje w tym czasie zablokowany.</p>
         {% endif %}
 
         <dl class="booking-summary">
             <div><dt>Usługa</dt><dd>{{ appointment.service.name }}</dd></div>
             <div><dt>Termin</dt><dd>{{ appointment.start_at|date:"d.m.Y" }}, {{ appointment.start_at|time:"H:i" }}</dd></div>
             <div><dt>Forma</dt><dd>{{ appointment.get_visit_type_display }}</dd></div>
-            <div><dt>Status</dt><dd>{{ appointment.get_status_display }}</dd></div>
+            <div><dt>Płatność</dt><dd>{{ appointment.get_payment_status_display }}</dd></div>
+            <div><dt>Kwota</dt><dd>{% if appointment.payment_amount %}{{ appointment.payment_amount|floatformat:2 }} {{ appointment.payment_currency }}{% else %}—{% endif %}</dd></div>
+            <div><dt>Status wizyty</dt><dd>{{ appointment.get_status_display }}</dd></div>
         </dl>
 
         <div class="booking-result-actions">

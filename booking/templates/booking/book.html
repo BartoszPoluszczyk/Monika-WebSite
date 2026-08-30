@@ -17,6 +17,7 @@
             <span class="is-complete"><b>1</b> Usługa</span>
             <span class="{% if selected_service %}is-complete{% endif %}"><b>2</b> Termin</span>
             <span class="{% if selected_date %}is-complete{% endif %}"><b>3</b> Dane</span>
+            <span class="{% if selected_date %}is-complete{% endif %}"><b>4</b> Płatność</span>
         </div>
 
         <section class="booking-panel">
@@ -163,7 +164,32 @@
                             {{ form.consent_privacy.errors }}
                             {{ form.non_field_errors }}
 
-                            <button type="submit" class="booking-submit">Potwierdź rezerwację <span>→</span></button>
+                            <div class="booking-payment-box">
+                                <div>
+                                    <strong>Bezpieczna płatność online</strong>
+                                    <small>Po zapisaniu danych przejdziesz do szyfrowanej strony Stripe.</small>
+                                </div>
+                                <div class="booking-payment-methods" aria-label="Dostępne metody płatności">
+                                    <span>BLIK</span>
+                                    <span>Karta</span>
+                                    <span>Przelewy24</span>
+                                    <span>Apple Pay</span>
+                                    <span>Google Pay</span>
+                                </div>
+                            </div>
+
+                            {% if payments_configured %}
+                                <button type="submit" class="booking-submit">
+                                    Przejdź do płatności
+                                    {% if selected_service.price %}{{ selected_service.price|floatformat:0 }} zł{% endif %}
+                                    <span>→</span>
+                                </button>
+                            {% else %}
+                                <p class="booking-payment-warning">
+                                    Integracja jest gotowa, ale wymaga jeszcze testowych kluczy Stripe.
+                                </p>
+                                <button type="button" class="booking-submit" disabled>Oczekiwanie na konfigurację Stripe</button>
+                            {% endif %}
                         </form>
                     {% elif selected_date %}
                         <div class="booking-empty">

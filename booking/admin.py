@@ -49,6 +49,7 @@ class BookingSettingsAdmin(admin.ModelAdmin):
                     "buffer_minutes",
                     "minimum_notice_hours",
                     "booking_window_days",
+                    "payment_hold_minutes",
                 )
             },
         ),
@@ -91,17 +92,44 @@ class AppointmentAdmin(admin.ModelAdmin):
         "service",
         "visit_type",
         "status",
+        "payment_status",
+        "payment_amount",
         "phone",
     )
-    list_filter = ("status", "visit_type", "service", "start_at")
+    list_filter = ("status", "payment_status", "visit_type", "service", "start_at")
     search_fields = ("first_name", "last_name", "email", "phone")
     ordering = ("start_at",)
     date_hierarchy = "start_at"
-    readonly_fields = ("public_id", "created_at", "updated_at")
+    readonly_fields = (
+        "public_id",
+        "payment_status",
+        "payment_amount",
+        "payment_currency",
+        "payment_expires_at",
+        "paid_at",
+        "stripe_checkout_session_id",
+        "stripe_payment_intent_id",
+        "created_at",
+        "updated_at",
+    )
     fieldsets = (
         ("Termin", {"fields": ("service", "start_at", "end_at", "visit_type", "status")}),
         ("Pacjent", {"fields": ("first_name", "last_name", "email", "phone")}),
         ("Informacje dodatkowe", {"fields": ("notes", "consent_privacy")}),
+        (
+            "Płatność online",
+            {
+                "fields": (
+                    "payment_status",
+                    "payment_amount",
+                    "payment_currency",
+                    "payment_expires_at",
+                    "paid_at",
+                    "stripe_checkout_session_id",
+                    "stripe_payment_intent_id",
+                )
+            },
+        ),
         ("Dane techniczne", {"fields": ("public_id", "created_at", "updated_at"), "classes": ("collapse",)}),
     )
 
