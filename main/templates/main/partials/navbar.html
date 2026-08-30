@@ -13,8 +13,18 @@
 
             {% else %}
 
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" role="img">
+                        <path d="M24 39V19" />
+                        <path d="M24 28C17 28 12 23 12 15c7 0 12 4 12 11" />
+                        <path d="M24 23c0-7 5-12 13-13 0 8-5 13-13 13" />
+                    </svg>
+                </span>
+
                 <div class="brand-text">
-                    <span class="brand-name">Monika</span>
+                    <span class="brand-name">
+                        {% if site_settings %}{{ site_settings.site_name }}{% else %}Monika Kowalska{% endif %}
+                    </span>
                     <span class="brand-subtitle">dietetyk kliniczny</span>
                 </div>
 
@@ -31,40 +41,45 @@
             aria-expanded="false"
             aria-label="Otwórz menu"
         >
-            <span class="navbar-toggler-icon"></span>
+            <span></span>
+            <span></span>
         </button>
 
         <div class="collapse navbar-collapse custom-navigation" id="mainNavigation">
 
             <div class="navigation-links">
 
-                <a class="navigation-link" href="{% url 'home' %}">
+                <a
+                    class="navigation-link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}"
+                    href="{% url 'home' %}"
+                    {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}
+                >
                     Strona główna
                 </a>
 
-                <a class="navigation-link" href="{% url 'about' %}">
+                <a
+                    class="navigation-link{% if request.resolver_match.url_name == 'about' %} is-active{% endif %}"
+                    href="{% url 'home' %}#o-mnie"
+                    {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}
+                >
                     O mnie
                 </a>
 
-                <a class="navigation-link" href="#">
+                <a class="navigation-link" href="{% url 'home' %}#oferta">
                     Oferta
                 </a>
 
-                <a class="navigation-link" href="#">
+                <a class="navigation-link" href="{% url 'home' %}#wspolpraca">
                     Współpraca
                 </a>
 
-                <a class="navigation-link" href="#">
-                    Blog
-                </a>
-
-                <a class="navigation-link" href="#">
+                <a class="navigation-link" href="{% url 'home' %}#pomoc">
                     Kontakt
                 </a>
 
             </div>
 
-            <a class="navbar-cta" href="#">
+            <a class="navbar-cta" href="{% url 'home' %}#wspolpraca">
                 Umów wizytę
             </a>
 

@@ -1,4 +1,4 @@
-<section class="cooperation-section">
+<section class="cooperation-section" id="wspolpraca">
 
     <div class="site-container">
 
@@ -32,7 +32,27 @@
                         <div class="cooperation-step-top">
 
                             <div class="cooperation-step-icon">
-                                <span></span>
+                                {% if forloop.counter == 1 %}
+                                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M24 41V19" />
+                                        <path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14" />
+                                        <path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16" />
+                                    </svg>
+                                {% elif forloop.counter == 2 %}
+                                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M13 12h22a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5H23l-9 7v-7h-1a5 5 0 0 1-5-5V17a5 5 0 0 1 5-5Z" />
+                                        <path d="M16 23h16" />
+                                    </svg>
+                                {% elif forloop.counter == 3 %}
+                                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M15 10h18v5h5v26H10V15h5Z" />
+                                        <path d="M15 10v8h18v-8M17 26h14M17 33h10" />
+                                    </svg>
+                                {% else %}
+                                    <svg viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M24 39S9 30 9 19a9 9 0 0 1 15-6 9 9 0 0 1 15 6c0 11-15 20-15 20Z" />
+                                    </svg>
+                                {% endif %}
                             </div>
 
                             <div class="cooperation-step-number">
@@ -69,7 +89,7 @@
 
         {% else %}
 
-            <p>
+            <p class="cooperation-empty">
                 Etapy współpracy nie zostały jeszcze dodane.
             </p>
 
