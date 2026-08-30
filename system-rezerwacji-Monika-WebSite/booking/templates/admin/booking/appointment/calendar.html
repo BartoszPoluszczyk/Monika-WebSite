@@ -1,0 +1,56 @@
+{% extends "admin/base_site.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .appointment-calendar-nav { margin: 0 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .appointment-calendar-nav a { padding: 8px 13px; border-radius: 5px; background: var(--button-bg); color: var(--button-fg); }
+        .appointment-calendar { width: 100%; table-layout: fixed; border-collapse: collapse; background: var(--body-bg); }
+        .appointment-calendar th { padding: 10px 6px; background: var(--darkened-bg); text-align: center; }
+        .appointment-calendar td { height: 132px; padding: 8px; border: 1px solid var(--hairline-color); vertical-align: top; }
+        .appointment-calendar td.outside { opacity: .42; background: var(--darkened-bg); }
+        .appointment-calendar td.today .day-number { width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--primary); color: #fff; }
+        .calendar-appointment { margin-top: 6px; padding: 6px 7px; display: block; border-left: 3px solid #738356; border-radius: 3px; background: var(--darkened-bg); font-size: 11px; line-height: 1.35; }
+        .calendar-appointment.cancelled { border-left-color: #999; opacity: .58; text-decoration: line-through; }
+        @media (max-width: 900px) { .appointment-calendar { min-width: 850px; } .calendar-scroll { overflow-x: auto; } }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="appointment-calendar-nav">
+        <a href="?month={{ previous_month }}">← Poprzedni miesiąc</a>
+        <a href="{% url 'admin:booking_appointment_changelist' %}">Lista wizyt</a>
+        <a href="?month={{ next_month }}">Następny miesiąc →</a>
+    </div>
+
+    <div class="calendar-scroll">
+        <table class="appointment-calendar">
+            <thead>
+                <tr>
+                    <th>Poniedziałek</th><th>Wtorek</th><th>Środa</th><th>Czwartek</th>
+                    <th>Piątek</th><th>Sobota</th><th>Niedziela</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in calendar_weeks %}
+                    <tr>
+                        {% for day in week %}
+                            <td class="{% if not day.is_current_month %}outside{% endif %}{% if day.is_today %} today{% endif %}">
+                                <span class="day-number">{{ day.date.day }}</span>
+                                {% for appointment in day.appointments %}
+                                    <a
+                                        class="calendar-appointment{% if appointment.status == 'cancelled' %} cancelled{% endif %}"
+                                        href="{% url 'admin:booking_appointment_change' appointment.pk %}"
+                                    >
+                                        {{ appointment.start_at|time:"H:i" }} — {{ appointment.patient_name }}<br>
+                                        {{ appointment.service.name }}
+                                    </a>
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

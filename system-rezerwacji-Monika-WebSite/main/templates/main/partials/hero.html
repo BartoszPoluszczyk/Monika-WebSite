@@ -1,0 +1,153 @@
+{% load static %}
+
+<section class="hero">
+
+    <div class="site-container hero-container">
+
+        <div class="hero-content">
+
+            {% if home_page %}
+
+                <p class="section-eyebrow">
+                    {{ home_page.hero_eyebrow }}
+                </p>
+
+                <h1 class="hero-title">
+                    {{ home_page.hero_title }}
+                </h1>
+
+                <p class="hero-description">
+                    {{ home_page.hero_description }}
+                </p>
+
+            {% else %}
+
+                <p class="section-eyebrow">
+                    Dietetyka dopasowana do Ciebie
+                </p>
+
+                <h1 class="hero-title">
+                    Zdrowie zaczyna się od dobrych wyborów
+                </h1>
+
+                <p class="hero-description">
+                    Pomagam odzyskać równowagę między zdrowiem,
+                    samopoczuciem i codziennym stylem życia.
+                </p>
+
+            {% endif %}
+
+
+            <div class="hero-buttons">
+
+                <a href="{% url 'booking:book' %}" class="button-primary">
+                    Umów wizytę
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+                </a>
+
+                <a href="#oferta" class="button-secondary">
+                    Poznaj ofertę
+
+                    <span class="button-arrow">
+                        →
+                    </span>
+                </a>
+
+            </div>
+
+
+            <div class="hero-benefits">
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32">
+                            <path d="M16 27V13" />
+                            <path d="M16 20c-6 0-10-4-10-10 6 0 10 3 10 9" />
+                            <path d="M16 16c0-6 4-10 10-11 0 6-4 11-10 11" />
+                        </svg>
+                    </div>
+
+                    <p>
+                        Indywidualne podejście
+                        <span>do każdej osoby</span>
+                    </p>
+
+                </div>
+
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32">
+                            <path d="M16 27S5 20 5 12.5A6.5 6.5 0 0 1 16 8a6.5 6.5 0 0 1 11 4.5C27 20 16 27 16 27Z" />
+                        </svg>
+                    </div>
+
+                    <p>
+                        Zdrowie oparte
+                        <span>na nauce</span>
+                    </p>
+
+                </div>
+
+
+                <div class="hero-benefit">
+
+                    <div class="hero-benefit-icon" aria-hidden="true">
+                        <svg viewBox="0 0 32 32">
+                            <path d="M6 23V11M12 26V8M20 24V10M26 21V13" />
+                            <path d="M3 17h26M8 11h2M22 13h2M18 10h4M4 21h4" />
+                        </svg>
+                    </div>
+
+                    <p>
+                        Realne efekty
+                        <span>i stałe wsparcie</span>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-visual">
+
+            <div class="hero-image-background"></div>
+
+
+            {% if home_page and home_page.hero_photo %}
+
+                <img
+                    src="{{ home_page.hero_photo.url }}"
+                    class="hero-person"
+                    alt="Dietetyk Monika"
+                >
+
+            {% else %}
+
+                <img
+                    src="{% static 'images/monika.png' %}"
+                    class="hero-person"
+                    alt="Dietetyk Monika"
+                >
+
+            {% endif %}
+
+
+            <div class="hero-decoration hero-decoration-one">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
