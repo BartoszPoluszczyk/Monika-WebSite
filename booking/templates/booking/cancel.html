@@ -14,13 +14,16 @@
         </dl>
 
         {% if can_cancel %}
+            {% if appointment.payment_status == 'paid' %}
+                <p class="booking-policy-warning">Anulowanie zwolni termin, ale nie wykona automatycznego zwrotu płatności. Sposób rozliczenia zostanie ustalony osobno.</p>
+            {% endif %}
             <form method="post" class="booking-result-actions">
                 {% csrf_token %}
                 <button class="booking-cancel-button" type="submit">Tak, anuluję wizytę</button>
                 <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Zachowaj termin</a>
             </form>
         {% else %}
-            <p class="booking-empty">Tej wizyty nie można już anulować przez stronę. Skontaktuj się bezpośrednio z Moniką.</p>
+            <p class="booking-empty">Anulowanie online jest dostępne najpóźniej {{ cancellation_notice_hours }} godz. przed wizytą. Skontaktuj się bezpośrednio z Moniką.</p>
             <div class="booking-result-actions">
                 <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Wróć</a>
             </div>

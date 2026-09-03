@@ -5,6 +5,9 @@
 {% block content %}
 <section class="booking-result-page">
     <div class="site-container booking-result-card">
+        {% if rescheduled %}
+            <div class="booking-status-notice">Nowy termin został zapisany. Potwierdzenie wysłaliśmy e-mailem.</div>
+        {% endif %}
         {% if appointment.status == 'cancelled' %}
             <div class="booking-result-icon is-cancelled">×</div>
             <p class="section-eyebrow">Rezerwacja anulowana</p>
@@ -32,13 +35,22 @@
         </dl>
 
         <div class="booking-result-actions">
-            {% if appointment.status != 'cancelled' %}
+            {% if can_reschedule %}
+                <a class="button-primary" href="{% url 'booking:reschedule' appointment.public_id %}">Przełóż wizytę</a>
+            {% endif %}
+            {% if appointment.status == 'confirmed' or appointment.status == 'pending' %}
+                <a class="button-secondary" href="{% url 'booking:calendar_file' appointment.public_id %}">Dodaj do kalendarza</a>
+            {% endif %}
+            {% if can_cancel %}
                 <a class="button-secondary" href="{% url 'booking:cancel' appointment.public_id %}">Anuluj wizytę</a>
-            {% else %}
+            {% elif appointment.status == 'cancelled' %}
                 <a class="button-primary" href="{% url 'booking:book' %}?service={{ appointment.service.pk }}">Wybierz nowy termin</a>
             {% endif %}
             <a class="button-secondary" href="{% url 'home' %}">Wróć na stronę główną</a>
         </div>
+        {% if appointment.status != 'cancelled' %}
+            <p class="booking-policy-note">Zmiana lub anulowanie online jest możliwe najpóźniej {{ cancellation_notice_hours }} godz. przed wizytą.</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

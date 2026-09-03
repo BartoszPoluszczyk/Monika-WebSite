@@ -1,11 +1,18 @@
 import calendar
 from datetime import date, datetime
+from functools import partial
 
 from django.contrib import admin
+from django.db import transaction
 from django.shortcuts import render
 from django.urls import path
 from django.utils import timezone
 
+from .emails import (
+    send_cancellation_notifications,
+    send_confirmation_notifications,
+    send_reschedule_notifications,
+)
 from .models import Appointment, BlockedTime, BookingSettings, WorkingHours
 
 
@@ -50,6 +57,16 @@ class BookingSettingsAdmin(admin.ModelAdmin):
                     "minimum_notice_hours",
                     "booking_window_days",
                     "payment_hold_minutes",
+                )
+            },
+        ),
+        (
+            "Komunikacja z pacjentem",
+            {
+                "fields": (
+                    "notification_email",
+                    "cancellation_notice_hours",
+                    "reminder_hours_before",
                 )
             },
         ),
@@ -109,6 +126,12 @@ class AppointmentAdmin(admin.ModelAdmin):
         "paid_at",
         "stripe_checkout_session_id",
         "stripe_payment_intent_id",
+        "previous_start_at",
+        "rescheduled_at",
+        "confirmation_email_sent_at",
+        "reminder_email_sent_at",
+        "cancellation_email_sent_at",
+        "reschedule_email_sent_at",
         "created_at",
         "updated_at",
     )
@@ -130,6 +153,20 @@ class AppointmentAdmin(admin.ModelAdmin):
                 )
             },
         ),
+        (
+            "Komunikacja i zmiany terminu",
+            {
+                "fields": (
+                    "previous_start_at",
+                    "rescheduled_at",
+                    "confirmation_email_sent_at",
+                    "reminder_email_sent_at",
+                    "cancellation_email_sent_at",
+                    "reschedule_email_sent_at",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
         ("Dane techniczne", {"fields": ("public_id", "created_at", "updated_at"), "classes": ("collapse",)}),
     )
 
@@ -140,6 +177,38 @@ class AppointmentAdmin(admin.ModelAdmin):
     @admin.display(description="Godzina", ordering="start_at")
     def appointment_time(self, obj):
         return timezone.localtime(obj.start_at).strftime("%H:%M")
+
+    def save_model(self, request, obj, form, change):
+        previous = Appointment.objects.filter(pk=obj.pk).first() if change else None
+        start_changed = bool(previous and previous.start_at != obj.start_at)
+        status_changed = bool(previous and previous.status != obj.status)
+
+        if start_changed:
+            obj.previous_start_at = previous.start_at
+            obj.rescheduled_at = timezone.now()
+            obj.reschedule_email_sent_at = None
+            obj.reminder_email_sent_at = None
+
+        super().save_model(request, obj, form, change)
+
+        if start_changed and obj.status in {
+            Appointment.Status.PENDING,
+            Appointment.Status.CONFIRMED,
+        }:
+            transaction.on_commit(
+                partial(send_reschedule_notifications, obj.pk),
+                robust=True,
+            )
+        elif (not previous or status_changed) and obj.status == Appointment.Status.CONFIRMED:
+            transaction.on_commit(
+                partial(send_confirmation_notifications, obj.pk),
+                robust=True,
+            )
+        elif status_changed and obj.status == Appointment.Status.CANCELLED:
+            transaction.on_commit(
+                partial(send_cancellation_notifications, obj.pk),
+                robust=True,
+            )
 
     def get_urls(self):
         return [

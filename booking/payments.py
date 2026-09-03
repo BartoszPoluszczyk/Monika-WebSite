@@ -1,4 +1,5 @@
 from decimal import Decimal
+from functools import partial
 
 import stripe
 from django.conf import settings
@@ -8,6 +9,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .models import Appointment
+from .emails import send_confirmation_notifications
 
 
 PAYMENT_METHOD_TYPES = ["card", "blik", "p24"]
@@ -119,6 +121,7 @@ def mark_checkout_paid(session):
         ):
             return False
 
+        should_notify = appointment.confirmation_email_sent_at is None
         appointment.status = Appointment.Status.CONFIRMED
         appointment.payment_status = Appointment.PaymentStatus.PAID
         appointment.paid_at = appointment.paid_at or timezone.now()
@@ -138,6 +141,11 @@ def mark_checkout_paid(session):
                 "updated_at",
             ]
         )
+        if should_notify:
+            transaction.on_commit(
+                partial(send_confirmation_notifications, appointment.pk),
+                robust=True,
+            )
         return True
 
 

@@ -29,7 +29,7 @@ def release_expired_payment_reservations(now=None):
     )
 
 
-def get_available_slots(service, day, now=None):
+def get_available_slots(service, day, now=None, exclude_appointment=None):
     if not service or not service.duration_minutes:
         return []
 
@@ -55,13 +55,14 @@ def get_available_slots(service, day, now=None):
 
     day_start = _aware_datetime(day, datetime.min.time())
     day_end = day_start + timedelta(days=1)
-    appointments = list(
-        Appointment.objects.filter(
-            status__in=Appointment.active_statuses(),
-            start_at__lt=day_end,
-            end_at__gt=day_start,
-        )
+    appointment_query = Appointment.objects.filter(
+        status__in=Appointment.active_statuses(),
+        start_at__lt=day_end,
+        end_at__gt=day_start,
     )
+    if exclude_appointment:
+        appointment_query = appointment_query.exclude(pk=exclude_appointment.pk)
+    appointments = list(appointment_query)
 
     duration = timedelta(minutes=service.duration_minutes)
     interval = timedelta(minutes=max(1, booking_settings.slot_interval_minutes))
@@ -145,3 +146,84 @@ def create_appointment(*, service, day, start_time, payment_required=False, **pa
             return appointment
     except IntegrityError as error:
         raise ValidationError("Wybrany termin został właśnie zarezerwowany. Wybierz inną godzinę.") from error
+
+
+def can_patient_manage(appointment, now=None):
+    now = now or timezone.now()
+    booking_settings = get_booking_settings()
+    deadline = appointment.start_at - timedelta(
+        hours=booking_settings.cancellation_notice_hours
+    )
+    return (
+        appointment.status in Appointment.active_statuses()
+        and now < deadline
+    )
+
+
+def can_patient_reschedule(appointment, now=None):
+    return (
+        appointment.status in {Appointment.Status.PENDING, Appointment.Status.CONFIRMED}
+        and can_patient_manage(appointment, now=now)
+    )
+
+
+def reschedule_existing_appointment(*, appointment, day, start_time):
+    try:
+        with transaction.atomic():
+            appointment = (
+                Appointment.objects.select_for_update()
+                .select_related("service")
+                .get(pk=appointment.pk)
+            )
+            if not can_patient_reschedule(appointment):
+                raise ValidationError(
+                    "Tej wizyty nie można już przełożyć przez stronę."
+                )
+
+            start_at = _aware_datetime(day, start_time)
+            end_at = start_at + timedelta(minutes=appointment.service.duration_minutes)
+            if start_at == appointment.start_at:
+                raise ValidationError("Wybierz termin inny niż obecny.")
+
+            list(
+                Appointment.objects.select_for_update()
+                .filter(
+                    status__in=Appointment.active_statuses(),
+                    start_at__lt=end_at,
+                    end_at__gt=start_at,
+                )
+                .exclude(pk=appointment.pk)
+            )
+            available_slots = get_available_slots(
+                appointment.service,
+                day,
+                exclude_appointment=appointment,
+            )
+            if start_at not in available_slots:
+                raise ValidationError(
+                    "Wybrany termin nie jest już dostępny. Wybierz inną godzinę."
+                )
+
+            appointment.previous_start_at = appointment.start_at
+            appointment.start_at = start_at
+            appointment.end_at = end_at
+            appointment.rescheduled_at = timezone.now()
+            appointment.reschedule_email_sent_at = None
+            appointment.reminder_email_sent_at = None
+            appointment.full_clean()
+            appointment.save(
+                update_fields=[
+                    "previous_start_at",
+                    "start_at",
+                    "end_at",
+                    "rescheduled_at",
+                    "reschedule_email_sent_at",
+                    "reminder_email_sent_at",
+                    "updated_at",
+                ]
+            )
+            return appointment
+    except IntegrityError as error:
+        raise ValidationError(
+            "Wybrany termin został właśnie zajęty. Wybierz inną godzinę."
+        ) from error

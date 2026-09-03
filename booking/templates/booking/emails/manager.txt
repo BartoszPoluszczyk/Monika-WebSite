@@ -1,0 +1,12 @@
+{{ title }}
+
+Pacjent: {{ appointment.patient_name }}
+E-mail: {{ appointment.email }}
+Telefon: {{ appointment.phone }}
+Usługa: {{ appointment.service.name }}
+Termin: {{ start_local|date:"d.m.Y" }}, {{ start_local|time:"H:i" }}
+Forma: {{ appointment.get_visit_type_display }}
+Status: {{ appointment.get_status_display }}
+{% if previous_start_local and event == "reschedule" %}Poprzedni termin: {{ previous_start_local|date:"d.m.Y" }}, {{ previous_start_local|time:"H:i" }}
+{% endif %}
+Szczegóły: {{ manage_url }}

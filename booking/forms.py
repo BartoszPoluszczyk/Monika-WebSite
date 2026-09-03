@@ -45,3 +45,19 @@ class AppointmentBookingForm(forms.ModelForm):
             (slot.strftime("%H:%M"), slot.strftime("%H:%M"))
             for slot in (available_slots or [])
         ]
+
+
+class AppointmentRescheduleForm(forms.Form):
+    appointment_date = forms.DateField(widget=forms.HiddenInput())
+    appointment_time = forms.ChoiceField(
+        label="Nowa godzina wizyty",
+        choices=(),
+        widget=forms.RadioSelect(),
+    )
+
+    def __init__(self, *args, available_slots=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["appointment_time"].choices = [
+            (slot.strftime("%H:%M"), slot.strftime("%H:%M"))
+            for slot in (available_slots or [])
+        ]

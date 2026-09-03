@@ -1,0 +1,21 @@
+Cześć {{ appointment.first_name }},
+
+{{ introduction }}
+
+Usługa: {{ appointment.service.name }}
+Termin: {{ start_local|date:"d.m.Y" }}, {{ start_local|time:"H:i" }}
+Forma wizyty: {{ appointment.get_visit_type_display }}
+{% if appointment.payment_amount %}Płatność: {{ appointment.payment_amount|floatformat:2 }} {{ appointment.payment_currency }} — {{ appointment.get_payment_status_display }}
+{% endif %}{% if previous_start_local and event == "reschedule" %}Poprzedni termin: {{ previous_start_local|date:"d.m.Y" }}, {{ previous_start_local|time:"H:i" }}
+{% endif %}
+{{ action_label }}: {{ action_url }}
+
+{% if event == "cancellation" and appointment.payment_status == "paid" %}Anulowanie terminu nie wykonuje automatycznego zwrotu płatności. Sposób rozliczenia zostanie ustalony osobno.
+{% endif %}
+
+Dodaj wizytę do kalendarza: {{ calendar_url }}
+
+Anulowanie lub przełożenie online jest możliwe najpóźniej {{ cancellation_notice_hours }} godz. przed wizytą.
+
+Pozdrawiamy,
+{{ site_name }}

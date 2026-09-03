@@ -1,4 +1,5 @@
-<nav class="site-navbar">
+{% load static %}
+<nav class="site-navbar" aria-label="Nawigacja główna">
     <div class="site-container navbar-inner">
 
         <a class="brand" href="{% url 'home' %}">
@@ -13,20 +14,13 @@
 
             {% else %}
 
-                <span class="brand-mark" aria-hidden="true">
-                    <svg viewBox="0 0 48 48" role="img">
-                        <path d="M24 39V19" />
-                        <path d="M24 28C17 28 12 23 12 15c7 0 12 4 12 11" />
-                        <path d="M24 23c0-7 5-12 13-13 0 8-5 13-13 13" />
-                    </svg>
-                </span>
-
-                <div class="brand-text">
-                    <span class="brand-name">
-                        {% if site_settings %}{{ site_settings.site_name }}{% else %}Monika Kowalska{% endif %}
-                    </span>
-                    <span class="brand-subtitle">dietetyk kliniczny</span>
-                </div>
+                <img
+                    src="{% static 'images/branding/monika-kulik-logo-horizontal.svg' %}"
+                    alt="Monika Kulik — dietetyk kliniczny, strona główna"
+                    class="navbar-logo navbar-logo-default"
+                    width="682"
+                    height="138"
+                >
 
             {% endif %}
 

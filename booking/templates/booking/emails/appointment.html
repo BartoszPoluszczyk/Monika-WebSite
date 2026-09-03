@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="pl">
+<body style="margin:0;background:#f6f2e9;color:#26281f;font-family:Arial,sans-serif;">
+    <div style="max-width:620px;margin:0 auto;padding:32px 16px;">
+        <div style="background:#fffdf8;border:1px solid #d9d2c2;border-radius:18px;padding:32px;">
+            <p style="margin:0 0 10px;color:#66734d;font-size:12px;letter-spacing:.14em;text-transform:uppercase;">{{ site_name }}</p>
+            <h1 style="margin:0 0 18px;font-family:Georgia,serif;font-size:28px;font-weight:400;">{{ title }}</h1>
+            <p style="margin:0 0 24px;line-height:1.7;">Cześć {{ appointment.first_name }},<br>{{ introduction }}</p>
+
+            <table role="presentation" style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+                <tr><td style="padding:9px 0;color:#747667;">Usługa</td><td style="padding:9px 0;text-align:right;font-weight:600;">{{ appointment.service.name }}</td></tr>
+                <tr><td style="padding:9px 0;color:#747667;">Termin</td><td style="padding:9px 0;text-align:right;font-weight:600;">{{ start_local|date:"d.m.Y" }}, {{ start_local|time:"H:i" }}</td></tr>
+                <tr><td style="padding:9px 0;color:#747667;">Forma</td><td style="padding:9px 0;text-align:right;font-weight:600;">{{ appointment.get_visit_type_display }}</td></tr>
+                {% if appointment.payment_amount %}<tr><td style="padding:9px 0;color:#747667;">Płatność</td><td style="padding:9px 0;text-align:right;font-weight:600;">{{ appointment.payment_amount|floatformat:2 }} {{ appointment.payment_currency }} · {{ appointment.get_payment_status_display }}</td></tr>{% endif %}
+                {% if previous_start_local and event == "reschedule" %}<tr><td style="padding:9px 0;color:#747667;">Poprzedni termin</td><td style="padding:9px 0;text-align:right;">{{ previous_start_local|date:"d.m.Y" }}, {{ previous_start_local|time:"H:i" }}</td></tr>{% endif %}
+            </table>
+
+            <p style="margin:0 0 14px;"><a href="{{ action_url }}" style="display:inline-block;background:#65734d;color:#fff;text-decoration:none;border-radius:999px;padding:13px 22px;">{{ action_label }}</a></p>
+            {% if event != "cancellation" %}<p style="margin:0 0 22px;"><a href="{{ calendar_url }}" style="color:#65734d;">Dodaj wizytę do kalendarza</a></p>{% endif %}
+            {% if event == "cancellation" and appointment.payment_status == "paid" %}<p style="margin:18px 0;padding:12px 14px;background:#faf5e8;border-radius:8px;color:#747667;font-size:13px;line-height:1.6;">Anulowanie terminu nie wykonuje automatycznego zwrotu płatności. Sposób rozliczenia zostanie ustalony osobno.</p>{% endif %}
+            <p style="margin:22px 0 0;padding-top:18px;border-top:1px solid #e4ded1;color:#747667;font-size:13px;line-height:1.6;">Anulowanie lub przełożenie online jest możliwe najpóźniej {{ cancellation_notice_hours }} godz. przed wizytą.</p>
+        </div>
+    </div>
+</body>
+</html>

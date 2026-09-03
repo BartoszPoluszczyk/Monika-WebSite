@@ -1,18 +1,22 @@
 import calendar
-from datetime import date, datetime
+from datetime import UTC, date, datetime
+from functools import partial
 
 import stripe
 from django.core.exceptions import ImproperlyConfigured
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
 from main.models import Service
 
-from .forms import AppointmentBookingForm
+from .emails import send_cancellation_notifications, send_reschedule_notifications
+from .forms import AppointmentBookingForm, AppointmentRescheduleForm
 from .models import Appointment
 from .payments import (
     construct_webhook_event,
@@ -23,7 +27,14 @@ from .payments import (
     payments_configured,
     retrieve_and_sync_checkout,
 )
-from .services import create_appointment, get_available_slots
+from .services import (
+    can_patient_manage,
+    can_patient_reschedule,
+    create_appointment,
+    get_available_slots,
+    get_booking_settings,
+    reschedule_existing_appointment,
+)
 
 
 MONTH_NAMES = (
@@ -63,7 +74,12 @@ def _shift_month(month, offset):
     return date(absolute_month // 12, absolute_month % 12 + 1, 1)
 
 
-def _calendar_context(service, displayed_month, selected_date):
+def _calendar_context(
+    service,
+    displayed_month,
+    selected_date,
+    exclude_appointment=None,
+):
     weeks = []
     for week in calendar.Calendar(firstweekday=0).monthdatescalendar(
         displayed_month.year,
@@ -72,7 +88,18 @@ def _calendar_context(service, displayed_month, selected_date):
         days = []
         for day in week:
             is_current_month = day.month == displayed_month.month
-            available = bool(get_available_slots(service, day)) if is_current_month else False
+            slots = (
+                get_available_slots(
+                    service,
+                    day,
+                    exclude_appointment=exclude_appointment,
+                )
+                if is_current_month
+                else []
+            )
+            if exclude_appointment:
+                slots = [slot for slot in slots if slot != exclude_appointment.start_at]
+            available = bool(slots)
             days.append(
                 {
                     "date": day,
@@ -190,7 +217,18 @@ def booking_confirmation(request, public_id):
         except stripe.StripeError:
             pass
         appointment.refresh_from_db()
-    return render(request, "booking/confirmation.html", {"appointment": appointment})
+    booking_settings = get_booking_settings()
+    return render(
+        request,
+        "booking/confirmation.html",
+        {
+            "appointment": appointment,
+            "can_cancel": can_patient_manage(appointment),
+            "can_reschedule": can_patient_reschedule(appointment),
+            "cancellation_notice_hours": booking_settings.cancellation_notice_hours,
+            "rescheduled": request.GET.get("rescheduled") == "1",
+        },
+    )
 
 
 def payment_cancelled(request, public_id):
@@ -237,10 +275,7 @@ def stripe_webhook(request):
 
 def cancel_appointment(request, public_id):
     appointment = get_object_or_404(Appointment, public_id=public_id)
-    can_cancel = (
-        appointment.status in Appointment.active_statuses()
-        and appointment.start_at > timezone.now()
-    )
+    can_cancel = can_patient_manage(appointment)
 
     if request.method == "POST":
         if not can_cancel:
@@ -250,10 +285,144 @@ def cancel_appointment(request, public_id):
             appointment.payment_status = Appointment.PaymentStatus.FAILED
         appointment.status = Appointment.Status.CANCELLED
         appointment.save(update_fields=["status", "payment_status", "updated_at"])
+        transaction.on_commit(
+            partial(send_cancellation_notifications, appointment.pk),
+            robust=True,
+        )
         return redirect("booking:confirmation", public_id=appointment.public_id)
 
     return render(
         request,
         "booking/cancel.html",
-        {"appointment": appointment, "can_cancel": can_cancel},
+        {
+            "appointment": appointment,
+            "can_cancel": can_cancel,
+            "cancellation_notice_hours": get_booking_settings().cancellation_notice_hours,
+        },
     )
+
+
+def reschedule_appointment(request, public_id):
+    appointment = get_object_or_404(
+        Appointment.objects.select_related("service"),
+        public_id=public_id,
+    )
+    can_reschedule = can_patient_reschedule(appointment)
+    selected_date = _parse_date(
+        request.POST.get("appointment_date") or request.GET.get("date")
+    )
+    default_month = selected_date or timezone.localdate()
+    displayed_month = _parse_month(request.GET.get("month"), default_month)
+    available_slots = (
+        get_available_slots(
+            appointment.service,
+            selected_date,
+            exclude_appointment=appointment,
+        )
+        if can_reschedule and selected_date
+        else []
+    )
+    available_slots = [
+        slot for slot in available_slots if slot != appointment.start_at
+    ]
+
+    form = None
+    if can_reschedule and selected_date:
+        form = AppointmentRescheduleForm(
+            request.POST or None,
+            available_slots=available_slots,
+            initial={"appointment_date": selected_date},
+        )
+        if request.method == "POST" and form.is_valid():
+            try:
+                appointment = reschedule_existing_appointment(
+                    appointment=appointment,
+                    day=form.cleaned_data["appointment_date"],
+                    start_time=datetime.strptime(
+                        form.cleaned_data["appointment_time"],
+                        "%H:%M",
+                    ).time(),
+                )
+            except ValidationError as error:
+                form.add_error("appointment_time", " ".join(error.messages))
+            else:
+                transaction.on_commit(
+                    partial(send_reschedule_notifications, appointment.pk),
+                    robust=True,
+                )
+                confirmation_url = reverse(
+                    "booking:confirmation",
+                    args=[appointment.public_id],
+                )
+                return redirect(f"{confirmation_url}?rescheduled=1")
+
+    calendar_weeks = (
+        _calendar_context(
+            appointment.service,
+            displayed_month,
+            selected_date,
+            exclude_appointment=appointment,
+        )
+        if can_reschedule
+        else []
+    )
+    return render(
+        request,
+        "booking/reschedule.html",
+        {
+            "appointment": appointment,
+            "can_reschedule": can_reschedule,
+            "selected_date": selected_date,
+            "available_slots": available_slots,
+            "form": form,
+            "calendar_weeks": calendar_weeks,
+            "displayed_month": displayed_month,
+            "month_label": f"{MONTH_NAMES[displayed_month.month]} {displayed_month.year}",
+            "previous_month": _shift_month(displayed_month, -1).strftime("%Y-%m"),
+            "next_month": _shift_month(displayed_month, 1).strftime("%Y-%m"),
+            "cancellation_notice_hours": get_booking_settings().cancellation_notice_hours,
+        },
+    )
+
+
+def _escape_ics(value):
+    return str(value).replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+
+
+@require_GET
+def appointment_calendar_file(request, public_id):
+    appointment = get_object_or_404(
+        Appointment.objects.select_related("service"),
+        public_id=public_id,
+    )
+    if appointment.status not in {Appointment.Status.PENDING, Appointment.Status.CONFIRMED}:
+        raise Http404
+
+    start_utc = appointment.start_at.astimezone(UTC)
+    end_utc = appointment.end_at.astimezone(UTC)
+    stamp_utc = timezone.now().astimezone(UTC)
+    content = "\r\n".join(
+        [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//Dietetyk Monika//Rezerwacje//PL",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
+            "BEGIN:VEVENT",
+            f"UID:{appointment.public_id}@dietetyk-monika",
+            f"DTSTAMP:{stamp_utc:%Y%m%dT%H%M%SZ}",
+            f"DTSTART:{start_utc:%Y%m%dT%H%M%SZ}",
+            f"DTEND:{end_utc:%Y%m%dT%H%M%SZ}",
+            f"SUMMARY:{_escape_ics(appointment.service.name)} — Dietetyk Monika",
+            f"DESCRIPTION:{_escape_ics(f'Forma wizyty: {appointment.get_visit_type_display()}')}",
+            "STATUS:CONFIRMED",
+            "END:VEVENT",
+            "END:VCALENDAR",
+            "",
+        ]
+    )
+    response = HttpResponse(content, content_type="text/calendar; charset=utf-8")
+    response["Content-Disposition"] = (
+        f'attachment; filename="wizyta-{appointment.start_at:%Y-%m-%d}.ics"'
+    )
+    return response

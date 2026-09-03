@@ -28,6 +28,19 @@ class BookingSettings(models.Model):
         verbose_name="Czas na opłacenie rezerwacji (minuty)",
         help_text="Stripe Checkout wymaga co najmniej 30 minut.",
     )
+    cancellation_notice_hours = models.PositiveIntegerField(
+        default=24,
+        verbose_name="Najpóźniejsze anulowanie / przełożenie (godziny przed wizytą)",
+    )
+    reminder_hours_before = models.PositiveIntegerField(
+        default=24,
+        verbose_name="Wyślij przypomnienie przed wizytą (godziny)",
+    )
+    notification_email = models.EmailField(
+        blank=True,
+        verbose_name="E-mail Moniki do powiadomień o rezerwacjach",
+        help_text="Pozostaw puste, jeśli powiadomienia mają trafiać tylko do pacjenta.",
+    )
 
     def save(self, *args, **kwargs):
         self.pk = 1
@@ -216,6 +229,36 @@ class Appointment(models.Model):
         max_length=255,
         blank=True,
         verbose_name="Identyfikator płatności Stripe",
+    )
+    previous_start_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Poprzedni termin wizyty",
+    )
+    rescheduled_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Termin zmieniono",
+    )
+    confirmation_email_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Potwierdzenie e-mail wysłano",
+    )
+    reminder_email_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Przypomnienie e-mail wysłano",
+    )
+    cancellation_email_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Anulowanie e-mail wysłano",
+    )
+    reschedule_email_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Zmianę terminu e-mail wysłano",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Zaktualizowano")

@@ -14,5 +14,15 @@ urlpatterns = [
         name="payment_cancelled",
     ),
     path("rezerwacja/<uuid:public_id>/anuluj/", views.cancel_appointment, name="cancel"),
+    path(
+        "rezerwacja/<uuid:public_id>/zmien-termin/",
+        views.reschedule_appointment,
+        name="reschedule",
+    ),
+    path(
+        "rezerwacja/<uuid:public_id>/kalendarz.ics",
+        views.appointment_calendar_file,
+        name="calendar_file",
+    ),
     path("platnosci/stripe/webhook/", views.stripe_webhook, name="stripe_webhook"),
 ]

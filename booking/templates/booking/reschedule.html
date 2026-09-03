@@ -1,0 +1,110 @@
+{% extends "main/base.html" %}
+
+{% block title %}Zmiana terminu | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="booking-page">
+    <div class="site-container booking-container booking-reschedule-container">
+        <header class="booking-heading">
+            <p class="section-eyebrow">Zmiana rezerwacji</p>
+            <h1 class="section-title">Wybierz <span>nowy termin</span></h1>
+            <p class="section-description">
+                Obecna wizyta: {{ appointment.start_at|date:"d.m.Y" }}, {{ appointment.start_at|time:"H:i" }} · {{ appointment.service.name }}.
+            </p>
+        </header>
+
+        {% if can_reschedule %}
+            <div class="booking-main-grid">
+                <section class="booking-panel booking-calendar-panel">
+                    <div class="booking-panel-heading">
+                        <span class="booking-step-number">01</span>
+                        <div>
+                            <h2>Wybierz nowy dzień</h2>
+                            <p>Dotychczasowy termin pozostaje zarezerwowany do zatwierdzenia zmiany.</p>
+                        </div>
+                    </div>
+
+                    <div class="booking-calendar-nav">
+                        <a href="?month={{ previous_month }}" aria-label="Poprzedni miesiąc">←</a>
+                        <strong>{{ month_label }}</strong>
+                        <a href="?month={{ next_month }}" aria-label="Następny miesiąc">→</a>
+                    </div>
+
+                    <div class="booking-calendar" role="grid" aria-label="Kalendarz dostępnych terminów">
+                        <div class="booking-calendar-weekdays" role="row">
+                            <span>Pn</span><span>Wt</span><span>Śr</span><span>Cz</span><span>Pt</span><span>So</span><span>Nd</span>
+                        </div>
+                        {% for week in calendar_weeks %}
+                            <div class="booking-calendar-week" role="row">
+                                {% for day in week %}
+                                    {% if day.is_current_month %}
+                                        {% if day.is_available %}
+                                            <a
+                                                class="booking-day is-available{% if day.is_selected %} is-selected{% endif %}{% if day.is_today %} is-today{% endif %}"
+                                                href="?month={{ displayed_month|date:'Y-m' }}&date={{ day.date|date:'Y-m-d' }}"
+                                                aria-label="Wybierz {{ day.date|date:'d.m.Y' }}"
+                                            >
+                                                {{ day.date.day }}<span></span>
+                                            </a>
+                                        {% else %}
+                                            <span class="booking-day is-unavailable{% if day.is_today %} is-today{% endif %}">{{ day.date.day }}</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="booking-day is-outside"></span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="booking-panel booking-details-panel">
+                    <div class="booking-panel-heading">
+                        <span class="booking-step-number">02</span>
+                        <div>
+                            <h2>Wybierz godzinę</h2>
+                            {% if selected_date %}<p>{{ selected_date|date:"l, d E Y" }}</p>{% else %}<p>Najpierw wybierz dostępny dzień.</p>{% endif %}
+                        </div>
+                    </div>
+
+                    {% if selected_date and available_slots and form %}
+                        <form method="post" class="booking-form" novalidate>
+                            {% csrf_token %}
+                            {{ form.appointment_date }}
+                            <fieldset class="booking-time-fieldset">
+                                <legend>Wolne godziny</legend>
+                                <div class="booking-time-grid">
+                                    {% for choice in form.appointment_time %}
+                                        <label class="booking-time-option">
+                                            {{ choice.tag }}<span>{{ choice.choice_label }}</span>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                                {{ form.appointment_time.errors }}
+                            </fieldset>
+                            <button type="submit" class="booking-submit">Zapisz nowy termin <span>→</span></button>
+                        </form>
+                    {% elif selected_date %}
+                        <p class="booking-empty">Ten dzień nie ma innej dostępnej godziny. Wybierz kolejny termin.</p>
+                    {% else %}
+                        <div class="booking-placeholder">
+                            <p>Po wybraniu dnia pojawią się tutaj wolne godziny.</p>
+                        </div>
+                    {% endif %}
+                </section>
+            </div>
+            <div class="booking-result-actions">
+                <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Zachowaj obecny termin</a>
+            </div>
+            <p class="booking-policy-note">Zmiana online jest możliwa najpóźniej {{ cancellation_notice_hours }} godz. przed wizytą.</p>
+        {% else %}
+            <div class="booking-result-card booking-result-card-compact">
+                <p class="booking-empty">Tej wizyty nie można już przełożyć przez stronę. Skontaktuj się bezpośrednio z Moniką.</p>
+                <div class="booking-result-actions">
+                    <a class="button-secondary" href="{% url 'booking:confirmation' appointment.public_id %}">Wróć do rezerwacji</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

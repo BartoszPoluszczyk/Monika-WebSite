@@ -1,7 +1,10 @@
 from datetime import datetime, time, timedelta
+from io import StringIO
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from django.core import mail
+from django.core.management import call_command
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -33,6 +36,9 @@ class BookingTestMixin:
             buffer_minutes=15,
             minimum_notice_hours=0,
             booking_window_days=90,
+            cancellation_notice_hours=24,
+            reminder_hours_before=24,
+            notification_email="monika@example.com",
         )
 
     def aware(self, value):
@@ -185,9 +191,10 @@ class PublicBookingTests(BookingTestMixin, TestCase):
             consent_privacy=True,
         )
 
-        response = self.client.post(
-            reverse("booking:cancel", args=[appointment.public_id])
-        )
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(
+                reverse("booking:cancel", args=[appointment.public_id])
+            )
 
         appointment.refresh_from_db()
         self.assertRedirects(
@@ -195,6 +202,87 @@ class PublicBookingTests(BookingTestMixin, TestCase):
             reverse("booking:confirmation", args=[appointment.public_id]),
         )
         self.assertEqual(appointment.status, Appointment.Status.CANCELLED)
+        self.assertIsNotNone(appointment.cancellation_email_sent_at)
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_patient_cannot_cancel_inside_notice_period(self):
+        appointment = Appointment.objects.create(
+            service=self.service,
+            start_at=timezone.now() + timedelta(hours=12),
+            end_at=timezone.now() + timedelta(hours=13),
+            first_name="Jan",
+            last_name="Kowalski",
+            email="jan@example.com",
+            phone="600700800",
+            consent_privacy=True,
+            status=Appointment.Status.CONFIRMED,
+        )
+
+        response = self.client.post(
+            reverse("booking:cancel", args=[appointment.public_id])
+        )
+
+        appointment.refresh_from_db()
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(appointment.status, Appointment.Status.CONFIRMED)
+
+    def test_patient_can_reschedule_and_receives_email(self):
+        appointment = Appointment.objects.create(
+            service=self.service,
+            start_at=self.aware(time(9, 0)),
+            end_at=self.aware(time(10, 0)),
+            first_name="Jan",
+            last_name="Kowalski",
+            email="jan@example.com",
+            phone="600700800",
+            consent_privacy=True,
+            status=Appointment.Status.CONFIRMED,
+            payment_status=Appointment.PaymentStatus.PAID,
+            payment_amount=self.service.price,
+        )
+        new_day = self.day + timedelta(days=7)
+
+        with self.captureOnCommitCallbacks(execute=True):
+            response = self.client.post(
+                reverse("booking:reschedule", args=[appointment.public_id]),
+                {
+                    "appointment_date": new_day.isoformat(),
+                    "appointment_time": "10:00",
+                },
+            )
+
+        appointment.refresh_from_db()
+        self.assertRedirects(
+            response,
+            f"{reverse('booking:confirmation', args=[appointment.public_id])}?rescheduled=1",
+        )
+        self.assertEqual(timezone.localtime(appointment.start_at).date(), new_day)
+        self.assertEqual(timezone.localtime(appointment.start_at).time(), time(10, 0))
+        self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.PAID)
+        self.assertIsNotNone(appointment.reschedule_email_sent_at)
+        self.assertEqual(len(mail.outbox), 2)
+
+    def test_calendar_file_can_be_downloaded(self):
+        appointment = Appointment.objects.create(
+            service=self.service,
+            start_at=self.aware(time(9, 0)),
+            end_at=self.aware(time(10, 0)),
+            first_name="Jan",
+            last_name="Kowalski",
+            email="jan@example.com",
+            phone="600700800",
+            consent_privacy=True,
+            status=Appointment.Status.CONFIRMED,
+        )
+
+        response = self.client.get(
+            reverse("booking:calendar_file", args=[appointment.public_id])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/calendar; charset=utf-8")
+        self.assertIn(b"BEGIN:VCALENDAR", response.content)
+        self.assertIn(str(appointment.public_id).encode(), response.content)
 
 
 class AppointmentAdminTests(BookingTestMixin, TestCase):
@@ -234,16 +322,16 @@ class PaymentLifecycleTests(BookingTestMixin, TestCase):
     def test_paid_checkout_confirms_appointment(self):
         appointment = self.create_payment_appointment()
 
-        changed = mark_checkout_paid(
-            {
-                "id": "cs_test_123",
-                "metadata": {"appointment_public_id": str(appointment.public_id)},
-                "payment_status": "paid",
-                "amount_total": int(self.service.price * 100),
-                "currency": "pln",
-                "payment_intent": "pi_test_123",
-            }
-        )
+        session = {
+            "id": "cs_test_123",
+            "metadata": {"appointment_public_id": str(appointment.public_id)},
+            "payment_status": "paid",
+            "amount_total": int(self.service.price * 100),
+            "currency": "pln",
+            "payment_intent": "pi_test_123",
+        }
+        with self.captureOnCommitCallbacks(execute=True):
+            changed = mark_checkout_paid(session)
 
         appointment.refresh_from_db()
         self.assertTrue(changed)
@@ -251,6 +339,12 @@ class PaymentLifecycleTests(BookingTestMixin, TestCase):
         self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.PAID)
         self.assertEqual(appointment.stripe_payment_intent_id, "pi_test_123")
         self.assertIsNotNone(appointment.paid_at)
+        self.assertIsNotNone(appointment.confirmation_email_sent_at)
+        self.assertEqual(len(mail.outbox), 2)
+
+        with self.captureOnCommitCallbacks(execute=True):
+            mark_checkout_paid(session)
+        self.assertEqual(len(mail.outbox), 2)
 
     def test_expired_payment_releases_slot(self):
         appointment = self.create_payment_appointment(
@@ -263,3 +357,26 @@ class PaymentLifecycleTests(BookingTestMixin, TestCase):
         self.assertEqual(released, 1)
         self.assertEqual(appointment.status, Appointment.Status.CANCELLED)
         self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.FAILED)
+
+    def test_reminder_command_sends_each_reminder_once(self):
+        start_at = timezone.now() + timedelta(hours=12)
+        appointment = Appointment.objects.create(
+            service=self.service,
+            start_at=start_at,
+            end_at=start_at + timedelta(hours=1),
+            first_name="Jan",
+            last_name="Kowalski",
+            email="jan@example.com",
+            phone="600700800",
+            consent_privacy=True,
+            status=Appointment.Status.CONFIRMED,
+            payment_status=Appointment.PaymentStatus.PAID,
+            payment_amount=self.service.price,
+        )
+
+        call_command("send_booking_reminders", stdout=StringIO())
+        call_command("send_booking_reminders", stdout=StringIO())
+
+        appointment.refresh_from_db()
+        self.assertIsNotNone(appointment.reminder_email_sent_at)
+        self.assertEqual(len(mail.outbox), 1)
