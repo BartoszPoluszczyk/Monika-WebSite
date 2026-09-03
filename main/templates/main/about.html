@@ -26,15 +26,21 @@
                         <img
                             src="{{ about_page.photo.url }}"
                             class="img-fluid about-photo"
-                            alt="{{ about_page.title }}"
+                            alt="Monika Kulik — dietetyk kliniczny"
+                            width="{{ about_page.photo.width }}"
+                            height="{{ about_page.photo.height }}"
+                            decoding="async"
                         >
 
                     {% else %}
 
                         <img
-                            src="{% static 'images/monika.png' %}"
+                            src="{% static 'images/portraits/monika-kulik-about-20260903.webp' %}"
                             class="img-fluid about-photo"
-                            alt="Dietetyk Monika"
+                            alt="Monika Kulik — dietetyk kliniczny"
+                            width="1073"
+                            height="1466"
+                            decoding="async"
                         >
 
                     {% endif %}
@@ -69,7 +75,7 @@
 
         {% else %}
 
-            <div class="alert alert-warning">
+            <div class="about-empty-message">
                 Treść strony „O mnie” nie została jeszcze dodana
                 w panelu administratora.
             </div>
@@ -124,7 +130,7 @@
                 Umów konsultację i sprawdźmy, jak mogę Ci pomóc.
             </p>
 
-            <a href="#" class="btn btn-primary mt-2">
+            <a href="#" class="button-primary mt-2">
                 Skontaktuj się
             </a>
 

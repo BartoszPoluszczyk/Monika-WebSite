@@ -118,7 +118,7 @@
 
         <div class="hero-visual">
 
-            <div class="hero-image-background"></div>
+            <div class="hero-image-background" aria-hidden="true"></div>
 
 
             {% if home_page and home_page.hero_photo %}
@@ -126,15 +126,23 @@
                 <img
                     src="{{ home_page.hero_photo.url }}"
                     class="hero-person"
-                    alt="Dietetyk Monika"
+                    alt="Monika Kulik — dietetyk kliniczny"
+                    width="{{ home_page.hero_photo.width }}"
+                    height="{{ home_page.hero_photo.height }}"
+                    fetchpriority="high"
+                    decoding="async"
                 >
 
             {% else %}
 
                 <img
-                    src="{% static 'images/monika.png' %}"
+                    src="{% static 'images/portraits/monika-kulik-hero-20260903.webp' %}"
                     class="hero-person"
-                    alt="Dietetyk Monika"
+                    alt="Monika Kulik — dietetyk kliniczny"
+                    width="1073"
+                    height="1466"
+                    fetchpriority="high"
+                    decoding="async"
                 >
 
             {% endif %}

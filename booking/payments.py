@@ -87,6 +87,8 @@ def _session_value(session, key, default=None):
 
 def _session_metadata(session):
     metadata = _session_value(session, "metadata", {}) or {}
+    if isinstance(metadata, stripe.StripeObject):
+        return metadata.to_dict()
     return dict(metadata)
 
 

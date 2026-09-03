@@ -67,6 +67,14 @@
                     Współpraca
                 </a>
 
+                <a
+                    class="navigation-link{% if request.resolver_match.url_name == 'calorie_calculator' %} is-active{% endif %}"
+                    href="{% url 'calorie_calculator' %}"
+                    {% if request.resolver_match.url_name == 'calorie_calculator' %}aria-current="page"{% endif %}
+                >
+                    Kalkulator kalorii
+                </a>
+
                 <a class="navigation-link" href="{% url 'home' %}#pomoc">
                     Kontakt
                 </a>

@@ -1,14 +1,55 @@
 import xml.etree.ElementTree as ET
+from pathlib import Path
+
+from PIL import Image
 
 from django.contrib.staticfiles import finders
+from django.db import connection
 from django.template.loader import render_to_string
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
+from django.test.utils import CaptureQueriesContext
+from django.urls import reverse
 
-from .models import SiteSettings
+from .models import AboutPage, HomePage, SiteSettings
+
+
+class WebsitePaletteTests(SimpleTestCase):
+    def test_website_uses_monikas_four_brand_colors_and_navy_text_and_buttons(self):
+        css = Path(finders.find("css/style.css")).read_text(encoding="utf-8")
+        for declaration in (
+            "--brand-green: #A9C3A2;",
+            "--brand-navy: #102F3A;",
+            "--brand-beige: #F7F1EC;",
+            "--brand-white: #FFFFFF;",
+            "--color-background: var(--brand-beige);",
+            "--color-text: var(--brand-navy);",
+            "--color-primary: var(--brand-navy);",
+        ):
+            with self.subTest(declaration=declaration):
+                self.assertIn(declaration, css)
+
+    def test_yellow_and_legacy_olive_palette_are_not_used_in_public_styles(self):
+        for asset in ("css/style.css", "css/calorie-calculator.css"):
+            css = Path(finders.find(asset)).read_text(encoding="utf-8").lower()
+            for obsolete in ("#f0cf60", "#738356", "#59683f", "#9aa681", "#f4e6eb", "#faf5e8", "#faf4e8"):
+                with self.subTest(asset=asset, color=obsolete):
+                    self.assertNotIn(obsolete, css)
+
+    def test_about_page_uses_shared_brand_button_without_bootstrap_warning_colors(self):
+        html = render_to_string("main/about.html")
+        self.assertIn('class="button-primary mt-2"', html)
+        self.assertIn('class="about-empty-message"', html)
+        self.assertNotIn("btn-primary", html)
+        self.assertNotIn("alert-warning", html)
 
 
 class NavbarBrandingTests(SimpleTestCase):
     logo_path = "images/branding/monika-kulik-logo-horizontal.svg"
+
+    def test_calculator_link_is_available_in_shared_navigation(self):
+        html = render_to_string("main/partials/navbar.html")
+        self.assertIn(f'href="{reverse("calorie_calculator")}"', html)
+        self.assertIn("Kalkulator kalorii", html)
 
     def test_final_logo_is_default_without_settings(self):
         html = render_to_string("main/partials/navbar.html")
@@ -43,3 +84,108 @@ class NavbarBrandingTests(SimpleTestCase):
                 attribute = name.rsplit("}", 1)[-1].lower()
                 self.assertNotEqual(attribute, "href")
                 self.assertFalse(attribute.startswith("on"))
+
+
+class WebsitePortraitTests(SimpleTestCase):
+    hero_asset = "images/portraits/monika-kulik-hero-20260903.webp"
+    about_asset = "images/portraits/monika-kulik-about-20260903.webp"
+
+    def test_home_hero_has_optimized_default_and_eager_loading(self):
+        html = render_to_string("main/partials/hero.html")
+        self.assertIn(self.hero_asset, html)
+        self.assertIn('fetchpriority="high"', html)
+        self.assertNotIn('loading="lazy"', html)
+        self.assertIn('width="1073"', html)
+        self.assertIn('height="1466"', html)
+        self.assertNotIn("images/monika.png", html)
+
+    def test_about_preview_uses_portrait_and_loads_lazily(self):
+        html = render_to_string("main/partials/about_preview.html")
+        self.assertIn(self.about_asset, html)
+        self.assertIn('loading="lazy"', html)
+        self.assertNotIn(self.hero_asset, html)
+
+    def test_dedicated_about_page_uses_same_default_portrait(self):
+        html = render_to_string("main/about.html", {"about_page": AboutPage(title="O mnie", description="Opis bez zmian")})
+        self.assertIn(self.about_asset, html)
+        self.assertIn("Opis bez zmian", html)
+
+    def test_admin_hero_photo_and_text_still_take_precedence(self):
+        page = HomePage(hero_photo="home/hero/custom.png", hero_title="Własny tytuł")
+        page.hero_photo._dimensions_cache = (900, 1200)
+        html = render_to_string("main/partials/hero.html", {"home_page": page})
+        self.assertIn(page.hero_photo.url, html)
+        self.assertIn('width="900"', html)
+        self.assertIn('height="1200"', html)
+        self.assertIn("Własny tytuł", html)
+        self.assertNotIn(self.hero_asset, html)
+
+    def test_admin_about_photo_takes_precedence_on_both_pages(self):
+        page = AboutPage(photo="about/custom.png", title="O mnie", description="Mój opis")
+        page.photo._dimensions_cache = (800, 1000)
+        for template in ("main/partials/about_preview.html", "main/about.html"):
+            with self.subTest(template=template):
+                html = render_to_string(template, {"about_page": page})
+                self.assertIn(page.photo.url, html)
+                self.assertIn('width="800"', html)
+                self.assertIn("Mój opis", html)
+                self.assertNotIn(self.about_asset, html)
+
+    def test_web_images_keep_dimensions_and_hero_transparency(self):
+        for asset, has_alpha in ((self.hero_asset, True), (self.about_asset, False)):
+            with self.subTest(asset=asset):
+                path = finders.find(asset)
+                self.assertIsNotNone(path)
+                with Image.open(path) as portrait:
+                    self.assertEqual(portrait.size, (1073, 1466))
+                    self.assertEqual(portrait.format, "WEBP")
+                    self.assertEqual("A" in portrait.getbands(), has_alpha)
+                    if has_alpha:
+                        self.assertEqual(portrait.getpixel((0, 0))[3], 0)
+                        self.assertEqual(portrait.getpixel((550, 300))[3], 255)
+
+
+class CalorieCalculatorPageTests(TestCase):
+    def test_page_renders_with_active_navigation_and_no_database_writes(self):
+        with CaptureQueriesContext(connection) as queries:
+            response = self.client.get(reverse("calorie_calculator"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "main/calorie_calculator.html")
+        self.assertContains(response, "Ile energii")
+        self.assertContains(response, "Oblicz zapotrzebowanie")
+        self.assertContains(response, 'class="navigation-link is-active"')
+        self.assertContains(response, 'aria-current="page"', count=1)
+        for query in queries:
+            self.assertTrue(query["sql"].lstrip().upper().startswith("SELECT"), query["sql"])
+
+    def test_calculation_is_local_and_sources_and_limitations_are_visible(self):
+        response = self.client.get(reverse("calorie_calculator"))
+        self.assertContains(response, 'type="module"')
+        self.assertContains(response, "js/calorie-calculator.mjs")
+        self.assertContains(response, "Nie wysyłamy ich na serwer")
+        self.assertContains(response, "Dla osób pełnoletnich")
+        self.assertContains(response, "W ciąży nie wyznaczamy celu redukcji")
+        self.assertContains(response, "uproszczony wzór Harrisa–Benedicta")
+        self.assertContains(response, "https://dietoterapia-lenartowicz.pl/kalkulator-zapotrzebowania-kalorycznego")
+        self.assertContains(response, 'id="calculate-button" type="submit" disabled')
+        self.assertContains(response, "<noscript>")
+        for field in ("age", "height", "weight", "condition", "trimester", "steps", "trainingType", "frequency"):
+            self.assertNotContains(response, f'name="{field}"')
+
+    def test_four_steps_and_all_reference_variables_are_present(self):
+        response = self.client.get(reverse("calorie_calculator"))
+        self.assertContains(response, 'data-calorie-step=', count=4)
+        self.assertContains(response, 'data-step-link=', count=4)
+        for field in ("sex", "age", "height", "weight", "condition", "trimester", "work", "steps", "training", "trainingType", "frequency", "goal"):
+            self.assertContains(response, f'data-field="{field}"')
+        for result in ("target", "resting", "maintenance", "activity", "condition", "goal"):
+            self.assertContains(response, f'id="{result}-value"')
+
+    def test_calculator_does_not_accept_patient_data_posts(self):
+        response = self.client.post(reverse("calorie_calculator"), {"weight": "70"})
+        self.assertEqual(response.status_code, 405)
+
+    def test_calculator_assets_are_discoverable(self):
+        for asset in ("css/calorie-calculator.css", "js/calorie-calculator.mjs", "js/calorie-calculator-core.mjs"):
+            with self.subTest(asset=asset):
+                self.assertIsNotNone(finders.find(asset))

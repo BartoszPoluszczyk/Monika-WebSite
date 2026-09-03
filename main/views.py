@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.http import require_GET
 
 from .models import (
     AboutPage,
@@ -38,6 +39,12 @@ def home(request):
         "main/home.html",
         context,
     )
+
+
+@require_GET
+def calorie_calculator(request):
+    # Inputs and calculations stay in the browser; no patient data is stored.
+    return render(request, "main/calorie_calculator.html")
 
 
 def about(request):

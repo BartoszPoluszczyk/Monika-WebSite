@@ -1,0 +1,391 @@
+{
+  "source": "https://dietoterapia-lenartowicz.pl/kalkulator-zapotrzebowania-kalorycznego",
+  "checkedOn": "2026-09-03",
+  "method": "Manual browser form submissions with synthetic examples. Values read from the result's displayed counter targets, not mid-animation.",
+  "baseline": {
+    "sex": "female",
+    "age": 35,
+    "height": 165,
+    "weight": 65,
+    "condition": "none",
+    "trimester": "first",
+    "work": "sedentary",
+    "steps": "low",
+    "training": "no",
+    "trainingType": "light",
+    "frequency": "one_two",
+    "goal": "maintain"
+  },
+  "cases": [
+    {
+      "name": "sitting_medium_steps",
+      "input": {
+        "steps": "medium"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1906,
+        "target": 1906
+      }
+    },
+    {
+      "name": "sitting_high_steps",
+      "input": {
+        "steps": "high"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1976,
+        "target": 1976
+      }
+    },
+    {
+      "name": "physical_low_steps",
+      "input": {
+        "work": "physical"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2188,
+        "target": 2188
+      }
+    },
+    {
+      "name": "physical_medium_steps",
+      "input": {
+        "work": "physical",
+        "steps": "medium"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2258,
+        "target": 2258
+      }
+    },
+    {
+      "name": "physical_high_steps",
+      "input": {
+        "work": "physical",
+        "steps": "high"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2329,
+        "target": 2329
+      }
+    },
+    {
+      "name": "light_1_2",
+      "input": {
+        "training": "yes",
+        "trainingType": "light"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1906,
+        "target": 1906
+      }
+    },
+    {
+      "name": "light_3",
+      "input": {
+        "training": "yes",
+        "trainingType": "light",
+        "frequency": "three"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1948,
+        "target": 1948
+      }
+    },
+    {
+      "name": "light_4_6",
+      "input": {
+        "training": "yes",
+        "trainingType": "light",
+        "frequency": "four_six"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2004,
+        "target": 2004
+      }
+    },
+    {
+      "name": "intense_1_2",
+      "input": {
+        "training": "yes",
+        "trainingType": "intense"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1976,
+        "target": 1976
+      }
+    },
+    {
+      "name": "intense_3",
+      "input": {
+        "training": "yes",
+        "trainingType": "intense",
+        "frequency": "three"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2047,
+        "target": 2047
+      }
+    },
+    {
+      "name": "intense_4_6",
+      "input": {
+        "training": "yes",
+        "trainingType": "intense",
+        "frequency": "four_six"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 2117,
+        "target": 2117
+      }
+    },
+    {
+      "name": "male_baseline",
+      "input": {
+        "sex": "male",
+        "age": 30,
+        "height": 180,
+        "weight": 80
+      },
+      "expected": {
+        "resting": 1858,
+        "maintenance": 2415,
+        "target": 2415
+      }
+    },
+    {
+      "name": "combined_max",
+      "input": {
+        "sex": "male",
+        "age": 30,
+        "height": 180,
+        "weight": 80,
+        "work": "physical",
+        "steps": "high",
+        "training": "yes",
+        "trainingType": "intense",
+        "frequency": "four_six"
+      },
+      "expected": {
+        "resting": 1858,
+        "maintenance": 3437,
+        "target": 3437
+      }
+    },
+    {
+      "name": "combined_mid",
+      "input": {
+        "age": 42,
+        "height": 172,
+        "weight": 70.5,
+        "work": "physical",
+        "steps": "medium",
+        "training": "yes",
+        "trainingType": "light",
+        "frequency": "three"
+      },
+      "expected": {
+        "resting": 1444,
+        "maintenance": 2426,
+        "target": 2426
+      }
+    },
+    {
+      "name": "deficit300",
+      "input": {
+        "goal": "lose300"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 1535
+      }
+    },
+    {
+      "name": "deficit500",
+      "input": {
+        "goal": "lose500"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 1335
+      }
+    },
+    {
+      "name": "surplus300",
+      "input": {
+        "goal": "gain300"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2135
+      }
+    },
+    {
+      "name": "surplus500",
+      "input": {
+        "goal": "gain500"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2335
+      }
+    },
+    {
+      "name": "pregnancy1",
+      "input": {
+        "condition": "pregnancy",
+        "trimester": "first"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 1905
+      }
+    },
+    {
+      "name": "pregnancy2",
+      "input": {
+        "condition": "pregnancy",
+        "trimester": "second"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2095
+      }
+    },
+    {
+      "name": "pregnancy3",
+      "input": {
+        "condition": "pregnancy",
+        "trimester": "third"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2335
+      }
+    },
+    {
+      "name": "nursing",
+      "input": {
+        "condition": "nursing"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2335
+      }
+    },
+    {
+      "name": "partial_nursing",
+      "input": {
+        "condition": "partial"
+      },
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 2235
+      }
+    },
+    {
+      "name": "female_baseline",
+      "input": {},
+      "expected": {
+        "resting": 1412,
+        "maintenance": 1835,
+        "target": 1835
+      }
+    },
+    {
+      "name": "female_weight_plus1",
+      "input": {
+        "weight": 66
+      },
+      "expected": {
+        "resting": 1421,
+        "maintenance": 1847,
+        "target": 1847
+      }
+    },
+    {
+      "name": "female_height_plus1",
+      "input": {
+        "height": 166
+      },
+      "expected": {
+        "resting": 1413,
+        "maintenance": 1837,
+        "target": 1837
+      }
+    },
+    {
+      "name": "female_age_plus1",
+      "input": {
+        "age": 36
+      },
+      "expected": {
+        "resting": 1407,
+        "maintenance": 1829,
+        "target": 1829
+      }
+    },
+    {
+      "name": "male_weight_plus1",
+      "input": {
+        "sex": "male",
+        "weight": 81,
+        "height": 180,
+        "age": 30
+      },
+      "expected": {
+        "resting": 1872,
+        "maintenance": 2433,
+        "target": 2433
+      }
+    },
+    {
+      "name": "male_height_plus1",
+      "input": {
+        "sex": "male",
+        "weight": 80,
+        "height": 181,
+        "age": 30
+      },
+      "expected": {
+        "resting": 1863,
+        "maintenance": 2422,
+        "target": 2422
+      }
+    },
+    {
+      "name": "male_age_plus1",
+      "input": {
+        "sex": "male",
+        "weight": 80,
+        "height": 180,
+        "age": 31
+      },
+      "expected": {
+        "resting": 1851,
+        "maintenance": 2407,
+        "target": 2407
+      }
+    }
+  ]
+}

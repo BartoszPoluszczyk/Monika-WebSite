@@ -12,16 +12,24 @@
 
                     <img
                         src="{{ about_page.photo.url }}"
-                        alt="Dietetyk Monika"
+                        alt="Monika Kulik — dietetyk kliniczny"
                         class="home-about-image"
+                        width="{{ about_page.photo.width }}"
+                        height="{{ about_page.photo.height }}"
+                        loading="lazy"
+                        decoding="async"
                     >
 
                 {% else %}
 
                     <img
-                        src="{% static 'images/monika.png' %}"
-                        alt="Dietetyk Monika"
+                        src="{% static 'images/portraits/monika-kulik-about-20260903.webp' %}"
+                        alt="Monika Kulik — dietetyk kliniczny"
                         class="home-about-image"
+                        width="1073"
+                        height="1466"
+                        loading="lazy"
+                        decoding="async"
                     >
 
                 {% endif %}

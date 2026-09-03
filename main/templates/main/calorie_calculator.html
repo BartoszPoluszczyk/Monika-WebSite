@@ -1,0 +1,127 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block title %}Kalkulator kalorii | Monika Kulik{% endblock %}
+{% block extra_css %}
+<meta name="description" content="Oblicz PPM, CPM i orientacyjny bilans energii. Uwzględnij pracę, kroki, treningi i swój cel. Bez logowania i zapisywania danych.">
+<link rel="stylesheet" href="{% static 'css/calorie-calculator.css' %}?v=brand-20260903">
+{% endblock %}
+{% block content %}
+<section class="calorie-page site-container" aria-labelledby="calorie-title">
+    <header class="calorie-heading">
+        <p class="section-eyebrow">Zrozum potrzeby swojego organizmu</p>
+        <h1 class="section-title" id="calorie-title">Ile energii <span>potrzebujesz?</span></h1>
+        <p class="section-description">Twój dzień, aktywność i cel mają znaczenie. Przejdź przez cztery krótkie kroki i poznaj szacunkowe zapotrzebowanie na energię.</p>
+    </header>
+    <div class="calorie-layout">
+        <div class="calorie-form-panel">
+            <p class="calorie-scope">Dla osób pełnoletnich. Wynik jest orientacyjny, nie jest gotową dietą ani zaleceniem medycznym.</p>
+            {# Values stay in this browser. No numeric/select names, no server submission. #}
+            <form id="calorie-calculator" autocomplete="off" novalidate>
+                <nav aria-label="Etapy kalkulatora">
+                    <ol class="calorie-progress">
+                        <li><button type="button" data-step-link="0" aria-controls="calorie-step-0" aria-current="step" disabled><span aria-hidden="true">01</span>Dane</button></li>
+                        <li><button type="button" data-step-link="1" aria-controls="calorie-step-1" disabled><span aria-hidden="true">02</span>Aktywność</button></li>
+                        <li><button type="button" data-step-link="2" aria-controls="calorie-step-2" disabled><span aria-hidden="true">03</span>Trening</button></li>
+                        <li><button type="button" data-step-link="3" aria-controls="calorie-step-3" disabled><span aria-hidden="true">04</span>Cel</button></li>
+                    </ol>
+                </nav>
+                <div id="calculator-errors" class="calorie-error-summary" tabindex="-1" hidden>Sprawdź zaznaczone pola. Pod każdym z nich znajdziesz podpowiedź.</div>
+                <section id="calorie-step-0" data-calorie-step="0" aria-labelledby="step-title-0">
+                    <div class="calorie-panel-heading"><div><h2 id="step-title-0" tabindex="-1">Zacznijmy od Ciebie</h2><p>Krok 1 z 4 · Podstawowe dane do obliczeń.</p></div></div>
+                    <fieldset class="calorie-field"><legend>Płeć — wariant wzoru</legend><div class="calorie-radio-group"><label class="calorie-radio"><input type="radio" name="calc-sex" data-field="sex" value="female" checked aria-describedby="sex-error sex-hint"><span>Kobieta</span></label>
+<label class="calorie-radio"><input type="radio" name="calc-sex" data-field="sex" value="male" aria-describedby="sex-error sex-hint"><span>Mężczyzna</span></label></div><p class="calorie-hint" id="sex-hint">Wzór wykorzystuje współczynniki zależne od płci biologicznej.</p><p class="calorie-field-error" id="sex-error"></p></fieldset>
+                    <div class="calorie-measurements">
+                        <div class="calorie-field"><label for="age">Wiek <span>(lata)</span></label><input id="age" data-field="age" type="text" inputmode="numeric" placeholder="np. 35" maxlength="3" required aria-describedby="age-error"><p class="calorie-field-error" id="age-error"></p></div>
+<div class="calorie-field"><label for="height">Wzrost <span>(cm)</span></label><input id="height" data-field="height" type="text" inputmode="numeric" placeholder="np. 170" maxlength="3" required aria-describedby="height-error"><p class="calorie-field-error" id="height-error"></p></div>
+<div class="calorie-field"><label for="weight">Masa ciała <span>(kg)</span></label><input id="weight" data-field="weight" type="text" inputmode="decimal" placeholder="np. 70,5" maxlength="5" required aria-describedby="weight-error"><p class="calorie-field-error" id="weight-error"></p></div>
+                    </div>
+                    <div id="condition-fields">
+                        <div class="calorie-field"><label for="condition">Ciąża lub karmienie piersią</label><select id="condition" data-field="condition" aria-describedby="condition-error"><option value="none">Nie dotyczy</option><option value="pregnancy">Jestem w ciąży</option><option value="nursing">Karmię piersią</option><option value="partial">Karmię częściowo</option></select><p class="calorie-field-error" id="condition-error"></p></div>
+                        <div id="trimester-fields" hidden><div class="calorie-field"><label for="trimester">Trymestr ciąży</label><select id="trimester" data-field="trimester" aria-describedby="trimester-error"><option value="first">I trymestr · +70 kcal</option><option value="second">II trymestr · +260 kcal</option><option value="third">III trymestr · +500 kcal</option></select><p class="calorie-field-error" id="trimester-error"></p></div></div>
+                        <p class="calorie-scope" id="maternal-note" hidden>Dodatki są uproszczonymi założeniami kalkulatora, nie indywidualną normą. W ciąży i podczas karmienia ustal dietę ze specjalistą.</p>
+                    </div>
+                </section>
+                <section id="calorie-step-1" data-calorie-step="1" aria-labelledby="step-title-1" hidden>
+                    <div class="calorie-panel-heading"><div><h2 id="step-title-1" tabindex="-1">Jak wygląda Twój dzień?</h2><p>Krok 2 z 4 · Ruch poza zaplanowanymi treningami.</p></div></div>
+                    <fieldset class="calorie-field"><legend>Rodzaj pracy</legend><div class="calorie-radio-group"><label class="calorie-radio"><input type="radio" name="calc-work" data-field="work" value="sedentary" checked aria-describedby="work-error work-hint"><span>Siedząca</span></label>
+<label class="calorie-radio"><input type="radio" name="calc-work" data-field="work" value="physical" aria-describedby="work-error work-hint"><span>Fizyczna</span></label></div><p class="calorie-hint" id="work-hint">Wybierz charakter większości dnia, również jeśli obecnie nie pracujesz zawodowo.</p><p class="calorie-field-error" id="work-error"></p></fieldset>
+                    <div class="calorie-field"><label for="steps">Średnia dzienna liczba kroków</label><select id="steps" data-field="steps" aria-describedby="steps-error steps-hint"><option value="low">Mniej niż 3 000</option><option value="medium">3 000–7 000</option><option value="high">Ponad 7 000</option></select><p class="calorie-hint" id="steps-hint">Pomyśl o typowym tygodniu, nie o najbardziej aktywnym dniu.</p><p class="calorie-field-error" id="steps-error"></p></div>
+                </section>
+                <section id="calorie-step-2" data-calorie-step="2" aria-labelledby="step-title-2" hidden>
+                    <div class="calorie-panel-heading"><div><h2 id="step-title-2" tabindex="-1">Czy jest też czas na trening?</h2><p>Krok 3 z 4 · Wybierz najbliższy Ci wariant.</p></div></div>
+                    <fieldset class="calorie-field"><legend>Czy regularnie trenujesz?</legend><div class="calorie-radio-group"><label class="calorie-radio"><input type="radio" name="calc-training" data-field="training" value="no" checked aria-describedby="training-error"><span>Nie</span></label>
+<label class="calorie-radio"><input type="radio" name="calc-training" data-field="training" value="yes" aria-describedby="training-error"><span>Tak</span></label></div><p class="calorie-field-error" id="training-error"></p></fieldset>
+                    <div id="training-fields" hidden>
+                        <div class="calorie-field"><label for="trainingType">Rodzaj treningu</label><select id="trainingType" data-field="trainingType" aria-describedby="trainingType-error"><option value="light">Lekki / cardio</option><option value="intense">Intensywny / siłowy</option></select><p class="calorie-field-error" id="trainingType-error"></p></div>
+                        <div class="calorie-field"><label for="frequency">Treningi w tygodniu</label><select id="frequency" data-field="frequency" aria-describedby="frequency-error"><option value="one_two">1–2 razy</option><option value="three">3 razy</option><option value="four_six">4–6 razy</option></select><p class="calorie-field-error" id="frequency-error"></p></div>
+                    </div>
+                    <p class="calorie-hint">To uproszczony podział. Kalkulator nie uwzględnia długości każdej sesji ani indywidualnych różnic w wydatku energetycznym.</p>
+                </section>
+                <section id="calorie-step-3" data-calorie-step="3" aria-labelledby="step-title-3" hidden>
+                    <div class="calorie-panel-heading"><div><h2 id="step-title-3" tabindex="-1">Co chcesz sprawdzić?</h2><p>Krok 4 z 4 · Cel zmienia bilans, nie samą wartość CPM.</p></div></div>
+                    <fieldset class="calorie-field"><legend>Twój cel</legend><div class="calorie-radio-group calorie-goals"><label class="calorie-radio"><input type="radio" name="calc-goal" data-field="goal" value="maintain" checked aria-describedby="goal-error"><span>Utrzymanie masy ciała <small>bez zmiany bilansu</small></span></label>
+<label class="calorie-radio"><input type="radio" name="calc-goal" data-field="goal" value="gain300" aria-describedby="goal-error"><span>Zwiększenie masy <small>+300 kcal / dzień</small></span></label>
+<label class="calorie-radio"><input type="radio" name="calc-goal" data-field="goal" value="gain500" aria-describedby="goal-error"><span>Zwiększenie masy <small>+500 kcal / dzień</small></span></label>
+<label class="calorie-radio"><input type="radio" name="calc-goal" data-field="goal" value="lose300" aria-describedby="goal-error"><span>Zmniejszenie masy <small>−300 kcal / dzień</small></span></label>
+<label class="calorie-radio"><input type="radio" name="calc-goal" data-field="goal" value="lose500" aria-describedby="goal-error"><span>Zmniejszenie masy <small>−500 kcal / dzień</small></span></label></div><p class="calorie-field-error" id="goal-error"></p></fieldset>
+                    <p class="calorie-scope" id="pregnancy-goal-note" hidden>W ciąży nie wyznaczamy celu redukcji ani dodatkowej nadwyżki. Uwzględniamy wyłącznie dodatek dla wybranego trymestru.</p>
+                    <p class="calorie-scope" id="nursing-goal-note" hidden>Przy karmieniu dodajemy 500 kcal, a przy karmieniu częściowym 400 kcal. Zmianę bilansu potraktuj tylko jako symulację do omówienia ze specjalistą.</p>
+                    <p class="calorie-hint">Różnica 300 lub 500 kcal jest wariantem obliczeń, a nie gwarancją określonej zmiany masy. Odpowiedni cel zależy także od stanu zdrowia.</p>
+                </section>
+                <div class="calorie-actions">
+                    <button class="button-secondary" id="calculator-back" type="button" hidden>Wstecz</button>
+                    <button class="button-primary" id="calculator-next" type="button" disabled>Dalej <span aria-hidden="true">→</span></button>
+                    <button class="button-primary" id="calculate-button" type="submit" disabled hidden>Oblicz zapotrzebowanie <span aria-hidden="true">→</span></button>
+                    <button class="calorie-reset" type="reset">Wyczyść</button>
+                </div>
+                <p class="calorie-hint" id="calculator-loading">Uruchamianie kalkulatora… Jeśli przycisk pozostaje nieaktywny, odśwież stronę i sprawdź, czy JavaScript jest włączony.</p>
+                <noscript><p class="calorie-error-summary">Do obliczeń potrzebny jest JavaScript. Włącz go w przeglądarce i odśwież stronę.</p></noscript>
+                <p class="calorie-privacy">Twoje dane pozostają w tej karcie przeglądarki. Nie wysyłamy ich na serwer ani nie zapisujemy w bazie.</p>
+            </form>
+        </div>
+        <aside class="calorie-results" aria-label="Wynik kalkulatora">
+            <div class="calorie-result-card">
+                <p class="section-eyebrow">Twoje zapotrzebowanie</p>
+                <div id="calculator-empty" class="calorie-empty">
+                    <svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M17 49C16 26 29 15 50 13C50 35 40 48 20 46M16 54L40 25M27 41L27 29M33 34L44 34" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <h2>Twój wynik czeka</h2><p id="calculator-empty-text">Przejdź przez cztery kroki, aby poznać PPM, CPM i wynik dla wybranego celu.</p>
+                </div>
+                <div id="calculator-result" tabindex="-1" hidden>
+                    <h2>Wynik dla wybranego celu</h2>
+                    <p class="calorie-total" id="target-total"><span class="calorie-approx">szacunkowo</span><strong id="target-value"></strong><span>kcal / dzień</span></p>
+                    <p class="calorie-result-note" id="result-goal"></p>
+                    <dl class="calorie-breakdown">
+                        <div><dt>PPM · energia spoczynkowa</dt><dd id="resting-value"></dd></div>
+                        <div><dt>CPM · codzienne zapotrzebowanie</dt><dd id="maintenance-value"></dd></div>
+                        <div><dt>Współczynnik aktywności</dt><dd id="activity-value"></dd></div>
+                        <div id="condition-result-row" hidden><dt>Dodatek: ciąża / karmienie</dt><dd id="condition-value"></dd></div>
+                        <div><dt>Zmiana bilansu dla celu</dt><dd id="goal-value"></dd></div>
+                    </dl>
+                    <div id="calculator-warnings" class="calorie-result-warnings" hidden></div>
+                    <p class="calorie-hint">To szacunek, nie pomiar metabolizmu ani indywidualna dieta. PPM nie jest zalecaną kalorycznością posiłków. Zaokrąglenie do 1 kcal służy porównaniu obliczeń, nie oznacza takiej dokładności.</p>
+                </div>
+            </div>
+            <div class="calorie-consultation">
+                <h2>Liczby to dopiero początek</h2>
+                <p>Twój cel, zdrowie i codzienne nawyki też mają znaczenie. Podczas konsultacji wspólnie ustalimy, co będzie odpowiednie dla Ciebie.</p>
+                <a href="{% url 'booking:book' %}" class="button-secondary">Porozmawiajmy na konsultacji <span aria-hidden="true">→</span></a>
+            </div>
+        </aside>
+    </div>
+    <details class="calorie-method">
+        <summary>Jak obliczamy wynik i kiedy warto zachować ostrożność?</summary>
+        <div>
+            <p>Stosujemy uproszczony wzór Harrisa–Benedicta: dla kobiet 655 + 9,6 × masa (kg) + 1,8 × wzrost (cm) − 4,7 × wiek, a dla mężczyzn 66 + 13,7 × masa + 5 × wzrost − 6,8 × wiek. To nie jest wzór Mifflina ani zrewidowany wariant Harrisa–Benedicta z 1984 r.</p>
+            <p>Współczynnik bazowy wynosi 1,30 przy pracy siedzącej i 1,55 przy fizycznej. Kroki dodają odpowiednio 0 / 0,05 / 0,10. Trening lekki dodaje 0,05 / 0,08 / 0,12, a intensywny 0,10 / 0,15 / 0,20 dla kolejnych częstotliwości. Bez treningu dodatek wynosi zero. CPM = niezaokrąglona PPM × współczynnik aktywności.</p>
+            <p>Wynik dla celu to CPM z korektą 0, ±300 lub ±500 kcal. W ciąży dodajemy 70 / 260 / 500 kcal zależnie od trymestru, bez korekty celu; przy karmieniu 500 kcal, a częściowym 400 kcal. Te dodatki i współczynniki odtwarzają założenia wskazanego kalkulatora, nie są indywidualnymi normami żywienia. PPM, CPM i wynik zaokrąglamy do całych kcal dopiero na końcu.</p>
+            <p>Wzór i współczynniki zweryfikowano porównawczo z <a href="https://dietoterapia-lenartowicz.pl/kalkulator-zapotrzebowania-kalorycznego" target="_blank" rel="noopener noreferrer">kalkulatorem Dietoterapia Lenartowicz</a> (3 września 2026). Informacje o wariantach wzoru: <a href="https://nutritionalassessment.mumc.nl/en/calculating-energy-expenditure" target="_blank" rel="noopener noreferrer">Maastricht UMC+</a>.</p>
+            <p>Przyjmujemy wiek 18–100 lat, wzrost 100–250 cm i masę 20–300 kg. To granice formularza, nie potwierdzenie wiarygodności wzoru w całym tym zakresie. Nie pokazujemy celu redukcyjnego przy BMI poniżej 18,5 ani celu poniżej 1000 kcal. Te zabezpieczenia nie zastępują oceny dietetycznej; wyższy wynik nie oznacza automatycznie bezpiecznej diety. Nie wyznaczamy diety dzieci.</p>
+            <p>Przy chorobach, nietypowej budowie ciała, ciąży i karmieniu wynik wymaga szczególnie ostrożnej interpretacji. Aktualne zalecenia i etap laktacji mogą oznaczać inne potrzeby niż stałe dodatki w kalkulatorze. Więcej: <a href="https://ncez.pzh.gov.pl/ciaza-i-macierzynstwo/karmienie/laktacja-zalecenia-zywieniowe/" target="_blank" rel="noopener noreferrer">NCEŻ — żywienie podczas laktacji</a>; <a href="https://www.niddk.nih.gov/bwp" target="_blank" rel="noopener noreferrer">NIDDK — ograniczenia kalkulatorów masy ciała</a>.</p>
+        </div>
+    </details>
+    <p class="calorie-sr-only" id="calculator-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script type="module" src="{% static 'js/calorie-calculator.mjs' %}"></script>
+{% endblock %}
