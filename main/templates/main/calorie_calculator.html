@@ -3,7 +3,7 @@
 {% block title %}Kalkulator kalorii | Monika Kulik{% endblock %}
 {% block extra_css %}
 <meta name="description" content="Oblicz PPM, CPM i orientacyjny bilans energii. Uwzględnij pracę, kroki, treningi i swój cel. Bez logowania i zapisywania danych.">
-<link rel="stylesheet" href="{% static 'css/calorie-calculator.css' %}?v=palette-v2-20260905">
+<link rel="stylesheet" href="{% static 'css/calorie-calculator.css' %}?v=brand-palette-20260906">
 {% endblock %}
 {% block content %}
 <section class="calorie-page site-container" aria-labelledby="calorie-title">
@@ -104,7 +104,7 @@
             <div class="calorie-consultation">
                 <h2>Liczby to dopiero początek</h2>
                 <p>Twój cel, zdrowie i codzienne nawyki też mają znaczenie. Podczas konsultacji wspólnie ustalimy, co będzie odpowiednie dla Ciebie.</p>
-                <a href="{% url 'booking:book' %}" class="button-secondary">Porozmawiajmy na konsultacji <span aria-hidden="true">→</span></a>
+                <a href="{% url 'booking:book' %}" class="button-primary">Porozmawiajmy na konsultacji <span aria-hidden="true">→</span></a>
             </div>
         </aside>
     </div>

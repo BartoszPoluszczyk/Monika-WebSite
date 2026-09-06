@@ -29,11 +29,11 @@
 .calorie-field input::placeholder { color: var(--color-text-secondary); opacity: 1; }
 .calorie-field select { padding-right: 8px; text-overflow: ellipsis; }
 .calorie-page :is(input, select, button, a, summary):focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 3px; }
-.calorie-field input[aria-invalid="true"], .calorie-field select[aria-invalid="true"], .calorie-radio:has(input[aria-invalid="true"]) { border-color: #a14639; }
+.calorie-field input[aria-invalid="true"], .calorie-field select[aria-invalid="true"], .calorie-radio:has(input[aria-invalid="true"]) { border-color: var(--color-feedback-border); }
 .calorie-hint { margin: 9px 0 0; color: var(--color-text-secondary); font-size: .72rem; line-height: 1.65; }
-.calorie-field-error { margin: 7px 0 0; color: #93392f; font-size: .75rem; line-height: 1.5; }
+.calorie-field-error { margin: 7px 0 0; color: var(--color-feedback-text); font-size: .75rem; line-height: 1.5; }
 .calorie-field-error:empty { display: none; }
-.calorie-error-summary { margin-bottom: 20px; padding: 12px 14px; border: 1px solid #c99d92; border-radius: 8px; background: #fff4ee; color: #81352d; font-size: .8rem; line-height: 1.6; }
+.calorie-error-summary { margin-bottom: 20px; padding: 12px 14px; border: 1px solid var(--color-feedback-border); border-radius: 8px; background: var(--color-feedback-surface); color: var(--color-feedback-text); font-size: .8rem; line-height: 1.6; }
 .calorie-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 25px; }
 .calorie-actions .button-primary { flex: none; font-size: .8rem; }
 .calorie-actions .button-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
@@ -59,7 +59,7 @@
 .calorie-consultation { padding: 4px 10px 0; }
 .calorie-consultation h2 { font-size: 1.2rem; }
 .calorie-consultation p { margin: 12px 0 18px; color: var(--color-text-secondary); font-size: .8rem; line-height: 1.8; }
-.calorie-consultation .button-secondary { font-size: .75rem; }
+.calorie-consultation .button-primary { font-size: .75rem; }
 .calorie-method { margin-top: 30px; border-top: 1px solid var(--color-border-subtle); border-bottom: 1px solid var(--color-border-subtle); font-size: .8rem; line-height: 1.8; }
 .calorie-method summary { padding: 18px 4px; color: var(--color-accent-strong); cursor: pointer; font-weight: 500; }
 .calorie-method > div { max-width: 900px; padding: 0 4px 6px; color: var(--color-text-secondary); }
@@ -71,7 +71,7 @@
 .calorie-progress button { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 100%; padding: 10px 3px; border: 0; border-bottom: 2px solid var(--color-border-subtle); background: transparent; color: var(--color-text-secondary); font: inherit; font-size: .73rem; }
 .calorie-progress button > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-border-subtle); border-radius: 50%; font-size: .65rem; }
 .calorie-progress button[aria-current="step"] { border-color: var(--color-accent-strong); color: var(--color-accent-strong); font-weight: 600; }
-.calorie-progress button[aria-current="step"] > span { background: var(--color-accent-strong); color: white; border-color: var(--color-accent-strong); }
+.calorie-progress button[aria-current="step"] > span { background: var(--palette-navy); color: var(--color-on-dark); border-color: var(--palette-navy); }
 .calorie-progress button.is-complete > span { border-color: var(--color-accent); background: var(--color-selection-background); }
 .calorie-progress button:disabled { opacity: .55; cursor: not-allowed; }
 .calorie-page [data-calorie-step] { min-height: 280px; }
@@ -109,5 +109,5 @@
     .calorie-field input[type="text"], .calorie-field select { font-size: 16px; }
     .calorie-actions { flex-direction: column; align-items: stretch; gap: 2px; }
     .calorie-consultation { padding: 2px 8px 0; }
-    .calorie-consultation .button-secondary { width: 100%; }
+    .calorie-consultation .button-primary { width: 100%; }
 }

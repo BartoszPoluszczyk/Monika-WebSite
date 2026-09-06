@@ -27,6 +27,8 @@ class WebsitePaletteTests(SimpleTestCase):
             "--color-text-primary: var(--palette-navy);",
             "--color-accent: var(--palette-green-accent);",
             "--color-cta-background: var(--palette-orange);",
+            "--color-secondary-button-background: var(--palette-navy);",
+            "--color-feedback-border: var(--palette-orange);",
         ):
             with self.subTest(declaration=declaration):
                 self.assertIn(declaration, css)
@@ -45,9 +47,19 @@ class WebsitePaletteTests(SimpleTestCase):
         self.assertNotIn("btn-primary", html)
         self.assertNotIn("alert-warning", html)
 
+    def test_booking_emails_use_the_current_brand_palette(self):
+        templates = Path(__file__).resolve().parent.parent / "booking" / "templates" / "booking" / "emails"
+        appointment_email = (templates / "appointment.html").read_text(encoding="utf-8")
+        manager_email = (templates / "manager.html").read_text(encoding="utf-8")
+        for color in ("#E4ECE7", "#BDD0C0", "#6F8F74", "#102F3A"):
+            with self.subTest(color=color):
+                self.assertIn(color, appointment_email)
+                self.assertIn(color, manager_email)
+        self.assertIn("#D98262", appointment_email)
+
 
 class NavbarBrandingTests(SimpleTestCase):
-    logo_path = "images/branding/monika-kulik-logo-horizontal.svg"
+    logo_path = "images/branding/Monika-Kulik-logo-poziome-bez-tla.svg"
 
     def test_calculator_link_is_available_in_shared_navigation(self):
         html = render_to_string("main/partials/navbar.html")
@@ -78,10 +90,14 @@ class NavbarBrandingTests(SimpleTestCase):
         logo = finders.find(self.logo_path)
         self.assertIsNotNone(logo)
         root = ET.parse(logo).getroot()
-        self.assertEqual(root.get("viewBox"), "0 0 682 138")
+        self.assertEqual(root.get("viewBox"), "0 0 1244 315")
         tags = {element.tag.rsplit("}", 1)[-1] for element in root.iter()}
-        self.assertLessEqual(tags, {"svg", "title", "desc", "g", "path"})
+        self.assertLessEqual(tags, {"svg", "title", "desc", "style", "g", "path"})
         self.assertIn("path", tags)
+        self.assertIn(
+            'path[fill="#A9C3A2"] { fill: #6F8F74; }',
+            Path(logo).read_text(encoding="utf-8"),
+        )
         for element in root.iter():
             for name in element.attrib:
                 attribute = name.rsplit("}", 1)[-1].lower()
