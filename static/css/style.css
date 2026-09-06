@@ -310,6 +310,12 @@ a {
 
     body { padding-left: clamp(248px, 24vw, 330px); }
 
+    main .site-container {
+    width: 100%;
+    margin-inline: 0;
+}
+
+    
     .site-navbar {
         position: fixed;
         inset: 0 auto 0 0;
@@ -419,19 +425,6 @@ a {
     flex-direction: column;
 }
 
-.hero-content::after {
-    content: "";
-    position: absolute;
-    top: 69px;
-    right: -25px;
-    width: 105px;
-    height: 170px;
-    z-index: 3;
-    opacity: 0.42;
-    background: radial-gradient(ellipse at 31px 47px, transparent 50%, var(--color-accent) 51% 52%, transparent 53%) 0 0 / 64px 84px no-repeat, radial-gradient(ellipse at 68px 88px, transparent 50%, var(--color-accent) 51% 52%, transparent 53%) 0 0 / 75px 95px no-repeat;
-    transform: rotate(-16deg);
-    pointer-events: none;
-}
 
 .hero-title {
     max-width: 610px;
