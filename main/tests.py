@@ -59,7 +59,7 @@ class WebsitePaletteTests(SimpleTestCase):
 
 
 class NavbarBrandingTests(SimpleTestCase):
-    logo_path = "images/branding/Monika-Kulik-logo-poziome-bez-tla.svg"
+    logo_path = "images/branding/monika-kulik-logo-pionowe.svg"
 
     def test_calculator_link_is_available_in_shared_navigation(self):
         html = render_to_string("main/partials/navbar.html")
@@ -90,14 +90,11 @@ class NavbarBrandingTests(SimpleTestCase):
         logo = finders.find(self.logo_path)
         self.assertIsNotNone(logo)
         root = ET.parse(logo).getroot()
-        self.assertEqual(root.get("viewBox"), "0 0 1244 315")
+        self.assertEqual(root.get("viewBox"), "300 407.5 529 650.5")
         tags = {element.tag.rsplit("}", 1)[-1] for element in root.iter()}
-        self.assertLessEqual(tags, {"svg", "title", "desc", "style", "g", "path"})
+        self.assertLessEqual(tags, {"svg", "title", "desc", "path"})
         self.assertIn("path", tags)
-        self.assertIn(
-            'path[fill="#A9C3A2"] { fill: #6F8F74; }',
-            Path(logo).read_text(encoding="utf-8"),
-        )
+        self.assertIn('fill="#6F8F74"', Path(logo).read_text(encoding="utf-8"))
         for element in root.iter():
             for name in element.attrib:
                 attribute = name.rsplit("}", 1)[-1].lower()

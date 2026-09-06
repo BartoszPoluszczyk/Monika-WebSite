@@ -214,7 +214,7 @@ a {
 }
 
 .navbar-logo-default {
-    width: 248px;
+    width: 92px;
     max-width: 100%;
     height: auto;
 }
@@ -303,6 +303,98 @@ a {
 
 .navbar-toggler span:first-child { transform: translateY(-3px); }
 .navbar-toggler span:last-child { transform: translateY(3px); }
+
+/* Lewy panel na dużych ekranach */
+@media (min-width: 1101px) {
+    html { scroll-padding-top: 28px; }
+
+    body { padding-left: clamp(248px, 24vw, 330px); }
+
+    .site-navbar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: clamp(248px, 24vw, 330px);
+        height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        border: 0;
+        border-right: 1px solid var(--color-border-subtle);
+        border-radius: 0;
+        background: var(--palette-white);
+        backdrop-filter: none;
+        overflow-y: auto;
+    }
+
+    .navbar-inner {
+        min-height: 100%;
+        padding: clamp(40px, 6vh, 66px) clamp(28px, 3vw, 48px) 34px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    .brand { justify-content: center; }
+
+    .navbar-logo-default {
+        width: min(100%, 166px);
+        max-height: 205px;
+    }
+
+    .custom-navigation {
+        width: 100%;
+        margin: clamp(52px, 9vh, 92px) 0 0;
+        display: flex !important;
+        flex: 1;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+    }
+
+    .navigation-links {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    .navigation-link {
+        padding: 11px 0 11px 28px;
+        color: var(--color-text-primary);
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .navigation-link::after {
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        left: 0;
+        width: 0;
+        height: 3px;
+        transform: translateY(-50%);
+        background: var(--color-cta-background);
+        transition: width var(--transition);
+    }
+
+    .navigation-link:hover,
+    .navigation-link.is-active { color: var(--color-text-primary); }
+
+    .navigation-link:hover::after,
+    .navigation-link.is-active::after {
+        right: auto;
+        left: 0;
+        width: 20px;
+    }
+
+    .navbar-cta {
+        width: 100%;
+        min-height: 44px;
+        margin: auto 0 0;
+        border-radius: 8px;
+        font-size: 0.76rem;
+    }
+}
 
 /* Hero */
 
@@ -1657,15 +1749,8 @@ a {
     .booking-service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* Leave room for the logo and the calculator link on small laptops. */
+/* Na tabletach i telefonach panel wraca do zwartego nagłówka. */
 @media (max-width: 1100px) {
-    .company-signature-bar {
-        min-height: 68px;
-        padding-block: 6px;
-    }
-
-    .company-signature-image { height: 55px; }
-
     .navbar-inner {
         min-height: 66px;
         padding: 0 20px;
@@ -1707,7 +1792,7 @@ a {
 }
 
 @media (max-width: 860px) {
-    html { scroll-padding-top: 140px; }
+    html { scroll-padding-top: 84px; }
 
     .site-navbar {
         margin-top: 8px;
@@ -1760,23 +1845,13 @@ a {
     body { font-size: 14px; }
     .brand-name { font-size: 0.92rem; }
 
-    .company-signature-bar {
-        min-height: 60px;
-        padding: 5px 12px;
-    }
-
-    .company-signature-image {
-        width: min(100%, 264px);
-        height: auto;
-    }
-
     .navbar-logo {
         max-width: 145px;
         height: 40px;
     }
 
     .navbar-logo-default {
-        width: 210px;
+        width: 74px;
         max-width: 100%;
         height: auto;
     }
