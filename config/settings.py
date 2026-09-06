@@ -154,3 +154,4 @@ BOOKING_SITE_URL = os.environ.get(
     "BOOKING_SITE_URL",
     "http://127.0.0.1:8000",
 ).rstrip("/")
+
