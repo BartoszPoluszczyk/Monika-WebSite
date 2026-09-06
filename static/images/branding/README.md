@@ -5,8 +5,10 @@
 - `monika-kulik-logo-horizontal.svg` — wariant nagłówkowy z przezroczystym
   tłem. Znak, litery i kolory pochodzą z oryginalnych konturów SVG; elementy
   ułożono poziomo, a linie separatora dostosowano do szerokości napisu.
+- `Monika-Kulik-logo-poziome-bez-tla.svg` — finalny wariant używany w nagłówku
+  strony, z zielenią znaku dopasowaną do aktualnej palety marki (`#6F8F74`).
 
-Wariant poziomy jest domyślnym logo strony. Logo ustawione w panelu
+Finalny wariant poziomy jest domyślnym logo strony. Logo ustawione w panelu
 administracyjnym nadal ma pierwszeństwo; modele i dane nie zostały zmienione.
 
 Plik źródłowy zawiera wektorowe kontury odtworzone ze zrzutu, z widocznymi

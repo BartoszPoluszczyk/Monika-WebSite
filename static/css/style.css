@@ -19,12 +19,18 @@
     --color-accent-soft: var(--palette-green-pastel-strong);
     --color-cta-background: var(--palette-orange);
     --color-cta-background-hover: color-mix(in srgb, var(--palette-orange) 84%, var(--palette-white));
+    --color-secondary-button-background: var(--palette-navy);
+    --color-secondary-button-hover: color-mix(in srgb, var(--palette-navy) 88%, var(--palette-white));
     --color-text-primary: var(--palette-navy);
     --color-text-secondary: color-mix(in srgb, var(--palette-navy) 80%, var(--palette-white));
     --color-border-subtle: color-mix(in srgb, var(--palette-navy) 18%, var(--palette-white));
     --color-border-emphasis: color-mix(in srgb, var(--palette-green-accent) 48%, var(--palette-white));
     --color-selection-background: var(--palette-green-pastel);
     --color-control-disabled: color-mix(in srgb, var(--palette-navy) 38%, var(--palette-white));
+    --color-feedback-border: var(--palette-orange);
+    --color-feedback-surface: color-mix(in srgb, var(--palette-orange) 14%, var(--palette-white));
+    --color-feedback-text: var(--palette-navy);
+    --color-on-dark: var(--palette-white);
     --font-heading: "Playfair Display", Georgia, serif;
     --font-body: "DM Sans", Arial, sans-serif;
     --container-width: 1460px;
@@ -365,7 +371,7 @@ a {
     align-items: center;
     justify-content: center;
     gap: 17px;
-    border: 1px solid var(--color-accent);
+    border: 1px solid transparent;
     border-radius: 9px;
     font-size: 0.75rem;
     font-weight: 500;
@@ -379,8 +385,9 @@ a {
 }
 
 .button-secondary {
-    background: rgba(255, 255, 255, 0.52);
-    color: var(--color-text-primary);
+    border-color: var(--color-secondary-button-background);
+    background: var(--color-secondary-button-background);
+    color: var(--color-on-dark);
 }
 
 .button-primary:hover, .button-secondary:hover { transform: translateY(-1px); }
@@ -391,8 +398,9 @@ a {
 }
 
 .button-secondary:hover {
-    background: var(--palette-green-pastel-strong);
-    color: var(--color-accent-strong);
+    border-color: var(--color-secondary-button-hover);
+    background: var(--color-secondary-button-hover);
+    color: var(--color-on-dark);
 }
 
 .button-arrow {
@@ -838,6 +846,7 @@ a {
     justify-content: space-between;
     border: 1px solid var(--color-cta-background);
     border-radius: 8px;
+    background: var(--color-cta-background);
     color: var(--color-text-primary);
     font-size: 0.65rem;
     font-weight: 500;
@@ -845,7 +854,7 @@ a {
 }
 
 .service-link:hover {
-    background: var(--color-cta-background);
+    background: var(--color-cta-background-hover);
     color: var(--palette-navy);
 }
 
@@ -1027,9 +1036,9 @@ a {
 }
 
 .booking-progress .is-complete b {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: #fff;
+    border-color: var(--palette-navy);
+    background: var(--palette-navy);
+    color: var(--color-on-dark);
 }
 
 .booking-panel {
@@ -1155,8 +1164,8 @@ a {
 }
 
 .booking-calendar-nav a:hover {
-    background: var(--color-accent);
-    color: #fff;
+    background: var(--palette-navy);
+    color: var(--color-on-dark);
 }
 
 .booking-calendar-nav strong {
@@ -1211,9 +1220,9 @@ a {
 
 .booking-day.is-available:hover,
 .booking-day.is-selected {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: #fff;
+    border-color: var(--palette-navy);
+    background: var(--palette-navy);
+    color: var(--color-on-dark);
 }
 
 .booking-day.is-selected span,
@@ -1276,9 +1285,9 @@ a {
 
 .booking-time-option:hover span,
 .booking-time-option input:checked + span {
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    color: #fff;
+    border-color: var(--palette-navy);
+    background: var(--palette-navy);
+    color: var(--color-on-dark);
 }
 
 .booking-time-option input:focus-visible + span {
@@ -1368,10 +1377,10 @@ a {
     align-items: center;
     justify-content: center;
     gap: 18px;
-    border: 1px solid var(--color-accent);
+    border: 1px solid var(--color-secondary-button-background);
     border-radius: 9px;
-    background: var(--color-accent);
-    color: #fff;
+    background: var(--color-secondary-button-background);
+    color: var(--color-on-dark);
     font-family: var(--font-body);
     font-size: 0.72rem;
     font-weight: 500;
@@ -1387,8 +1396,12 @@ a {
 
 .booking-submit:hover,
 .booking-cancel-button:hover {
-    background: var(--color-accent-strong);
     transform: translateY(-1px);
+}
+
+.booking-cancel-button:hover {
+    border-color: var(--color-secondary-button-hover);
+    background: var(--color-secondary-button-hover);
 }
 
 .booking-submit:hover {
@@ -1494,9 +1507,10 @@ a {
 
 .booking-form .errorlist {
     margin: 6px 0 0;
-    padding: 0;
+    padding: 0 0 0 9px;
+    border-left: 2px solid var(--color-feedback-border);
     list-style: none;
-    color: #9d3e36;
+    color: var(--color-feedback-text);
     font-size: 0.62rem;
 }
 
@@ -1580,8 +1594,8 @@ a {
     gap: 10px;
 }
 
-.booking-result-actions .booking-cancel-button { margin-top: 0; background: transparent; color: var(--color-text-primary); }
-.booking-result-actions .booking-cancel-button:hover { background: var(--color-accent-strong); color: #fff; }
+.booking-result-actions .booking-cancel-button { margin-top: 0; border-color: var(--palette-navy); background: transparent; color: var(--color-text-primary); }
+.booking-result-actions .booking-cancel-button:hover { background: var(--palette-navy); color: var(--color-on-dark); }
 
 .booking-status-notice,
 .booking-policy-warning {
