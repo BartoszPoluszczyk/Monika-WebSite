@@ -1,5 +1,21 @@
 {% load static %}
 <nav class="site-navbar" aria-label="Nawigacja główna">
+    <div class="company-signature-bar">
+        <a
+            class="company-signature-link"
+            href="{% url 'home' %}"
+            aria-label="Zdrowienie przez żywienie — strona główna"
+        >
+            <img
+                src="{% static 'images/branding/zdrowienie-przez-zywienie.svg' %}"
+                alt="Zdrowienie przez żywienie"
+                class="company-signature-image"
+                width="660"
+                height="150"
+            >
+        </a>
+    </div>
+
     <div class="site-container navbar-inner">
 
         <a class="brand" href="{% url 'home' %}">
@@ -15,7 +31,7 @@
             {% else %}
 
                 <img
-                    src="{% static 'images/branding/monika-kulik-logo-horizontal.svg' %}"
+                    src="{% static 'images/branding/Monika-Kulik-logo-poziome-bez-tla.svg' %}"
                     alt="Monika Kulik — dietetyk kliniczny, strona główna"
                     class="navbar-logo navbar-logo-default"
                     width="682"

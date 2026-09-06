@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 150" role="img" aria-labelledby="title description">
+  <title id="title">Zdrowienie przez żywienie</title>
+  <desc id="description">Stylizowane drzewo z korzeniami oraz nazwa firmy Zdrowienie przez żywienie.</desc>
+
+  <defs>
+    <path id="leaf" d="M0 0C5-12 18-15 26-8C22 4 9 11 0 0Z"/>
+  </defs>
+
+  <g fill="none" stroke="#6F8F74" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M82 70V20M82 46L55 28M82 50L111 30M61 58L38 44M103 57L128 42M82 35L70 14M82 37L94 13" stroke-width="6"/>
+    <path d="M82 80V104M82 98L61 128M82 101L101 132M72 106L48 119M92 107L119 121M65 118L59 143M99 119L106 143M82 107L82 145" stroke-width="4"/>
+  </g>
+
+  <g fill="#6F8F74">
+    <use href="#leaf" transform="translate(16 36) rotate(-18)"/>
+    <use href="#leaf" transform="translate(34 21) rotate(-42) scale(.9)"/>
+    <use href="#leaf" transform="translate(54 9) rotate(-65) scale(.82)"/>
+    <use href="#leaf" transform="translate(73 4) rotate(-88) scale(.75)"/>
+    <use href="#leaf" transform="translate(95 7) rotate(-112) scale(.82)"/>
+    <use href="#leaf" transform="translate(118 17) rotate(-136) scale(.9)"/>
+    <use href="#leaf" transform="translate(139 35) rotate(-160)"/>
+    <use href="#leaf" transform="translate(43 47) rotate(-35) scale(.72)"/>
+    <use href="#leaf" transform="translate(65 35) rotate(-58) scale(.68)"/>
+    <use href="#leaf" transform="translate(99 34) rotate(-122) scale(.68)"/>
+    <use href="#leaf" transform="translate(122 47) rotate(-145) scale(.72)"/>
+  </g>
+
+  <!-- Wszystkie separatory korzystają z tej samej osi y=75. -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M10 75H154" stroke="#102F3A" stroke-width="8"/>
+    <path d="M204 75H315M459 75H570" stroke="#6F8F74" stroke-width="2"/>
+  </g>
+
+  <g fill="#102F3A" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+    <text x="387" y="50" font-size="39" letter-spacing="5">ZDROWIENIE</text>
+    <text x="387" y="133" font-size="39" letter-spacing="7">ŻYWIENIE</text>
+  </g>
+
+  <text
+    x="387"
+    y="75"
+    fill="#6F8F74"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="32"
+    font-style="italic"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >przez</text>
+</svg>

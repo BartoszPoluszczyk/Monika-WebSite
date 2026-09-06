@@ -14,16 +14,19 @@ from .models import AboutPage, HomePage, SiteSettings
 
 
 class WebsitePaletteTests(SimpleTestCase):
-    def test_website_uses_monikas_four_brand_colors_and_navy_text_and_buttons(self):
+    def test_website_uses_monikas_current_brand_palette(self):
         css = Path(finders.find("css/style.css")).read_text(encoding="utf-8")
         for declaration in (
-            "--brand-green: #A9C3A2;",
-            "--brand-navy: #102F3A;",
-            "--brand-beige: #F7F1EC;",
-            "--brand-white: #FFFFFF;",
-            "--color-background: var(--brand-beige);",
-            "--color-text: var(--brand-navy);",
-            "--color-primary: var(--brand-navy);",
+            "--palette-green-accent: #6F8F74;",
+            "--palette-green-pastel: #E4ECE7;",
+            "--palette-green-pastel-strong: #BDD0C0;",
+            "--palette-navy: #102F3A;",
+            "--palette-orange: #D98262;",
+            "--palette-white: #FFFFFF;",
+            "--color-surface-page: var(--palette-white);",
+            "--color-text-primary: var(--palette-navy);",
+            "--color-accent: var(--palette-green-accent);",
+            "--color-cta-background: var(--palette-orange);",
         ):
             with self.subTest(declaration=declaration):
                 self.assertIn(declaration, css)
@@ -31,7 +34,7 @@ class WebsitePaletteTests(SimpleTestCase):
     def test_yellow_and_legacy_olive_palette_are_not_used_in_public_styles(self):
         for asset in ("css/style.css", "css/calorie-calculator.css"):
             css = Path(finders.find(asset)).read_text(encoding="utf-8").lower()
-            for obsolete in ("#f0cf60", "#738356", "#59683f", "#9aa681", "#f4e6eb", "#faf5e8", "#faf4e8"):
+            for obsolete in ("#f0cf60", "#a9c3a2", "#f7f1ec", "#301280", "#c51818", "#738356", "#59683f", "#9aa681", "#f4e6eb", "#faf5e8", "#faf4e8"):
                 with self.subTest(asset=asset, color=obsolete):
                     self.assertNotIn(obsolete, css)
 

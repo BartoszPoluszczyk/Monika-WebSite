@@ -1,25 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap");
 
 :root {
-    /* Monika's website palette. Yellow belongs to the banner, not the site. */
-    --brand-green: #A9C3A2;
-    --brand-navy: #102F3A;
-    --brand-beige: #F7F1EC;
-    --brand-white: #FFFFFF;
+    /* Paleta bazowa: nazwa zmiennej opisuje rzeczywisty kolor. */
+    --palette-green-accent: #6F8F74;
+    --palette-green-pastel: #E4ECE7;
+    --palette-green-pastel-strong: #BDD0C0;
+    --palette-navy: #102F3A;
+    --palette-orange: #D98262;
+    --palette-white: #FFFFFF;
 
-    --color-background: var(--brand-beige);
-    --color-background-soft: color-mix(in srgb, var(--brand-beige) 75%, var(--brand-green));
-    --color-surface: var(--brand-white);
-    --color-surface-muted: var(--brand-beige);
-    --color-primary: var(--brand-navy);
-    --color-primary-dark: color-mix(in srgb, var(--brand-navy) 90%, var(--brand-green));
-    --color-primary-light: var(--brand-green);
-    --color-text: var(--brand-navy);
-    --color-text-soft: color-mix(in srgb, var(--brand-navy) 88%, var(--brand-white));
-    --color-border: color-mix(in srgb, var(--brand-navy) 22%, var(--brand-beige));
-    --color-border-strong: color-mix(in srgb, var(--brand-navy) 58%, var(--brand-white));
-    --color-selection: color-mix(in srgb, var(--brand-green) 32%, var(--brand-white));
-    --color-disabled: color-mix(in srgb, var(--brand-navy) 38%, var(--brand-white));
+    /* Kolory semantyczne: nazwa zmiennej opisuje jej zastosowanie. */
+    --color-surface-page: var(--palette-white);
+    --color-surface-section: var(--palette-green-pastel);
+    --color-surface-default: var(--palette-white);
+    --color-surface-subtle: var(--palette-green-pastel);
+    --color-accent: var(--palette-green-accent);
+    --color-accent-strong: color-mix(in srgb, var(--palette-green-accent) 58%, var(--palette-navy));
+    --color-accent-soft: var(--palette-green-pastel-strong);
+    --color-cta-background: var(--palette-orange);
+    --color-cta-background-hover: color-mix(in srgb, var(--palette-orange) 84%, var(--palette-white));
+    --color-text-primary: var(--palette-navy);
+    --color-text-secondary: color-mix(in srgb, var(--palette-navy) 80%, var(--palette-white));
+    --color-border-subtle: color-mix(in srgb, var(--palette-navy) 18%, var(--palette-white));
+    --color-border-emphasis: color-mix(in srgb, var(--palette-green-accent) 48%, var(--palette-white));
+    --color-selection-background: var(--palette-green-pastel);
+    --color-control-disabled: color-mix(in srgb, var(--palette-navy) 38%, var(--palette-white));
     --font-heading: "Playfair Display", Georgia, serif;
     --font-body: "DM Sans", Arial, sans-serif;
     --container-width: 1460px;
@@ -31,13 +36,13 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 88px;
+    scroll-padding-top: 164px;
 }
 
 body {
     margin: 0;
-    background: var(--color-background);
-    color: var(--color-text);
+    background: var(--color-surface-page);
+    color: var(--color-text-primary);
     font-family: var(--font-body);
     font-size: 15px;
     -webkit-font-smoothing: antialiased;
@@ -50,10 +55,10 @@ a {
     text-decoration: none;
 }
 
-::selection { background: var(--brand-green); color: var(--brand-navy); }
+::selection { background: var(--palette-green-pastel-strong); color: var(--palette-navy); }
 
 :where(a, button, input, select, textarea, summary):focus-visible {
-    outline: 2px solid var(--brand-navy);
+    outline: 2px solid var(--palette-navy);
     outline-offset: 3px;
 }
 
@@ -64,7 +69,7 @@ a {
 
 .section-eyebrow {
     margin: 0 0 13px;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     font-size: 0.67rem;
     font-weight: 600;
     letter-spacing: 0.17em;
@@ -73,7 +78,7 @@ a {
 
 .section-title {
     margin: 0;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-family: var(--font-heading);
     font-size: clamp(2rem, 3vw, 3.1rem);
     font-weight: 400;
@@ -82,14 +87,14 @@ a {
 }
 
 .section-title span {
-    color: var(--color-primary);
+    color: var(--color-accent);
     font-style: italic;
 }
 
 .section-description {
     max-width: 520px;
     margin: 15px auto 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.83rem;
     line-height: 1.7;
 }
@@ -102,11 +107,34 @@ a {
     z-index: 100;
     width: min(calc(100% - 28px), var(--container-width));
     margin: 14px auto 0;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-bottom: 0;
     border-radius: var(--radius-medium) var(--radius-medium) 0 0;
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(14px);
+}
+
+.company-signature-bar {
+    min-height: 76px;
+    padding: 7px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-radius: calc(var(--radius-medium) - 1px) calc(var(--radius-medium) - 1px) 0 0;
+    background: var(--palette-white);
+}
+
+.company-signature-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.company-signature-image {
+    display: block;
+    width: auto;
+    height: 61px;
 }
 
 .site-navbar .site-container { width: 100%; }
@@ -124,7 +152,7 @@ a {
     align-items: center;
     gap: 11px;
     flex: 0 0 auto;
-    color: var(--color-text);
+    color: var(--color-text-primary);
 }
 
 .brand-mark {
@@ -132,9 +160,9 @@ a {
     height: 36px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 50%;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
 }
 
 .brand-mark svg {
@@ -161,7 +189,7 @@ a {
 
 .brand-subtitle {
     margin-top: 5px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.58rem;
     letter-spacing: 0.025em;
 }
@@ -197,7 +225,7 @@ a {
 .navigation-link {
     position: relative;
     padding: 27px 0 24px;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-size: 0.72rem;
     font-weight: 500;
     transition: color var(--transition);
@@ -210,11 +238,11 @@ a {
     bottom: 18px;
     left: 50%;
     height: 1px;
-    background: var(--color-primary);
+    background: var(--color-accent);
     transition: right var(--transition), left var(--transition);
 }
 
-.navigation-link:hover, .navigation-link.is-active { color: var(--color-primary-dark); }
+.navigation-link:hover, .navigation-link.is-active { color: var(--color-accent-strong); }
 
 .navigation-link:hover::after, .navigation-link.is-active::after {
     right: 0;
@@ -228,18 +256,18 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-cta-background);
     border-radius: 8px;
-    background: var(--color-primary);
-    color: #fff;
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
     font-size: 0.7rem;
     font-weight: 500;
     transition: background var(--transition), transform var(--transition);
 }
 
 .navbar-cta:hover {
-    background: var(--color-primary-dark);
-    color: #fff;
+    background: var(--color-cta-background-hover);
+    color: var(--palette-navy);
     transform: translateY(-1px);
 }
 
@@ -251,7 +279,7 @@ a {
     padding: 0;
     display: none;
     place-items: center;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 50%;
     background: transparent;
 }
@@ -260,7 +288,7 @@ a {
     position: absolute;
     width: 16px;
     height: 1px;
-    background: var(--color-text);
+    background: var(--color-text-primary);
 }
 
 .navbar-toggler span:first-child { transform: translateY(-3px); }
@@ -276,8 +304,8 @@ a {
     display: grid;
     grid-template-columns: minmax(0, 1.08fr) minmax(420px, 0.92fr);
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    background: radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.92), transparent 31%), var(--color-surface-muted);
+    border: 1px solid var(--color-border-subtle);
+    background: radial-gradient(circle at 30% 18%, rgba(255, 255, 255, 0.92), transparent 31%), var(--color-surface-subtle);
 }
 
 .hero-content {
@@ -298,7 +326,7 @@ a {
     height: 170px;
     z-index: 3;
     opacity: 0.42;
-    background: radial-gradient(ellipse at 31px 47px, transparent 50%, var(--color-primary) 51% 52%, transparent 53%) 0 0 / 64px 84px no-repeat, radial-gradient(ellipse at 68px 88px, transparent 50%, var(--color-primary) 51% 52%, transparent 53%) 0 0 / 75px 95px no-repeat;
+    background: radial-gradient(ellipse at 31px 47px, transparent 50%, var(--color-accent) 51% 52%, transparent 53%) 0 0 / 64px 84px no-repeat, radial-gradient(ellipse at 68px 88px, transparent 50%, var(--color-accent) 51% 52%, transparent 53%) 0 0 / 75px 95px no-repeat;
     transform: rotate(-16deg);
     pointer-events: none;
 }
@@ -317,7 +345,7 @@ a {
 .hero-description {
     max-width: 520px;
     margin: 21px 0 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.92rem;
     line-height: 1.75;
 }
@@ -336,7 +364,7 @@ a {
     align-items: center;
     justify-content: center;
     gap: 17px;
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-accent);
     border-radius: 9px;
     font-size: 0.75rem;
     font-weight: 500;
@@ -344,25 +372,26 @@ a {
 }
 
 .button-primary {
-    background: var(--color-primary);
-    color: #fff;
+    border-color: var(--color-cta-background);
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
 }
 
 .button-secondary {
     background: rgba(255, 255, 255, 0.52);
-    color: var(--color-text);
+    color: var(--color-text-primary);
 }
 
 .button-primary:hover, .button-secondary:hover { transform: translateY(-1px); }
 
 .button-primary:hover {
-    background: var(--color-primary-dark);
-    color: #fff;
+    background: var(--color-cta-background-hover);
+    color: var(--palette-navy);
 }
 
 .button-secondary:hover {
-    background: var(--brand-green);
-    color: var(--color-primary-dark);
+    background: var(--palette-green-pastel-strong);
+    color: var(--color-accent-strong);
 }
 
 .button-arrow {
@@ -377,7 +406,7 @@ a {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .hero-benefit {
@@ -386,13 +415,13 @@ a {
     text-align: center;
 }
 
-.hero-benefit + .hero-benefit { border-left: 1px solid var(--color-border); }
+.hero-benefit + .hero-benefit { border-left: 1px solid var(--color-border-subtle); }
 
 .hero-benefit-icon {
     width: 28px;
     height: 28px;
     margin: 0 auto 9px;
-    color: var(--color-primary);
+    color: var(--color-accent);
 }
 
 .hero-benefit-icon svg {
@@ -419,7 +448,7 @@ a {
     min-height: 605px;
     overflow: hidden;
     border-radius: 47% 0 0 47%;
-    background: var(--brand-green);
+    background: var(--palette-green-pastel-strong);
 }
 
 .hero-image-background {
@@ -448,10 +477,10 @@ a {
 
 .about-empty-message {
     padding: 18px 22px;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: var(--radius-medium);
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: var(--color-surface-default);
+    color: var(--color-text-primary);
 }
 
 .home-about { padding: 10px 0 0; }
@@ -464,9 +493,9 @@ a {
     align-items: center;
     gap: clamp(45px, 7vw, 100px);
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--color-surface);
+    background: var(--color-surface-default);
 }
 
 .home-about-visual { position: relative; }
@@ -476,7 +505,7 @@ a {
     aspect-ratio: 1.12 / 1;
     overflow: hidden;
     border-radius: 54px 54px 54px 13px;
-    background: var(--color-background-soft);
+    background: var(--color-surface-section);
 }
 
 .home-about-image {
@@ -497,9 +526,9 @@ a {
     aspect-ratio: 4 / 5;
     object-fit: cover;
     object-position: center top;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 54px 54px 54px 13px;
-    background: var(--color-background-soft);
+    background: var(--color-surface-section);
 }
 
 .home-about-decoration {
@@ -508,7 +537,7 @@ a {
     bottom: -26px;
     width: 105px;
     height: 112px;
-    color: var(--color-primary);
+    color: var(--color-accent);
     opacity: 0.48;
 }
 
@@ -554,20 +583,20 @@ a {
 
 .home-about-title span {
     margin-left: 6px;
-    color: var(--color-primary);
+    color: var(--color-accent);
     font-style: italic;
 }
 
 .home-about-lead {
     margin: 20px 0 0;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-size: 0.88rem;
     line-height: 1.7;
 }
 
 .home-about-description {
     margin: 14px 0 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.78rem;
     line-height: 1.75;
 }
@@ -582,9 +611,9 @@ a {
 
 .help-section > .site-container {
     padding: clamp(56px, 7vw, 88px) clamp(26px, 4vw, 58px);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--brand-green);
+    background: var(--palette-green-pastel-strong);
 }
 
 .help-heading, .offer-heading, .cooperation-heading {
@@ -608,15 +637,15 @@ a {
     flex: 1 1 180px;
     flex-direction: column;
     max-width: 238px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 13px;
     background: rgba(255, 255, 255, 0.94);
     transition: border-color var(--transition), transform var(--transition), background var(--transition);
 }
 
 .help-card:hover {
-    border-color: var(--color-primary-light);
-    background: var(--color-surface);
+    border-color: var(--color-accent-soft);
+    background: var(--color-surface-default);
     transform: translateY(-3px);
 }
 
@@ -624,7 +653,7 @@ a {
     position: absolute;
     top: 19px;
     right: 20px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-family: var(--font-heading);
     font-size: 0.63rem;
 }
@@ -633,7 +662,7 @@ a {
     width: 42px;
     height: 42px;
     margin-bottom: 27px;
-    color: var(--color-primary);
+    color: var(--color-accent);
 }
 
 .help-card-icon svg, .service-symbol svg, .cooperation-step-icon svg {
@@ -656,7 +685,7 @@ a {
 
 .help-card p {
     margin: 0 0 18px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.7rem;
     line-height: 1.65;
 }
@@ -667,9 +696,9 @@ a {
     margin-top: auto;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-primary-light);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 50%;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     font-size: 0.8rem;
 }
 
@@ -677,9 +706,9 @@ a {
 
 .offer-section > .site-container {
     padding: clamp(56px, 7vw, 88px) clamp(26px, 5vw, 72px);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--color-surface-muted);
+    background: var(--color-surface-subtle);
 }
 
 .offer-heading { margin-bottom: 43px; }
@@ -699,19 +728,19 @@ a {
     flex: 1 1 245px;
     flex-direction: column;
     max-width: 315px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 13px;
-    background: var(--color-surface);
+    background: var(--color-surface-default);
     transition: border-color var(--transition), transform var(--transition), background var(--transition);
 }
 
 .service-card:hover {
-    border-color: var(--color-primary-light);
-    background: var(--color-surface);
+    border-color: var(--color-accent-soft);
+    background: var(--color-surface-default);
     transform: translateY(-3px);
 }
 
-.service-card-featured { border-color: var(--color-primary-light); }
+.service-card-featured { border-color: var(--color-accent-soft); }
 
 .service-badge {
     position: absolute;
@@ -719,8 +748,8 @@ a {
     right: 18px;
     padding: 6px 12px;
     border-radius: 0 0 7px 7px;
-    background: var(--brand-green);
-    color: var(--brand-navy);
+    background: var(--palette-green-pastel-strong);
+    color: var(--palette-navy);
     font-size: 0.55rem;
     font-weight: 600;
     letter-spacing: 0.08em;
@@ -731,7 +760,7 @@ a {
     position: absolute;
     top: 23px;
     right: 22px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-family: var(--font-heading);
     font-size: 0.63rem;
 }
@@ -742,10 +771,10 @@ a {
     width: 50px;
     height: 50px;
     margin-bottom: 22px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 11px;
     overflow: hidden;
-    background: var(--color-selection);
+    background: var(--color-selection-background);
 }
 
 .service-image {
@@ -757,7 +786,7 @@ a {
 
 .service-symbol {
     padding: 10px;
-    color: var(--color-primary);
+    color: var(--color-accent);
 }
 
 .service-name {
@@ -770,14 +799,14 @@ a {
 
 .service-description {
     margin: 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.72rem;
     line-height: 1.65;
 }
 
 .service-duration {
     margin: 15px 0 0;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     font-size: 0.64rem;
 }
 
@@ -794,7 +823,7 @@ a {
 }
 
 .service-price span {
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-family: var(--font-body);
     font-size: 0.58rem;
 }
@@ -806,17 +835,17 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid var(--color-primary-light);
+    border: 1px solid var(--color-cta-background);
     border-radius: 8px;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-size: 0.65rem;
     font-weight: 500;
     transition: background var(--transition), color var(--transition);
 }
 
 .service-link:hover {
-    background: var(--color-primary);
-    color: #fff;
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
 }
 
 .offer-empty { text-align: center; }
@@ -827,9 +856,9 @@ a {
 
 .cooperation-section > .site-container {
     padding: clamp(56px, 7vw, 86px) clamp(26px, 5vw, 70px);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--color-surface);
+    background: var(--color-surface-default);
 }
 
 .cooperation-heading { margin-bottom: 44px; }
@@ -863,15 +892,15 @@ a {
     padding: 13px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 50%;
-    background: var(--brand-green);
-    color: var(--color-primary);
+    background: var(--palette-green-pastel);
+    color: var(--color-accent);
 }
 
 .cooperation-step-number {
     margin-top: 12px;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     font-size: 0.57rem;
     font-weight: 600;
 }
@@ -885,7 +914,7 @@ a {
 
 .cooperation-step p {
     margin: 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.64rem;
     line-height: 1.55;
 }
@@ -897,7 +926,7 @@ a {
     left: calc(50% + 32px);
     width: calc(100% - 64px);
     height: 1px;
-    background: var(--color-border);
+    background: var(--color-border-subtle);
 }
 
 .cooperation-line::after {
@@ -908,16 +937,16 @@ a {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: var(--color-primary-light);
+    background: var(--color-accent-soft);
 }
 
 .cooperation-empty {
     max-width: 520px;
     margin: 0 auto;
     padding: 17px 20px;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-soft);
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
     font-size: 0.74rem;
     text-align: center;
 }
@@ -930,14 +959,14 @@ a {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 11px;
-    background: var(--brand-green);
+    background: var(--palette-green-pastel-strong);
 }
 
 .cooperation-booking-cta p {
     margin: 0;
-    color: var(--color-text);
+    color: var(--color-text-primary);
     font-family: var(--font-heading);
     font-size: 1rem;
 }
@@ -950,8 +979,8 @@ a {
 
 .booking-container {
     padding: clamp(54px, 7vw, 90px) clamp(24px, 5vw, 72px);
-    border: 1px solid var(--color-border);
-    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-subtle);
 }
 
 .booking-heading {
@@ -965,7 +994,7 @@ a {
     margin: 0 auto 30px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.67rem;
 }
 
@@ -981,7 +1010,7 @@ a {
     height: 1px;
     flex: 1;
     margin-right: 9px;
-    background: var(--color-border);
+    background: var(--color-border-subtle);
 }
 
 .booking-progress b {
@@ -989,24 +1018,24 @@ a {
     height: 27px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 50%;
-    background: var(--color-surface);
-    color: var(--color-primary-dark);
+    background: var(--color-surface-default);
+    color: var(--color-accent-strong);
     font-size: 0.62rem;
 }
 
 .booking-progress .is-complete b {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--color-accent);
+    background: var(--color-accent);
     color: #fff;
 }
 
 .booking-panel {
     padding: clamp(24px, 3vw, 36px);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--color-surface);
+    background: var(--color-surface-default);
 }
 
 .booking-panel-heading {
@@ -1022,9 +1051,9 @@ a {
     flex: 0 0 auto;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-primary-light);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 50%;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     font-family: var(--font-heading);
     font-size: 0.7rem;
 }
@@ -1038,7 +1067,7 @@ a {
 
 .booking-panel-heading p {
     margin: 5px 0 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.7rem;
     line-height: 1.5;
 }
@@ -1056,17 +1085,17 @@ a {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 10px;
-    background: var(--color-surface);
+    background: var(--color-surface-default);
     transition: border-color var(--transition), background var(--transition), transform var(--transition);
 }
 
 .booking-service:hover,
 .booking-service.is-selected {
-    border-color: var(--color-primary);
-    background: var(--color-selection);
-    color: var(--color-text);
+    border-color: var(--color-accent);
+    background: var(--color-selection-background);
+    color: var(--color-text-primary);
     transform: translateY(-1px);
 }
 
@@ -1078,7 +1107,7 @@ a {
 
 .booking-service small {
     margin-top: 5px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.62rem;
 }
 
@@ -1088,13 +1117,13 @@ a {
     right: 17px;
     width: 17px;
     height: 17px;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 50%;
     transform: translateY(-50%);
 }
 
 .booking-service.is-selected .booking-service-check {
-    border: 5px solid var(--color-primary);
+    border: 5px solid var(--color-accent);
 }
 
 .booking-main-grid {
@@ -1118,14 +1147,14 @@ a {
     height: 35px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 50%;
-    color: var(--color-primary-dark);
+    color: var(--color-accent-strong);
     transition: background var(--transition), color var(--transition);
 }
 
 .booking-calendar-nav a:hover {
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: #fff;
 }
 
@@ -1144,7 +1173,7 @@ a {
 
 .booking-calendar-weekdays span {
     padding: 8px 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.58rem;
     font-weight: 600;
     text-align: center;
@@ -1164,9 +1193,9 @@ a {
 }
 
 .booking-day.is-available {
-    border-color: var(--color-border-strong);
-    background: var(--color-surface);
-    color: var(--color-text);
+    border-color: var(--color-border-emphasis);
+    background: var(--color-surface-default);
+    color: var(--color-text-primary);
     transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
@@ -1176,28 +1205,28 @@ a {
     width: 3px;
     height: 3px;
     border-radius: 50%;
-    background: var(--color-primary);
+    background: var(--color-accent);
 }
 
 .booking-day.is-available:hover,
 .booking-day.is-selected {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--color-accent);
+    background: var(--color-accent);
     color: #fff;
 }
 
 .booking-day.is-selected span,
-.booking-day.is-available:hover span { background: var(--brand-white); }
+.booking-day.is-available:hover span { background: var(--palette-white); }
 
 .booking-day.is-unavailable {
-    color: var(--color-disabled);
+    color: var(--color-control-disabled);
 }
 
 .booking-day.is-today::after {
     content: "";
     position: absolute;
     inset: 4px;
-    border: 1px solid var(--color-primary-light);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 6px;
     pointer-events: none;
 }
@@ -1210,7 +1239,7 @@ a {
 
 .booking-time-fieldset legend {
     margin: 0 0 9px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.64rem;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -1237,22 +1266,22 @@ a {
     min-height: 38px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 8px;
-    background: var(--color-surface);
+    background: var(--color-surface-default);
     font-size: 0.68rem;
     transition: border-color var(--transition), background var(--transition), color var(--transition);
 }
 
 .booking-time-option:hover span,
 .booking-time-option input:checked + span {
-    border-color: var(--color-primary);
-    background: var(--color-primary);
+    border-color: var(--color-accent);
+    background: var(--color-accent);
     color: #fff;
 }
 
 .booking-time-option input:focus-visible + span {
-    outline: 2px solid var(--color-primary-dark);
+    outline: 2px solid var(--color-accent-strong);
     outline-offset: 2px;
 }
 
@@ -1271,7 +1300,7 @@ a {
 .booking-field label {
     margin: 0 0 6px;
     display: block;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.64rem;
     font-weight: 500;
 }
@@ -1281,11 +1310,11 @@ a {
 .booking-field textarea {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid var(--color-border-strong);
+    border: 1px solid var(--color-border-emphasis);
     border-radius: 8px;
     outline: none;
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: var(--color-surface-default);
+    color: var(--color-text-primary);
     font: inherit;
     font-size: 0.72rem;
     transition: border-color var(--transition), box-shadow var(--transition);
@@ -1299,14 +1328,14 @@ a {
 .booking-field input:focus,
 .booking-field select:focus,
 .booking-field textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-selection);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-selection-background);
 }
 
 .booking-field small {
     margin-top: 5px;
     display: block;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.58rem;
 }
 
@@ -1315,7 +1344,7 @@ a {
     display: flex;
     align-items: flex-start;
     gap: 9px;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     cursor: pointer;
     font-size: 0.62rem;
     line-height: 1.5;
@@ -1326,7 +1355,7 @@ a {
     height: 15px;
     margin-top: 2px;
     flex: 0 0 auto;
-    accent-color: var(--color-primary);
+    accent-color: var(--color-accent);
 }
 
 .booking-submit,
@@ -1338,9 +1367,9 @@ a {
     align-items: center;
     justify-content: center;
     gap: 18px;
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-accent);
     border-radius: 9px;
-    background: var(--color-primary);
+    background: var(--color-accent);
     color: #fff;
     font-family: var(--font-body);
     font-size: 0.72rem;
@@ -1349,15 +1378,26 @@ a {
     transition: background var(--transition), transform var(--transition);
 }
 
+.booking-submit {
+    border-color: var(--color-cta-background);
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
+}
+
 .booking-submit:hover,
 .booking-cancel-button:hover {
-    background: var(--color-primary-dark);
+    background: var(--color-accent-strong);
     transform: translateY(-1px);
 }
 
+.booking-submit:hover {
+    background: var(--color-cta-background-hover);
+    color: var(--palette-navy);
+}
+
 .booking-submit:disabled {
-    border-color: var(--color-border-strong);
-    background: var(--color-disabled);
+    border-color: var(--color-border-emphasis);
+    background: var(--color-control-disabled);
     cursor: not-allowed;
     opacity: 0.72;
     transform: none;
@@ -1366,9 +1406,9 @@ a {
 .booking-payment-box {
     margin-top: 18px;
     padding: 15px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 10px;
-    background: var(--color-surface-muted);
+    background: var(--color-surface-subtle);
 }
 
 .booking-payment-box strong {
@@ -1381,7 +1421,7 @@ a {
 .booking-payment-box small {
     margin-top: 4px;
     display: block;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.6rem;
     line-height: 1.5;
 }
@@ -1395,10 +1435,10 @@ a {
 
 .booking-payment-methods span {
     padding: 6px 9px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 6px;
-    background: var(--color-surface);
-    color: var(--color-primary-dark);
+    background: var(--color-surface-default);
+    color: var(--color-accent-strong);
     font-size: 0.58rem;
     font-weight: 600;
 }
@@ -1406,9 +1446,9 @@ a {
 .booking-payment-warning {
     margin: 14px 0 0;
     padding: 10px 12px;
-    border-left: 3px solid var(--color-primary-light);
-    background: var(--color-background-soft);
-    color: var(--color-text-soft);
+    border-left: 3px solid var(--color-accent-soft);
+    background: var(--color-surface-section);
+    color: var(--color-text-secondary);
     font-size: 0.64rem;
     line-height: 1.55;
 }
@@ -1416,10 +1456,10 @@ a {
 .booking-empty {
     margin: 0;
     padding: 15px 17px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
-    background: var(--color-surface-muted);
-    color: var(--color-text-soft);
+    background: var(--color-surface-subtle);
+    color: var(--color-text-secondary);
     font-size: 0.7rem;
     line-height: 1.6;
 }
@@ -1429,7 +1469,7 @@ a {
     display: grid;
     place-content: center;
     justify-items: center;
-    color: var(--color-primary-light);
+    color: var(--color-accent-soft);
     text-align: center;
 }
 
@@ -1446,7 +1486,7 @@ a {
 .booking-placeholder p {
     max-width: 280px;
     margin: 14px 0 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.68rem;
     line-height: 1.6;
 }
@@ -1468,8 +1508,8 @@ a {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface-muted);
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-subtle);
     text-align: center;
 }
 
@@ -1479,23 +1519,23 @@ a {
     margin-bottom: 23px;
     display: grid;
     place-items: center;
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-accent);
     border-radius: 50%;
-    background: var(--brand-green);
-    color: var(--brand-navy);
+    background: var(--palette-green-pastel-strong);
+    color: var(--palette-navy);
     font-family: var(--font-heading);
     font-size: 1.4rem;
 }
 
 .booking-result-icon.is-cancelled {
-    border-color: var(--color-border-strong);
+    border-color: var(--color-border-emphasis);
     background: transparent;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
 }
 
 .booking-result-icon.is-pending {
-    background: var(--color-surface);
-    color: var(--color-primary-dark);
+    background: var(--color-surface-default);
+    color: var(--color-accent-strong);
 }
 
 .booking-summary {
@@ -1503,10 +1543,10 @@ a {
     margin: 32px auto 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 12px;
     overflow: hidden;
-    background: var(--color-surface);
+    background: var(--color-surface-default);
     text-align: left;
 }
 
@@ -1514,11 +1554,11 @@ a {
     padding: 17px 20px;
 }
 
-.booking-summary div:nth-child(even) { border-left: 1px solid var(--color-border); }
-.booking-summary div:nth-child(n + 3) { border-top: 1px solid var(--color-border); }
+.booking-summary div:nth-child(even) { border-left: 1px solid var(--color-border-subtle); }
+.booking-summary div:nth-child(n + 3) { border-top: 1px solid var(--color-border-subtle); }
 
 .booking-summary dt {
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.58rem;
     font-weight: 500;
     letter-spacing: 0.08em;
@@ -1539,18 +1579,18 @@ a {
     gap: 10px;
 }
 
-.booking-result-actions .booking-cancel-button { margin-top: 0; background: transparent; color: var(--color-text); }
-.booking-result-actions .booking-cancel-button:hover { background: var(--color-primary-dark); color: #fff; }
+.booking-result-actions .booking-cancel-button { margin-top: 0; background: transparent; color: var(--color-text-primary); }
+.booking-result-actions .booking-cancel-button:hover { background: var(--color-accent-strong); color: #fff; }
 
 .booking-status-notice,
 .booking-policy-warning {
     width: min(100%, 620px);
     margin: 0 auto 24px;
     padding: 12px 16px;
-    border: 1px solid var(--color-primary-light);
+    border: 1px solid var(--color-accent-soft);
     border-radius: 9px;
-    background: var(--color-selection);
-    color: var(--color-primary-dark);
+    background: var(--color-selection-background);
+    color: var(--color-accent-strong);
     font-size: 0.68rem;
     line-height: 1.6;
 }
@@ -1558,15 +1598,15 @@ a {
 .booking-policy-warning {
     margin-top: 22px;
     margin-bottom: 0;
-    border-color: var(--color-border-strong);
-    background: var(--brand-beige);
-    color: var(--color-text-soft);
+    border-color: var(--color-border-emphasis);
+    background: var(--palette-green-pastel);
+    color: var(--color-text-secondary);
 }
 
 .booking-policy-note {
     max-width: 620px;
     margin: 18px auto 0;
-    color: var(--color-text-soft);
+    color: var(--color-text-secondary);
     font-size: 0.62rem;
     line-height: 1.6;
     text-align: center;
@@ -1601,6 +1641,13 @@ a {
 
 /* Leave room for the logo and the calculator link on small laptops. */
 @media (max-width: 1100px) {
+    .company-signature-bar {
+        min-height: 68px;
+        padding-block: 6px;
+    }
+
+    .company-signature-image { height: 55px; }
+
     .navbar-inner {
         min-height: 66px;
         padding: 0 20px;
@@ -1630,7 +1677,7 @@ a {
 
     .navigation-link {
         padding: 11px 0;
-        border-top: 1px solid var(--color-border);
+        border-top: 1px solid var(--color-border-subtle);
     }
 
     .navigation-link::after { display: none; }
@@ -1642,7 +1689,7 @@ a {
 }
 
 @media (max-width: 860px) {
-    html { scroll-padding-top: 76px; }
+    html { scroll-padding-top: 140px; }
 
     .site-navbar {
         margin-top: 8px;
@@ -1694,6 +1741,16 @@ a {
 @media (max-width: 640px) {
     body { font-size: 14px; }
     .brand-name { font-size: 0.92rem; }
+
+    .company-signature-bar {
+        min-height: 60px;
+        padding: 5px 12px;
+    }
+
+    .company-signature-image {
+        width: min(100%, 264px);
+        height: auto;
+    }
 
     .navbar-logo {
         max-width: 145px;
@@ -1793,7 +1850,7 @@ a {
     .booking-time-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .booking-summary { grid-template-columns: 1fr; }
     .booking-summary div:nth-child(even) { border-left: 0; }
-    .booking-summary div + div { border-top: 1px solid var(--color-border); }
+    .booking-summary div + div { border-top: 1px solid var(--color-border-subtle); }
     .booking-result-actions { width: min(100%, 360px); flex-direction: column; }
     .booking-result-actions .button-primary,
     .booking-result-actions .button-secondary,

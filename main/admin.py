@@ -106,3 +106,4 @@ class CooperationStepAdmin(admin.ModelAdmin):
     ordering = (
         "order",
     )
+

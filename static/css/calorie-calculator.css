@@ -1,88 +1,88 @@
 .calorie-page {
     margin-bottom: 14px;
     padding: clamp(40px, 5vw, 72px) clamp(20px, 5vw, 72px);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 0 0 var(--radius-medium) var(--radius-medium);
-    background: var(--color-surface-muted);
+    background: var(--color-surface-subtle);
 }
 
 .calorie-heading { max-width: 660px; margin: 0 auto 36px; text-align: center; }
 .calorie-heading .section-description { max-width: 590px; }
 .calorie-layout { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: start; }
-.calorie-form-panel, .calorie-result-card { padding: clamp(22px, 3vw, 36px); border: 1px solid var(--color-border); border-radius: var(--radius-medium); }
-.calorie-form-panel { background: var(--color-surface); }
+.calorie-form-panel, .calorie-result-card { padding: clamp(22px, 3vw, 36px); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-medium); }
+.calorie-form-panel { background: var(--color-surface-default); }
 .calorie-panel-heading { display: flex; gap: 14px; align-items: center; margin-bottom: 22px; }
-.calorie-step { width: 40px; height: 40px; display: grid; flex-shrink: 0; place-items: center; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-primary-dark); font-size: .7rem; }
+.calorie-step { width: 40px; height: 40px; display: grid; flex-shrink: 0; place-items: center; border: 1px solid var(--color-border-subtle); border-radius: 50%; color: var(--color-accent-strong); font-size: .7rem; }
 .calorie-page h2 { margin: 0; font-family: var(--font-heading); font-size: 1.35rem; font-weight: 400; line-height: 1.35; }
-.calorie-panel-heading p { margin: 5px 0 0; color: var(--color-text-soft); font-size: .75rem; }
-.calorie-scope { margin: 0 0 24px; padding-left: 13px; border-left: 2px solid var(--color-primary-light); color: var(--color-text-soft); font-size: .75rem; line-height: 1.7; }
+.calorie-panel-heading p { margin: 5px 0 0; color: var(--color-text-secondary); font-size: .75rem; }
+.calorie-scope { margin: 0 0 24px; padding-left: 13px; border-left: 2px solid var(--color-accent-soft); color: var(--color-text-secondary); font-size: .75rem; line-height: 1.7; }
 .calorie-field { min-width: 0; margin: 0 0 20px; padding: 0; border: 0; }
 .calorie-field label, .calorie-field legend { display: block; width: auto; float: none; margin: 0 0 8px; padding: 0; font-size: .8rem; font-weight: 500; }
-.calorie-field label > span:not(.calorie-radio span) { color: var(--color-text-soft); font-weight: 400; }
+.calorie-field label > span:not(.calorie-radio span) { color: var(--color-text-secondary); font-weight: 400; }
 .calorie-radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.calorie-field .calorie-radio { display: flex; align-items: center; gap: 10px; margin: 0; padding: 12px 14px; border: 1px solid var(--color-border-strong); border-radius: 8px; cursor: pointer; }
-.calorie-radio input { width: 16px; height: 16px; margin: 0; accent-color: var(--color-primary-dark); }
-.calorie-radio:has(input:checked) { border-color: var(--color-primary); background: var(--color-selection); }
-.calorie-radio:has(input:focus-visible) { outline: 2px solid var(--color-primary-dark); outline-offset: 3px; }
+.calorie-field .calorie-radio { display: flex; align-items: center; gap: 10px; margin: 0; padding: 12px 14px; border: 1px solid var(--color-border-emphasis); border-radius: 8px; cursor: pointer; }
+.calorie-radio input { width: 16px; height: 16px; margin: 0; accent-color: var(--color-accent-strong); }
+.calorie-radio:has(input:checked) { border-color: var(--color-accent); background: var(--color-selection-background); }
+.calorie-radio:has(input:focus-visible) { outline: 2px solid var(--color-accent-strong); outline-offset: 3px; }
 .calorie-measurements { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.calorie-field input[type="text"], .calorie-field select { width: 100%; min-width: 0; min-height: 46px; padding: 11px 12px; border: 1px solid var(--color-border-strong); border-radius: 8px; background: var(--color-surface); color: var(--color-text); font: inherit; font-size: .85rem; }
-.calorie-field input::placeholder { color: var(--color-text-soft); opacity: 1; }
+.calorie-field input[type="text"], .calorie-field select { width: 100%; min-width: 0; min-height: 46px; padding: 11px 12px; border: 1px solid var(--color-border-emphasis); border-radius: 8px; background: var(--color-surface-default); color: var(--color-text-primary); font: inherit; font-size: .85rem; }
+.calorie-field input::placeholder { color: var(--color-text-secondary); opacity: 1; }
 .calorie-field select { padding-right: 8px; text-overflow: ellipsis; }
-.calorie-page :is(input, select, button, a, summary):focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 3px; }
+.calorie-page :is(input, select, button, a, summary):focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 3px; }
 .calorie-field input[aria-invalid="true"], .calorie-field select[aria-invalid="true"], .calorie-radio:has(input[aria-invalid="true"]) { border-color: #a14639; }
-.calorie-hint { margin: 9px 0 0; color: var(--color-text-soft); font-size: .72rem; line-height: 1.65; }
+.calorie-hint { margin: 9px 0 0; color: var(--color-text-secondary); font-size: .72rem; line-height: 1.65; }
 .calorie-field-error { margin: 7px 0 0; color: #93392f; font-size: .75rem; line-height: 1.5; }
 .calorie-field-error:empty { display: none; }
 .calorie-error-summary { margin-bottom: 20px; padding: 12px 14px; border: 1px solid #c99d92; border-radius: 8px; background: #fff4ee; color: #81352d; font-size: .8rem; line-height: 1.6; }
 .calorie-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 25px; }
 .calorie-actions .button-primary { flex: none; font-size: .8rem; }
 .calorie-actions .button-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-.calorie-reset { min-height: 44px; padding: 10px 12px; border: 0; background: transparent; color: var(--color-text-soft); font-size: .78rem; text-decoration: underline; text-underline-offset: 4px; }
-.calorie-reset:hover { color: var(--color-primary-dark); }
-.calorie-privacy { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--color-border); color: var(--color-text-soft); font-size: .7rem; line-height: 1.7; }
+.calorie-reset { min-height: 44px; padding: 10px 12px; border: 0; background: transparent; color: var(--color-text-secondary); font-size: .78rem; text-decoration: underline; text-underline-offset: 4px; }
+.calorie-reset:hover { color: var(--color-accent-strong); }
+.calorie-privacy { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); font-size: .7rem; line-height: 1.7; }
 .calorie-results { display: grid; gap: 24px; min-width: 0; }
-.calorie-result-card { background: var(--brand-green); border-color: var(--color-border); }
+.calorie-result-card { background: var(--palette-green-pastel-strong); border-color: var(--color-border-subtle); }
 .calorie-result-card > .section-eyebrow { margin-bottom: 24px; }
 .calorie-empty { padding: 4px 5px 28px; text-align: center; }
-.calorie-empty svg { width: 74px; height: 74px; margin: 6px auto 20px; color: var(--color-primary); }
-.calorie-empty p { max-width: 270px; margin: 14px auto 0; color: var(--color-text-soft); font-size: .82rem; line-height: 1.8; }
-.calorie-total { display: flex; flex-direction: column; margin: 22px 0; color: var(--color-primary-dark); font-size: .8rem; }
+.calorie-empty svg { width: 74px; height: 74px; margin: 6px auto 20px; color: var(--color-accent); }
+.calorie-empty p { max-width: 270px; margin: 14px auto 0; color: var(--color-text-secondary); font-size: .82rem; line-height: 1.8; }
+.calorie-total { display: flex; flex-direction: column; margin: 22px 0; color: var(--color-accent-strong); font-size: .8rem; }
 .calorie-total strong { font-family: var(--font-heading); font-size: clamp(3.2rem, 5vw, 4.6rem); font-weight: 400; line-height: 1.15; letter-spacing: -.04em; font-variant-numeric: lining-nums tabular-nums; }
-.calorie-approx { margin-bottom: 4px; color: var(--color-text-soft); }
-.calorie-result-note { color: var(--color-text-soft); font-size: .8rem; line-height: 1.75; }
-.calorie-breakdown { margin: 24px 0 0; padding: 15px 0; border-block: 1px solid var(--color-border-strong); }
+.calorie-approx { margin-bottom: 4px; color: var(--color-text-secondary); }
+.calorie-result-note { color: var(--color-text-secondary); font-size: .8rem; line-height: 1.75; }
+.calorie-breakdown { margin: 24px 0 0; padding: 15px 0; border-block: 1px solid var(--color-border-emphasis); }
 .calorie-breakdown div { display: flex; align-items: baseline; justify-content: space-between; gap: 15px; padding: 6px 0; font-size: .75rem; }
-.calorie-breakdown dt { font-weight: 400; color: var(--color-text-soft); }
-.calorie-breakdown dd { flex-shrink: 0; margin: 0; color: var(--color-primary-dark); font-weight: 600; }
+.calorie-breakdown dt { font-weight: 400; color: var(--color-text-secondary); }
+.calorie-breakdown dd { flex-shrink: 0; margin: 0; color: var(--color-accent-strong); font-weight: 600; }
 #calculator-result { scroll-margin-top: 100px; }
-#calculator-result:focus-visible, #calculator-errors:focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 8px; border-radius: 4px; }
+#calculator-result:focus-visible, #calculator-errors:focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 8px; border-radius: 4px; }
 .calorie-consultation { padding: 4px 10px 0; }
 .calorie-consultation h2 { font-size: 1.2rem; }
-.calorie-consultation p { margin: 12px 0 18px; color: var(--color-text-soft); font-size: .8rem; line-height: 1.8; }
+.calorie-consultation p { margin: 12px 0 18px; color: var(--color-text-secondary); font-size: .8rem; line-height: 1.8; }
 .calorie-consultation .button-secondary { font-size: .75rem; }
-.calorie-method { margin-top: 30px; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); font-size: .8rem; line-height: 1.8; }
-.calorie-method summary { padding: 18px 4px; color: var(--color-primary-dark); cursor: pointer; font-weight: 500; }
-.calorie-method > div { max-width: 900px; padding: 0 4px 6px; color: var(--color-text-soft); }
-.calorie-method a { color: var(--color-primary-dark); text-decoration: underline; text-underline-offset: 3px; }
+.calorie-method { margin-top: 30px; border-top: 1px solid var(--color-border-subtle); border-bottom: 1px solid var(--color-border-subtle); font-size: .8rem; line-height: 1.8; }
+.calorie-method summary { padding: 18px 4px; color: var(--color-accent-strong); cursor: pointer; font-weight: 500; }
+.calorie-method > div { max-width: 900px; padding: 0 4px 6px; color: var(--color-text-secondary); }
+.calorie-method a { color: var(--color-accent-strong); text-decoration: underline; text-underline-offset: 3px; }
 .calorie-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .calorie-page [hidden] { display: none !important; }
 
 .calorie-progress { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; padding: 0; margin: 0 0 28px; list-style: none; }
-.calorie-progress button { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 100%; padding: 10px 3px; border: 0; border-bottom: 2px solid var(--color-border); background: transparent; color: var(--color-text-soft); font: inherit; font-size: .73rem; }
-.calorie-progress button > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-border); border-radius: 50%; font-size: .65rem; }
-.calorie-progress button[aria-current="step"] { border-color: var(--color-primary-dark); color: var(--color-primary-dark); font-weight: 600; }
-.calorie-progress button[aria-current="step"] > span { background: var(--color-primary-dark); color: white; border-color: var(--color-primary-dark); }
-.calorie-progress button.is-complete > span { border-color: var(--color-primary); background: var(--color-selection); }
+.calorie-progress button { display: flex; flex-direction: column; align-items: center; gap: 7px; width: 100%; padding: 10px 3px; border: 0; border-bottom: 2px solid var(--color-border-subtle); background: transparent; color: var(--color-text-secondary); font: inherit; font-size: .73rem; }
+.calorie-progress button > span { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--color-border-subtle); border-radius: 50%; font-size: .65rem; }
+.calorie-progress button[aria-current="step"] { border-color: var(--color-accent-strong); color: var(--color-accent-strong); font-weight: 600; }
+.calorie-progress button[aria-current="step"] > span { background: var(--color-accent-strong); color: white; border-color: var(--color-accent-strong); }
+.calorie-progress button.is-complete > span { border-color: var(--color-accent); background: var(--color-selection-background); }
 .calorie-progress button:disabled { opacity: .55; cursor: not-allowed; }
 .calorie-page [data-calorie-step] { min-height: 280px; }
 .calorie-page h2[tabindex="-1"] { scroll-margin-top: 110px; }
-.calorie-page h2[tabindex="-1"]:focus-visible { outline: 2px solid var(--color-primary-dark); outline-offset: 5px; }
+.calorie-page h2[tabindex="-1"]:focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 5px; }
 .calorie-goals { grid-template-columns: 1fr; }
 .calorie-goals .calorie-radio { padding: 11px 13px; }
 .calorie-goals .calorie-radio > span { flex: 1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 3px 12px; }
-.calorie-goals small { color: var(--color-text-soft); font-size: .7rem; font-weight: 400; }
+.calorie-goals small { color: var(--color-text-secondary); font-size: .7rem; font-weight: 400; }
 .calorie-actions .button-secondary { flex: none; font-size: .8rem; }
-.calorie-result-warnings { margin-top: 18px; padding: 13px 14px; border-left: 2px solid var(--brand-navy); background: var(--brand-beige); color: var(--color-text); font-size: .76rem; line-height: 1.7; }
+.calorie-result-warnings { margin-top: 18px; padding: 13px 14px; border-left: 2px solid var(--palette-navy); background: var(--palette-green-pastel); color: var(--color-text-primary); font-size: .76rem; line-height: 1.7; }
 .calorie-result-warnings p { margin: 0; }
 .calorie-result-warnings p + p { margin-top: 12px; }
 .calorie-results { position: sticky; top: 100px; }
