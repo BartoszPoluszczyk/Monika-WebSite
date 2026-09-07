@@ -401,58 +401,60 @@ a {
 
     .navbar-signature {
         position: relative;
-        height: 190px;
-        margin: auto -34px 12px;
+        height: 218px;
+        margin: auto -34px 10px;
         overflow: hidden;
         isolation: isolate;
+        background: var(--palette-white);
     }
 
     .navbar-signature::before,
     .navbar-signature::after {
         content: "";
         position: absolute;
-        z-index: -2;
         border-radius: 50%;
         pointer-events: none;
     }
 
     .navbar-signature::before {
-        width: 265px;
-        height: 265px;
-        right: -146px;
-        bottom: -112px;
+        width: 336px;
+        height: 336px;
+        top: -180px;
+        right: -175px;
+        z-index: -3;
         background: var(--palette-green-pastel-strong);
     }
 
     .navbar-signature::after {
-        width: 290px;
-        height: 112px;
-        right: -54px;
-        bottom: -55px;
-        border: 18px solid var(--palette-white);
-        transform: rotate(-18deg);
+        width: 286px;
+        height: 324px;
+        top: -176px;
+        right: -166px;
+        z-index: -2;
+        background: var(--palette-white);
     }
 
     .navbar-signature-copy {
         position: relative;
-        z-index: 2;
-        width: 142px;
-        margin: 30px 0 0 34px;
+        z-index: 1;
+        width: 144px;
+        margin: 82px 0 0 32px;
         color: var(--color-accent-strong);
         font-family: var(--font-heading);
         font-size: 1.02rem;
         font-style: italic;
         line-height: 1.06;
         text-align: center;
-        transform: rotate(-6deg);
+        transform: rotate(-7deg);
     }
 
-    .navbar-signature-copy::after {
+    .navbar-signature-copy::before {
         content: "";
-        width: 36px;
+        position: absolute;
+        top: -48px;
+        left: 12px;
+        width: 32px;
         height: 1px;
-        margin: 12px auto 0;
-        display: block;
         background: var(--color-border-emphasis);
     }
 
@@ -460,32 +462,6 @@ a {
     .navbar-signature-copy strong { display: block; }
 
     .navbar-signature-copy strong { margin-top: 4px; font-weight: 500; }
-
-    .navbar-signature-art {
-        position: absolute;
-        right: -28px;
-        bottom: -12px;
-        width: 218px;
-        height: 132px;
-        z-index: -1;
-        overflow: hidden;
-        border-radius: 66% 0 0 0;
-    }
-
-    .navbar-signature-art::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.86), transparent 58%);
-    }
-
-    .navbar-signature-art img {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-        object-position: 80% 86%;
-    }
 
     .navbar-cta {
         width: 100%;
