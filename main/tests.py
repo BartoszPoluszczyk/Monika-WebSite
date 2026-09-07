@@ -68,6 +68,43 @@ class NavbarBrandingTests(SimpleTestCase):
         self.assertIn('class="navigation-icon"', html)
         self.assertIn('class="navbar-signature"', html)
 
+    def test_sidebar_signature_has_four_lines_and_one_continuous_footer(self):
+        html = render_to_string("main/partials/navbar.html")
+        for line in ("Zdrowie", "zaczyna się", "od dobrych", "wyborów"):
+            self.assertIn(f"<span>{line}</span>", html)
+        footer = html.split('<div class="navbar-footer">', 1)[1].split("</div>", 1)[0]
+        self.assertIn("navbar-bottom-decoration.svg", footer)
+        self.assertIn('class="navbar-cta"', footer)
+        self.assertIn('href="' + reverse("booking:book") + '"', footer)
+
+    def test_navigation_assets_are_local_and_loaded_by_the_shared_base(self):
+        html = render_to_string("main/base.html")
+        for asset in ("css/navigation.css", "js/navigation.js", "fonts/caveat-latin.woff2"):
+            self.assertIsNotNone(finders.find(asset))
+            self.assertIn(asset, html)
+        css = Path(finders.find("css/navigation.css")).read_text(encoding="utf-8")
+        self.assertIn('font-family: "Caveat"', css)
+        self.assertIn("padding-left: var(--navbar-width)", css)
+        self.assertNotIn("radial-gradient", css)
+
+    def test_decorations_are_filled_paths_not_disconnected_rings(self):
+        for filename, viewbox in (
+            ("navbar-top-decoration.svg", "0 0 180 120"),
+            ("navbar-bottom-decoration.svg", "0 0 180 330"),
+        ):
+            root = ET.parse(finders.find("images/branding/" + filename)).getroot()
+            self.assertEqual(root.get("viewBox"), viewbox)
+            self.assertEqual(root.get("preserveAspectRatio"), "none")
+            for element in root:
+                self.assertEqual(element.tag.rsplit("}", 1)[-1], "path")
+                self.assertTrue(element.get("d").endswith("Z"))
+
+    def test_mobile_menu_has_a_single_toggle_controller(self):
+        html = render_to_string("main/partials/navbar.html")
+        self.assertIn('aria-controls="mainNavigation"', html)
+        self.assertIn('aria-expanded="false"', html)
+        self.assertNotIn("data-bs-toggle", html)
+
     def test_final_logo_is_default_without_settings(self):
         html = render_to_string("main/partials/navbar.html")
         self.assertIn(self.logo_path, html)

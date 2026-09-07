@@ -25,8 +25,10 @@
 
     <link
         rel="stylesheet"
-        href="{% static 'css/style.css' %}?v=sidebar-nav-vector-20260907"
+        href="{% static 'css/style.css' %}?v=navbar-reference-20260907"
     >
+    <link rel="stylesheet" href="{% static 'css/navigation.css' %}?v=navbar-reference-20260907">
+    <link rel="preload" href="{% static 'fonts/caveat-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
 
     {% block extra_css %}{% endblock %}
 
@@ -49,6 +51,7 @@
     <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
     </script>
+    <script src="{% static 'js/navigation.js' %}?v=navbar-reference-20260907" defer></script>
 
     {% block extra_js %}{% endblock %}
 

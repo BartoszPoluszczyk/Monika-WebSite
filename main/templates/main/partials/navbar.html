@@ -1,6 +1,7 @@
 {% load static %}
 <nav class="site-navbar" aria-label="Nawigacja główna">
-    <div class="site-container navbar-inner">
+    <img class="navbar-corner" src="{% static 'images/branding/navbar-top-decoration.svg' %}" alt="" aria-hidden="true">
+    <div class="navbar-inner">
         <a class="brand" href="{% url 'home' %}" aria-label="Monika Kulik — strona główna">
             {% if site_settings and site_settings.logo %}
                 <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_name }}" class="navbar-logo">
@@ -18,8 +19,6 @@
         <button
             class="navbar-toggler"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNavigation"
             aria-controls="mainNavigation"
             aria-expanded="false"
             aria-label="Otwórz menu"
@@ -27,7 +26,7 @@
             <span></span><span></span>
         </button>
 
-        <div class="collapse navbar-collapse custom-navigation" id="mainNavigation">
+        <div class="custom-navigation" id="mainNavigation">
             <div class="navigation-links">
                 <a class="navigation-link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Strona główna</span>
@@ -49,14 +48,16 @@
                 </a>
             </div>
 
-            <div class="navbar-signature" aria-hidden="true">
-                <div class="navbar-signature-copy">
-                    <span>Zdrowie zaczyna się</span>
-                    <strong>od dobrych wyborów</strong>
-                </div>
+            <div class="navbar-footer">
+                <img class="navbar-wave" src="{% static 'images/branding/navbar-bottom-decoration.svg' %}?v=reference-20260907" alt="" aria-hidden="true">
+                <p class="navbar-signature">
+                    <span>Zdrowie</span>
+                    <span>zaczyna się</span>
+                    <span>od dobrych</span>
+                    <span>wyborów</span>
+                </p>
+                <a class="navbar-cta" href="{% url 'booking:book' %}">Umów wizytę <span aria-hidden="true">→</span></a>
             </div>
-
-            <a class="navbar-cta" href="{% url 'booking:book' %}">Umów wizytę <span aria-hidden="true">→</span></a>
         </div>
     </div>
 </nav>

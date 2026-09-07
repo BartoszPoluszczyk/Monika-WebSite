@@ -1,8 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 250" fill="none" aria-hidden="true">
-  <path fill="#BDD0C0" d="M300 0H207C221 52 264 94 300 100V0Z"/>
-  <path fill="#BDD0C0" d="M300 127C229 122 177 73 170 0h-67c7 109 94 199 197 209V127Z"/>
-  <path fill="#FFFFFF" d="M300 21h-70c13 39 40 70 70 77V21Z"/>
-  <path fill="#E4ECE7" d="M300 155c-58-6-105-43-121-92H93c18 94 100 166 207 174v-82Z"/>
-  <path fill="#FFFFFF" d="M300 174c-47-9-85-42-101-86h-49c20 74 81 130 150 139v-53Z"/>
-  <path fill="#BDD0C0" d="M300 209c-36-7-66-27-87-55h-57c32 57 84 90 144 96v-41Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 330" preserveAspectRatio="none">
+  <!-- Both filled silhouettes continue to the bottom edge, underneath the CTA. -->
+  <path fill="#E4ECE7" d="M180 0C139 20 113 50 109 88C104 134 116 167 92 202C68 235 34 249 0 260V330H180Z"/>
+  <path fill="#BDD0C0" fill-opacity=".62" d="M180 0C161 36 147 67 148 100C150 139 154 164 134 195C110 230 79 244 44 272C22 290 9 309 6 330H180Z"/>
 </svg>
