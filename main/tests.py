@@ -65,6 +65,8 @@ class NavbarBrandingTests(SimpleTestCase):
         html = render_to_string("main/partials/navbar.html")
         self.assertIn(f'href="{reverse("calorie_calculator")}"', html)
         self.assertIn("Kalkulator kalorii", html)
+        self.assertIn('class="navigation-icon"', html)
+        self.assertIn('class="navbar-signature"', html)
 
     def test_final_logo_is_default_without_settings(self):
         html = render_to_string("main/partials/navbar.html")

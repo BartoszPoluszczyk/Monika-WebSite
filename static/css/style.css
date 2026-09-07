@@ -311,11 +311,10 @@ a {
     body { padding-left: clamp(248px, 24vw, 330px); }
 
     main .site-container {
-    width: 100%;
-    margin-inline: 0;
-}
+        width: 100%;
+        margin-inline: 0;
+    }
 
-    
     .site-navbar {
         position: fixed;
         inset: 0 auto 0 0;
@@ -327,14 +326,17 @@ a {
         border: 0;
         border-right: 1px solid var(--color-border-subtle);
         border-radius: 0;
-        background: var(--palette-white);
+        background:
+            radial-gradient(ellipse 105% 36% at -12% -2%, var(--palette-green-pastel) 0 42%, transparent 43%),
+            radial-gradient(ellipse 115% 34% at 106% 78%, var(--palette-green-pastel-strong) 0 42%, transparent 43%),
+            var(--palette-white);
         backdrop-filter: none;
-        overflow-y: auto;
+        overflow: hidden;
     }
 
     .navbar-inner {
         min-height: 100%;
-        padding: clamp(40px, 6vh, 66px) clamp(28px, 3vw, 48px) 34px;
+        padding: clamp(42px, 6vh, 66px) clamp(20px, 2.4vw, 34px) 24px;
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -343,18 +345,18 @@ a {
     .brand { justify-content: center; }
 
     .navbar-logo-default {
-        width: min(100%, 166px);
-        max-height: 205px;
+        width: min(100%, 146px);
+        max-height: 178px;
     }
 
     .custom-navigation {
         width: 100%;
-        margin: clamp(52px, 9vh, 92px) 0 0;
+        min-height: 0;
+        margin: clamp(38px, 6vh, 58px) 0 0;
         display: flex !important;
         flex: 1;
         flex-direction: column;
         align-items: stretch;
-        justify-content: flex-start;
     }
 
     .navigation-links {
@@ -365,41 +367,94 @@ a {
     }
 
     .navigation-link {
-        padding: 11px 0 11px 28px;
+        min-height: 44px;
+        padding: 10px 13px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-radius: 14px;
         color: var(--color-text-primary);
-        font-size: 0.85rem;
-        font-weight: 500;
+        font-size: 0.78rem;
+        font-weight: 600;
     }
 
-    .navigation-link::after {
-        top: 50%;
-        right: auto;
-        bottom: auto;
-        left: 0;
-        width: 0;
-        height: 3px;
-        transform: translateY(-50%);
-        background: var(--color-cta-background);
-        transition: width var(--transition);
+    .navigation-icon {
+        width: 19px;
+        height: 19px;
+        flex: 0 0 auto;
+        fill: none;
+        stroke: var(--color-accent);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.55;
     }
+
+    .navigation-link::after { display: none; }
 
     .navigation-link:hover,
-    .navigation-link.is-active { color: var(--color-text-primary); }
-
-    .navigation-link:hover::after,
-    .navigation-link.is-active::after {
-        right: auto;
-        left: 0;
-        width: 20px;
+    .navigation-link.is-active {
+        background: var(--palette-green-pastel);
+        color: var(--color-text-primary);
     }
+
+    .navigation-link:hover .navigation-icon,
+    .navigation-link.is-active .navigation-icon { stroke: var(--color-accent-strong); }
+
+    .navbar-signature {
+        position: relative;
+        margin: auto 0 16px;
+        padding: 31px 14px 42px;
+        overflow: hidden;
+        color: var(--color-accent-strong);
+        font-family: var(--font-heading);
+        font-size: 1.05rem;
+        font-style: italic;
+        line-height: 1.06;
+        text-align: center;
+        transform: rotate(-6deg);
+    }
+
+    .navbar-signature::before,
+    .navbar-signature::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .navbar-signature::before {
+        width: 235px;
+        height: 176px;
+        right: -72px;
+        bottom: -118px;
+        border: 25px solid color-mix(in srgb, var(--palette-white) 66%, var(--palette-green-pastel-strong));
+    }
+
+    .navbar-signature::after {
+        width: 158px;
+        height: 188px;
+        left: -64px;
+        bottom: -117px;
+        background: color-mix(in srgb, var(--palette-green-pastel) 58%, transparent);
+        transform: rotate(30deg);
+    }
+
+    .navbar-signature span,
+    .navbar-signature strong { display: block; }
+
+    .navbar-signature strong { margin-top: 4px; font-weight: 500; }
 
     .navbar-cta {
         width: 100%;
-        min-height: 44px;
-        margin: auto 0 0;
+        min-height: 46px;
+        margin: 0;
+        gap: 13px;
         border-radius: 8px;
-        font-size: 0.76rem;
+        font-size: 0.78rem;
     }
+
+    .navbar-cta span { font-size: 1rem; }
 }
 
 /* Hero */
