@@ -77,6 +77,12 @@ class NavbarBrandingTests(SimpleTestCase):
         self.assertIn('class="navbar-cta"', footer)
         self.assertIn('href="' + reverse("booking:book") + '"', footer)
 
+    def test_navbar_has_no_top_wave_but_keeps_the_bottom_wave(self):
+        html = render_to_string("main/partials/navbar.html")
+        self.assertNotIn("navbar-top-decoration.svg", html)
+        self.assertNotIn('class="navbar-corner"', html)
+        self.assertIn("navbar-bottom-decoration.svg", html)
+
     def test_navigation_assets_are_local_and_loaded_by_the_shared_base(self):
         html = render_to_string("main/base.html")
         for asset in ("css/navigation.css", "js/navigation.js", "fonts/caveat-latin.woff2"):

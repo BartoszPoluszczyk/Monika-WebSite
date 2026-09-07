@@ -1,6 +1,5 @@
 {% load static %}
 <nav class="site-navbar" aria-label="Nawigacja główna">
-    <img class="navbar-corner" src="{% static 'images/branding/navbar-top-decoration.svg' %}" alt="" aria-hidden="true">
     <div class="navbar-inner">
         <a class="brand" href="{% url 'home' %}" aria-label="Monika Kulik — strona główna">
             {% if site_settings and site_settings.logo %}
