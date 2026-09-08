@@ -31,7 +31,7 @@
     <link rel="preload" href="{% static 'fonts/caveat-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
 
     {% block extra_css %}{% endblock %}
-    <link rel="stylesheet" href="{% static 'css/watermark.css' %}?v=20260908">
+    <link rel="stylesheet" href="{% static 'css/watermark.css' %}?v=20260908-fixed-home">
 
 </head>
 
@@ -41,7 +41,7 @@
     {% include "main/partials/navbar.html" %}
 
 
-    <main class="site-main">
+    <main class="site-main{% if request.resolver_match.url_name == 'home' %} site-main-home{% endif %}">
 
         {% block content %}
         {% endblock %}

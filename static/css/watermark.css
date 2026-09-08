@@ -1,5 +1,5 @@
 /* Watermark settings: opacity controls visibility; size controls logo width.
-   Each mark belongs to its section and scrolls naturally with the document. */
+   Home: one stationary logo. Other pages: marks scroll with their sections. */
 :root {
     --watermark-opacity: 0.055;
     --watermark-size: clamp(200px, 36vw, 460px);
@@ -8,7 +8,7 @@
 
 /* Isolate the decorative layer above the surface background and below content.
    Opaque photos, cards and form fields retain their own clean backgrounds. */
-.site-main :is(
+.site-main:not(.site-main-home) :is(
     .hero-container,
     .home-about-container,
     .help-section > .site-container,
@@ -23,7 +23,7 @@
     isolation: isolate;
 }
 
-.site-main :is(
+.site-main:not(.site-main-home) :is(
     .hero-container,
     .home-about-container,
     .help-section > .site-container,
@@ -49,18 +49,59 @@
     background-attachment: scroll;
 }
 
-/* The portrait occupies the right half of the hero. */
-.site-main .hero-container {
-    --watermark-position: left 5% center;
+/* One viewport-anchored mark for the entire home page.
+   Layer 0: section backgrounds; layer 1: logo; layer 2: readable content.
+   The surfaces must not create their own stacking contexts, otherwise their
+   opaque backgrounds would hide the shared watermark. */
+.site-main-home {
+    position: relative;
+    isolation: isolate;
+}
+
+.site-main-home::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    opacity: var(--watermark-opacity);
+    background-image: url("../images/branding/monika-kulik-logo-pionowe.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: min(75%, var(--watermark-size)) auto;
+}
+
+.site-main-home :is(
+    .hero-container,
+    .home-about-container,
+    .help-section > .site-container,
+    .offer-section > .site-container,
+    .cooperation-section > .site-container
+) {
+    position: relative;
+}
+
+.site-main-home :is(
+    .hero-container,
+    .home-about-container,
+    .help-section > .site-container,
+    .offer-section > .site-container,
+    .cooperation-section > .site-container
+) > * {
+    position: relative;
+    z-index: 2;
+}
+
+@media (min-width: 1101px) {
+    /* Center in the content area, excluding the fixed left navigation. */
+    .site-main-home::before { left: var(--navbar-width); }
 }
 
 @media (max-width: 860px) {
     .site-main {
         --watermark-opacity: 0.045;
         --watermark-size: clamp(180px, 62vw, 300px);
-    }
-    .site-main .hero-container {
-        --watermark-position: right 5% top 90px;
     }
 }
 
