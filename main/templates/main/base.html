@@ -31,6 +31,7 @@
     <link rel="preload" href="{% static 'fonts/caveat-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
 
     {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/watermark.css' %}?v=20260908">
 
 </head>
 
@@ -40,7 +41,7 @@
     {% include "main/partials/navbar.html" %}
 
 
-    <main>
+    <main class="site-main">
 
         {% block content %}
         {% endblock %}

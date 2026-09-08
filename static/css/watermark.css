@@ -1,0 +1,69 @@
+/* Watermark settings: opacity controls visibility; size controls logo width.
+   Each mark belongs to its section and scrolls naturally with the document. */
+:root {
+    --watermark-opacity: 0.055;
+    --watermark-size: clamp(200px, 36vw, 460px);
+    --watermark-position: right 5% center;
+}
+
+/* Isolate the decorative layer above the surface background and below content.
+   Opaque photos, cards and form fields retain their own clean backgrounds. */
+.site-main :is(
+    .hero-container,
+    .home-about-container,
+    .help-section > .site-container,
+    .offer-section > .site-container,
+    .cooperation-section > .site-container,
+    .about-section,
+    .calorie-page,
+    .booking-container,
+    .booking-result-card
+) {
+    position: relative;
+    isolation: isolate;
+}
+
+.site-main :is(
+    .hero-container,
+    .home-about-container,
+    .help-section > .site-container,
+    .offer-section > .site-container,
+    .cooperation-section > .site-container,
+    .about-section,
+    .calorie-page,
+    .booking-container,
+    .booking-result-card
+)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    user-select: none;
+    opacity: var(--watermark-opacity);
+    background-image: url("../images/branding/monika-kulik-logo-pionowe.svg");
+    background-repeat: no-repeat;
+    background-size: min(75%, var(--watermark-size)) auto;
+    background-position: var(--watermark-position);
+    background-attachment: scroll;
+}
+
+/* The portrait occupies the right half of the hero. */
+.site-main .hero-container {
+    --watermark-position: left 5% center;
+}
+
+@media (max-width: 860px) {
+    .site-main {
+        --watermark-opacity: 0.045;
+        --watermark-size: clamp(180px, 62vw, 300px);
+    }
+    .site-main .hero-container {
+        --watermark-position: right 5% top 90px;
+    }
+}
+
+@media print {
+    .site-main { --watermark-opacity: 0; }
+}
