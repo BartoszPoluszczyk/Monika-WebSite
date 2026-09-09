@@ -1,10 +1,9 @@
 /* The sidebar is one layout: no independent circles or footer gradients.
    Keep --navbar-width shared by the panel and the page to avoid a white gap. */
-/* Alex Brush is locally bundled from Google Fonts. Its Latin Extended
-   repertoire includes the Polish characters used in the sidebar signature. */
+/* Amsterdam One is bundled locally for the handwritten sidebar signature. */
 @font-face {
-    font-family: "Alex Brush";
-    src: url("../fonts/alex-brush.ttf") format("truetype");
+    font-family: "Amsterdam One";
+    src: url("../fonts/amsterdam-one.ttf") format("truetype");
     font-style: normal;
     font-weight: 400;
     font-display: swap;
@@ -214,7 +213,7 @@
         display: block;
         margin: 0;
         color: var(--navbar-icon);
-        font-family: "Alex Brush", cursive;
+        font-family: "Amsterdam One", cursive;
         font-size: 25px;
         font-size: 10.5cqi;
         font-weight: 400;
