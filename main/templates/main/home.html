@@ -6,7 +6,7 @@ Strona główna | Dietetyk Monika
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/home-photo.css' %}?v=20260909-reference">
+    <link rel="stylesheet" href="{% static 'css/home-photo.css' %}?v=20260909-hero-only">
 {% endblock %}
 
 {% block content %}
@@ -25,8 +25,9 @@ Strona główna | Dietetyk Monika
         >
         </div>
         {% include "main/partials/hero.html" with shared_photo_background=True %}
-        {% include "main/partials/about_preview.html" with shared_photo_background=True %}
     </div>
+
+    {% include "main/partials/about_preview.html" %}
 
     {% include "main/partials/help.html" %}
 

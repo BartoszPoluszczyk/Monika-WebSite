@@ -207,10 +207,10 @@ class WebsitePortraitTests(SimpleTestCase):
                         self.assertEqual(portrait.getpixel((550, 300))[3], 255)
 
 
-class HomeSharedPhotoTests(TestCase):
+class HomeHeroPhotoTests(TestCase):
     photo_asset = "images/backgrounds/monika-kitchen-20260909.webp"
 
-    def test_one_background_wraps_exactly_the_first_two_sections(self):
+    def test_background_wraps_only_hero_and_about_keeps_its_own_portrait(self):
         class IntroParser(HTMLParser):
             depth = 0
             sections = None
@@ -239,11 +239,11 @@ class HomeSharedPhotoTests(TestCase):
         self.assertEqual(response.status_code, 200)
         parser = IntroParser()
         parser.feed(response.content.decode())
-        self.assertEqual(parser.sections, ["hero", "home-about"])
+        self.assertEqual(parser.sections, ["hero"])
         self.assertEqual(parser.photos, 1)
         self.assertContains(response, self.photo_asset, count=1)
         self.assertNotContains(response, 'class="hero-person"')
-        self.assertNotContains(response, 'class="home-about-image"')
+        self.assertContains(response, 'class="home-about-image"', count=1)
         for anchor in ('id="o-mnie"', 'id="pomoc"', 'id="oferta"', 'id="wspolpraca"'):
             self.assertContains(response, anchor)
 
@@ -255,7 +255,7 @@ class HomeSharedPhotoTests(TestCase):
                 self.assertNotContains(response, self.photo_asset)
                 self.assertNotContains(response, "css/home-photo.css")
 
-    def test_shared_photo_preserves_admin_text_and_suppresses_duplicate_portraits(self):
+    def test_hero_background_preserves_admin_text_and_independent_about_portrait(self):
         home = HomePage(
             hero_title="Indywidualny tytuł",
             hero_description="Indywidualny opis strony",
@@ -265,11 +265,12 @@ class HomeSharedPhotoTests(TestCase):
             title="O mnie", subtitle="Indywidualny podtytuł",
             description="Opis Moniki z panelu administratora.", photo="about/custom.png",
         )
+        about.photo._dimensions_cache = (800, 1000)
         html = render_to_string("main/home.html", {"home_page": home, "about_page": about})
         for content in (home.hero_title, home.hero_description, about.subtitle, about.description):
             self.assertIn(content, html)
         self.assertNotIn(home.hero_photo.url, html)
-        self.assertNotIn(about.photo.url, html)
+        self.assertIn(about.photo.url, html)
 
     def test_background_keeps_the_full_source_frame_in_a_small_web_asset(self):
         path = Path(finders.find(self.photo_asset))

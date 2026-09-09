@@ -1,9 +1,9 @@
 /* Reference composition: clear kitchen photograph, large left-aligned copy.
-   One backdrop remains bounded by the hero + About wrapper. */
+   The kitchen photograph belongs only to the full-screen hero. */
 .home-photo-intro {
     --home-photo-focus: 65% center;
-    --home-photo-top: 0px;
-    --home-photo-height: max(660px, 100svh);
+    --home-photo-height: 100vh;
+    --home-photo-height: 100svh;
     --home-copy-width: 58%;
     --home-copy-padding: 11.5%;
     position: relative;
@@ -13,10 +13,7 @@
     background: #FFFFFF;
 }
 
-/* This full-height rail bounds the sticky image to the first two sections.
-   Do not add overflow:hidden/auto to the rail or its ancestors: that would
-   change the sticky scrolling container. The image is sized to the viewport,
-   not to the combined height of both sections. */
+/* The backdrop fills only the hero and scrolls out with it. */
 .home-photo-backdrop {
     position: absolute;
     inset: 0;
@@ -25,11 +22,11 @@
 }
 
 .home-photo-background {
-    position: sticky;
-    top: var(--home-photo-top);
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
-    height: var(--home-photo-height);
+    height: 100%;
     max-width: none;
     object-fit: cover;
     object-position: var(--home-photo-focus);
@@ -54,14 +51,12 @@
     );
 }
 
-.home-photo-intro > .hero,
-.home-photo-intro > .home-about {
+.home-photo-intro > .hero {
     position: relative;
     z-index: 2;
 }
 
-.home-photo-intro .hero-container,
-.home-photo-intro .home-about-container {
+.home-photo-intro .hero-container {
     display: block;
     width: 100%;
     margin: 0;
@@ -75,8 +70,7 @@
     min-height: var(--home-photo-height);
 }
 
-.home-photo-intro .hero-content,
-.home-photo-intro .home-about-content {
+.home-photo-intro .hero-content {
     width: var(--home-copy-width);
     max-width: none;
     min-width: 0;
@@ -136,28 +130,22 @@
     font-size: clamp(10px, 0.85cqi, 16px);
 }
 
-.home-photo-intro .home-about { padding: 0; }
-
-.home-photo-intro .home-about-content {
-    padding-top: 56px;
-    padding-bottom: 96px;
-}
-
-.home-photo-intro .home-about-description {
-    font-size: clamp(14px, 1.1cqi, 18px);
-    line-height: 1.7;
+@media (max-width: 1100px) {
+    /* The compact navbar is 103px tall; the hero fills the remaining screen. */
+    .home-photo-intro {
+        --home-photo-height: calc(100vh - 103px);
+        --home-photo-height: calc(100svh - 103px);
+    }
 }
 
 @media (min-width: 861px) and (max-width: 1100px) {
     .home-photo-intro {
-        --home-photo-top: 103px;
-        --home-photo-height: max(600px, calc(100svh - 103px));
         --home-copy-padding: 8%;
     }
 }
 
-/* On phones use the existing natural scroll, with a stronger veil for text.
-   Sticky desktop framing must not create extra empty space on small screens. */
+/* Retain the full-screen minimum on phones, with a stronger text veil.
+   Content may increase the height naturally rather than being clipped. */
 @media (max-width: 860px) {
     .home-photo-intro {
         --home-copy-width: 100%;
@@ -177,9 +165,7 @@
             rgba(255, 255, 255, 0.62) 100%
         );
     }
-    .home-photo-intro .hero-container { min-height: 0; }
-    .home-photo-intro .hero-content,
-    .home-photo-intro .home-about-content {
+    .home-photo-intro .hero-content {
         padding-inline: var(--home-copy-padding);
     }
     .home-photo-intro .hero-content {
@@ -195,13 +181,9 @@
         margin-bottom: 18px;
     }
     .home-photo-intro .hero-buttons { gap: 12px; }
-    .home-photo-intro .home-about-content {
-        padding-top: 28px;
-        padding-bottom: 56px;
-    }
 }
 
 @media print {
-    .home-photo-background { position: absolute; inset: 0; height: 100%; }
     .home-photo-intro .hero-container { min-height: 0; }
+    .home-photo-background { position: absolute; inset: 0; height: 100%; }
 }
