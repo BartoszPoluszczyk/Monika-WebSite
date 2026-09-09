@@ -8,6 +8,16 @@
     font-display: swap;
 }
 
+/* Supplied Amsterdam One has a regular face only. Caveat remains after it
+   solely as a glyph fallback for Polish letters missing from that font. */
+@font-face {
+    font-family: "Amsterdam One";
+    src: url("../fonts/amsterdam-one.ttf") format("truetype");
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+}
+
 :root {
     --navbar-width: clamp(220px, 26vh, 260px);
     --navbar-background: #FFFFFF;
@@ -212,10 +222,10 @@
         display: block;
         margin: 0;
         color: var(--navbar-icon);
-        font-family: "Caveat", cursive;
+        font-family: "Amsterdam One", "Caveat", cursive;
         font-size: 34px;
         font-size: 14.5cqi;
-        font-weight: 600;
+        font-weight: 400;
         line-height: 0.95;
         letter-spacing: -0.025em;
         transform: rotate(-7deg);

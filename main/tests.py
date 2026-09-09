@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from PIL import Image
+from fontTools.ttLib import TTFont
 
 from django.contrib.staticfiles import finders
 from django.db import connection
@@ -86,13 +87,31 @@ class NavbarBrandingTests(SimpleTestCase):
 
     def test_navigation_assets_are_local_and_loaded_by_the_shared_base(self):
         html = render_to_string("main/base.html")
-        for asset in ("css/navigation.css", "js/navigation.js", "fonts/caveat-latin.woff2"):
+        for asset in (
+            "css/navigation.css",
+            "js/navigation.js",
+            "fonts/caveat-latin.woff2",
+            "fonts/amsterdam-one.ttf",
+        ):
             self.assertIsNotNone(finders.find(asset))
             self.assertIn(asset, html)
         css = Path(finders.find("css/navigation.css")).read_text(encoding="utf-8")
-        self.assertIn('font-family: "Caveat"', css)
+        self.assertIn('font-family: "Amsterdam One", "Caveat", cursive;', css)
+        self.assertIn('src: url("../fonts/amsterdam-one.ttf") format("truetype");', css)
         self.assertIn("padding-left: var(--navbar-width)", css)
         self.assertNotIn("radial-gradient", css)
+
+    def test_amsterdam_one_signature_font_is_embedded_with_polish_fallback(self):
+        font = TTFont(finders.find("fonts/amsterdam-one.ttf"))
+        family_names = {
+            record.toUnicode()
+            for record in font["name"].names
+            if record.nameID in (1, 4)
+        }
+        self.assertIn("Amsterdam One", family_names)
+        # The supplied regular face lacks e-ogonek. Keep the text correct and
+        # let the explicit Caveat fallback draw only that character.
+        self.assertNotIn(ord("ę"), font.getBestCmap())
 
     def test_decorations_are_filled_paths_not_disconnected_rings(self):
         for filename, viewbox in (
