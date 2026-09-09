@@ -226,9 +226,10 @@
         font-size: 25px;
         font-size: 10.5cqi;
         font-weight: 400;
-        line-height: 1.18;
+        line-height: 1.38;
         letter-spacing: 0;
-        transform: none;
+        transform: rotate(-5deg);
+        transform-origin: left center;
     }
     .navbar-signature span { display: block; white-space: nowrap; }
     .navbar-cta {
