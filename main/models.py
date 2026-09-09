@@ -47,6 +47,41 @@ class HomePage(models.Model):
         ),
     )
 
+    help_eyebrow = models.CharField(
+        max_length=150,
+        default="Jak pomagam",
+        verbose_name="Mały nagłówek sekcji Jak pomagam",
+    )
+
+    help_title = models.CharField(
+        max_length=250,
+        default="Od poznania Twojej historii do stworzenia planu, który działa",
+        verbose_name="Główny nagłówek sekcji Jak pomagam",
+    )
+
+    help_description = models.TextField(
+        default=(
+            "Każdy organizm opowiada własną historię. Chcę się w nią uważnie "
+            "wsłuchać, aby lepiej zrozumieć płynące z niego sygnały i wyznaczyć "
+            "kierunek działania, który pozwoli odnaleźć klucz do Twojego sukcesu "
+            "— niezależnie czy jest nim redukcja wagi, osiągnięcie konkretnych "
+            "celów zdrowotnych, poprawa samopoczucia czy realizacja kilku założeń "
+            "jednocześnie. W tym celu łączę wiedzę z zakresu dietetyki klinicznej "
+            "z elementami fitoterapii, technik oddechowych i aromaterapii."
+        ),
+        verbose_name="Opis sekcji Jak pomagam",
+        help_text=(
+            "Aby wyróżnić fragment na stronie, otocz go podwójnymi gwiazdkami. "
+            "Przykład: **odŻYWIENIE**."
+        ),
+    )
+
+    help_specializations_title = models.CharField(
+        max_length=250,
+        default="Obszary, w których mogę Ci pomóc",
+        verbose_name="Nagłówek specjalizacji",
+    )
+
     hero_photo = models.ImageField(
         upload_to="home/hero/",
         blank=True,
@@ -196,10 +231,12 @@ class CooperationStep(models.Model):
     title = models.CharField(
         max_length=150,
         verbose_name="Nazwa etapu",
+        help_text="Tytuł jednego z trzech etapów w sekcji Jak pomagam.",
     )
 
     description = models.TextField(
         verbose_name="Opis etapu",
+        help_text="Opis etapu widoczny pod jego tytułem na stronie głównej.",
     )
 
     order = models.PositiveIntegerField(
@@ -216,6 +253,6 @@ class CooperationStep(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = "Etap współpracy"
-        verbose_name_plural = "Etapy współpracy"
+        verbose_name = "Etap „Jak pomagam”"
+        verbose_name_plural = "Etapy „Jak pomagam”"
         ordering = ["order"]

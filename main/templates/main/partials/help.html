@@ -1,76 +1,71 @@
+{% load content_formatting %}
 <section class="help-section" id="pomoc">
-
     <div class="site-container">
-
         <div class="help-heading">
-
             <p class="section-eyebrow">
-                Wsparcie dopasowane do Ciebie
+                {{ home_page.help_eyebrow|default:"Jak pomagam" }}
             </p>
-
             <h2 class="section-title">
-                W czym mogę
-                <span>Ci pomóc?</span>
+                {{ home_page.help_title|default:"Od poznania Twojej historii do stworzenia planu, który działa" }}
             </h2>
-
-            <p class="section-description">
-                Każda osoba ma inne potrzeby, dlatego sposób
-                współpracy dobieramy indywidualnie.
-            </p>
-
+            <div class="help-description">
+                {{ home_page.help_description|accent_text|linebreaks }}
+            </div>
         </div>
 
+        <div class="help-journey" aria-label="Trzy etapy współpracy">
+            {% for step in cooperation_steps %}
+                <article class="help-step">
+                    <div class="help-step-top">
+                        <span class="help-step-number">
+                            {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
+                        </span>
+                        <span class="help-step-icon" aria-hidden="true">
+                            {% if forloop.counter == 1 %}
+                                <svg viewBox="0 0 48 48"><path d="M24 41V19"/><path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14"/><path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16"/></svg>
+                            {% elif forloop.counter == 2 %}
+                                <svg viewBox="0 0 48 48"><path d="M10 34V16h28v18H10Z"/><path d="M16 16v-5h16v5M17 25h14M17 30h9"/></svg>
+                            {% else %}
+                                <svg viewBox="0 0 48 48"><path d="M13 25 21 33 36 16"/><circle cx="24" cy="24" r="18"/></svg>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <h3>{{ step.title }}</h3>
+                    <p>{{ step.description }}</p>
+                </article>
+            {% empty %}
+                <article class="help-step"><div class="help-step-top"><span class="help-step-number">01</span></div><h3>Poznaję Twój punkt wyjścia</h3><p>Przed konsultacją poznaję Twoją ankietę zdrowotną, wyniki badań oraz cele współpracy.</p></article>
+                <article class="help-step"><div class="help-step-top"><span class="help-step-number">02</span></div><h3>Tworzę plan działania</h3><p>Łączę analizę potrzeb z zaleceniami żywieniowymi, stylem życia i suplementacją.</p></article>
+                <article class="help-step"><div class="help-step-top"><span class="help-step-number">03</span></div><h3>Towarzyszę Ci w zmianie</h3><p>Monitorujemy efekty i wspólnie dostosowujemy plan do codziennego życia.</p></article>
+            {% endfor %}
+        </div>
+
+        <div class="specializations-heading">
+            <p class="section-eyebrow">Specjalności</p>
+            <h3>{{ home_page.help_specializations_title|default:"Obszary, w których mogę Ci pomóc" }}</h3>
+        </div>
 
         {% if specializations %}
-
-            <div class="help-grid">
-
-                {% for specialization in specializations %}
-
-                    <article class="help-card">
-
-                        <div class="help-card-number">
-                            0{{ forloop.counter }}
-                        </div>
-
-                        <div class="help-card-icon">
-                            <svg viewBox="0 0 48 48" aria-hidden="true">
-                                <path d="M24 41V19" />
-                                <path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14" />
-                                <path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16" />
-                            </svg>
-                        </div>
-
-                        <h3>
-                            {{ specialization.name }}
-                        </h3>
-
-                        {% if specialization.description %}
-
-                            <p>
-                                {{ specialization.description }}
-                            </p>
-
-                        {% endif %}
-
-                        <div class="help-card-arrow" aria-hidden="true">
-                            →
-                        </div>
-
-                    </article>
-
-                {% endfor %}
-
+            <div class="specializations-carousel" data-specializations-carousel>
+                <div class="specializations-controls" aria-label="Sterowanie listą specjalizacji">
+                    <button class="specializations-control" type="button" data-slider-previous aria-label="Poprzednia specjalizacja">←</button>
+                    <button class="specializations-control" type="button" data-slider-next aria-label="Następna specjalizacja">→</button>
+                </div>
+                <div class="specializations-track" id="specializations-list">
+                    {% for specialization in specializations %}
+                        <article class="specialization-card">
+                            <span class="specialization-card-number">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
+                            <div class="specialization-card-icon" aria-hidden="true">
+                                <svg viewBox="0 0 48 48"><path d="M24 41V19"/><path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14"/><path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16"/></svg>
+                            </div>
+                            <h4>{{ specialization.name }}</h4>
+                            {% if specialization.description %}<p>{{ specialization.description }}</p>{% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
             </div>
-
         {% else %}
-
-            <p>
-                Nie dodano jeszcze obszarów pracy.
-            </p>
-
+            <p class="specializations-empty">Specjalności pojawią się tutaj wkrótce.</p>
         {% endif %}
-
     </div>
-
 </section>

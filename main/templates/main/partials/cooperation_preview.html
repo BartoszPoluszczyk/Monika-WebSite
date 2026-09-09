@@ -1,107 +1,13 @@
 <section class="cooperation-section" id="wspolpraca">
-
     <div class="site-container">
-
         <div class="cooperation-heading">
-
-            <p class="section-eyebrow">
-                Współpraca
-            </p>
-
-            <h2 class="section-title">
-                Jak wygląda
-                <span>proces współpracy?</span>
-            </h2>
-
-            <p class="section-description">
-                Od pierwszego kontaktu aż po dalsze wsparcie —
-                każdy etap ma jasno określony cel.
-            </p>
-
+            <p class="section-eyebrow">Współpraca</p>
+            <h2 class="section-title">Zacznijmy od <span>pierwszej rozmowy.</span></h2>
+            <p class="section-description">Wybierz dogodny termin konsultacji. Przed wizytą otrzymasz ankietę, która pomoże mi lepiej przygotować się do spotkania.</p>
         </div>
-
-
-        {% if cooperation_steps %}
-
-            <div class="cooperation-steps">
-
-                {% for step in cooperation_steps %}
-
-                    <article class="cooperation-step">
-
-                        <div class="cooperation-step-top">
-
-                            <div class="cooperation-step-icon">
-                                {% if forloop.counter == 1 %}
-                                    <svg viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M24 41V19" />
-                                        <path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14" />
-                                        <path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16" />
-                                    </svg>
-                                {% elif forloop.counter == 2 %}
-                                    <svg viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M13 12h22a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5H23l-9 7v-7h-1a5 5 0 0 1-5-5V17a5 5 0 0 1 5-5Z" />
-                                        <path d="M16 23h16" />
-                                    </svg>
-                                {% elif forloop.counter == 3 %}
-                                    <svg viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M15 10h18v5h5v26H10V15h5Z" />
-                                        <path d="M15 10v8h18v-8M17 26h14M17 33h10" />
-                                    </svg>
-                                {% else %}
-                                    <svg viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M24 39S9 30 9 19a9 9 0 0 1 15-6 9 9 0 0 1 15 6c0 11-15 20-15 20Z" />
-                                    </svg>
-                                {% endif %}
-                            </div>
-
-                            <div class="cooperation-step-number">
-                                {% if forloop.counter < 10 %}
-                                    0{{ forloop.counter }}
-                                {% else %}
-                                    {{ forloop.counter }}
-                                {% endif %}
-                            </div>
-
-                        </div>
-
-
-                        <h3>
-                            {{ step.title }}
-                        </h3>
-
-                        <p>
-                            {{ step.description }}
-                        </p>
-
-
-                        {% if not forloop.last %}
-
-                            <div class="cooperation-line"></div>
-
-                        {% endif %}
-
-                    </article>
-
-                {% endfor %}
-
-            </div>
-
-        {% else %}
-
-            <p class="cooperation-empty">
-                Etapy współpracy nie zostały jeszcze dodane.
-            </p>
-
-        {% endif %}
-
         <div class="cooperation-booking-cta">
-            <p>Masz już wybraną formę współpracy?</p>
-            <a href="{% url 'booking:book' %}" class="button-primary">
-                Wybierz termin wizyty <span class="button-arrow">→</span>
-            </a>
+            <p>Masz pytanie lub jesteś gotowa/y zacząć?</p>
+            <a href="{% url 'booking:book' %}" class="button-primary">Umów wizytę <span class="button-arrow">→</span></a>
         </div>
-
     </div>
-
 </section>
