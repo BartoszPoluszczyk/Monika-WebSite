@@ -192,6 +192,7 @@
     .navbar-wave {
         position: absolute;
         inset: 0;
+        z-index: 0;
         display: block;
         width: 100%;
         height: 100%;
@@ -200,24 +201,41 @@
     .navbar-footer::before {
         content: "";
         position: absolute;
-        top: 5%;
-        left: 14%;
-        width: 20%;
+        z-index: 2;
+        top: 6%;
+        left: 11%;
+        width: 18%;
         height: 1px;
         background: var(--color-border-emphasis);
     }
+    .navbar-footer-photo {
+        position: absolute;
+        z-index: 1;
+        right: -5%;
+        bottom: 19%;
+        display: block;
+        width: 74%;
+        height: 49%;
+        object-fit: cover;
+        object-position: 52% 58%;
+        border-radius: 100% 0 0 0;
+        clip-path: ellipse(92% 100% at 100% 100%);
+        filter: saturate(.78) brightness(1.04);
+        pointer-events: none;
+    }
     .navbar-signature {
         position: absolute;
-        top: 23%;
-        left: 14%;
+        z-index: 2;
+        top: 14%;
+        left: 10%;
         display: block;
         margin: 0;
         color: var(--navbar-icon);
         font-family: "Amsterdam One", cursive;
         font-size: 25px;
-        font-size: 10.5cqi;
+        font-size: 9.2cqi;
         font-weight: 400;
-        line-height: 1.38;
+        line-height: 1.22;
         letter-spacing: 0;
         transform: rotate(-9deg);
         transform-origin: left center;
@@ -225,6 +243,7 @@
     .navbar-signature span { display: block; white-space: nowrap; }
     .navbar-cta {
         position: absolute;
+        z-index: 3;
         right: 8%;
         bottom: 8%;
         left: 8%;
