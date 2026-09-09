@@ -220,7 +220,7 @@
         font-weight: 400;
         line-height: 1.38;
         letter-spacing: 0;
-        transform: rotate(-5deg);
+        transform: rotate(-9deg);
         transform-origin: left center;
     }
     .navbar-signature span { display: block; white-space: nowrap; }
