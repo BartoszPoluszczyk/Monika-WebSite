@@ -38,7 +38,7 @@
 
 .brand { display: block; flex-shrink: 0; }
 .navbar-logo { display: block; width: 66px; height: 82px; object-fit: contain; }
-.navbar-corner, .navbar-wave, .navbar-signature { display: none; }
+.navbar-corner, .navbar-wave, .navbar-signature, .navbar-footer-photo { display: none; }
 
 .custom-navigation { display: none; width: 100%; }
 .custom-navigation.is-open { display: block; padding-block: 10px 14px; }
@@ -147,16 +147,16 @@
         pointer-events: none;
     }
 
-    /* Reference proportions: logo 28%, links 32%, illustrated footer 40%.
+    /* Reserve space for the handwritten caption, complete photo and CTA.
        Short laptop windows scroll the panel instead of clipping its CTA. */
     .navbar-inner {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: 28% 72%;
+        grid-template-rows: 24% 76%;
         align-items: stretch;
         justify-content: normal;
         height: 100%;
-        min-height: 760px;
+        min-height: 960px;
         padding: 0;
     }
     .brand {
@@ -172,7 +172,7 @@
     .custom-navigation,
     .custom-navigation.is-open {
         display: grid;
-        grid-template-rows: 45% 55%;
+        grid-template-rows: minmax(264px, 1fr) minmax(440px, 1.4fr);
         width: 100%;
         height: 100%;
         min-height: 0;
@@ -184,15 +184,22 @@
         padding: 0 8% 9px;
     }
     .navigation-link { min-height: 0; padding: 8px 12px; }
+    /* Separate rows keep handwriting, photo and CTA from overlapping.
+       Minimum sizes also protect the layout on short laptop windows. */
     .navbar-footer {
         position: relative;
-        min-height: 0;
+        display: grid;
+        grid-template-rows: auto minmax(140px, 1fr) auto;
+        gap: 12px;
+        padding: 24px 8% 18px;
+        min-height: 440px;
+        isolation: isolate;
         container-type: inline-size;
     }
     .navbar-wave {
         position: absolute;
         inset: 0;
-        z-index: 0;
+        z-index: -1;
         display: block;
         width: 100%;
         height: 100%;
@@ -201,53 +208,45 @@
     .navbar-footer::before {
         content: "";
         position: absolute;
-        z-index: 2;
-        top: 6%;
-        left: 11%;
+        top: 8px;
+        left: 10%;
         width: 18%;
         height: 1px;
         background: var(--color-border-emphasis);
     }
     .navbar-footer-photo {
-        position: absolute;
-        z-index: 1;
-        right: 0;
-        bottom: 19%;
+        grid-row: 2;
         display: block;
-        width: 70%;
-        height: 48%;
-        object-fit: cover;
-        object-position: 54% 58%;
-        border-radius: 110px 0 0 0;
-        filter: saturate(.78) brightness(1.04);
+        justify-self: end;
+        width: 100%;
+        height: 100%;
+        min-height: 140px;
+        max-height: 200px;
+        object-fit: contain;
+        object-position: center;
+        border-radius: 0;
         pointer-events: none;
     }
     .navbar-signature {
-        position: absolute;
-        z-index: 2;
-        top: 14%;
-        left: 10%;
+        grid-row: 1;
+        justify-self: start;
         display: block;
-        margin: 0;
+        margin: 0 0 0 4px;
+        padding-top: 8px;
         color: var(--navbar-icon);
         font-family: "Amsterdam One", cursive;
-        font-size: 25px;
-        font-size: 9.2cqi;
+        font-size: 16px;
         font-weight: 400;
-        line-height: 1.22;
+        line-height: 2.4;
         letter-spacing: 0;
         transform: rotate(-9deg);
         transform-origin: left center;
     }
     .navbar-signature span { display: block; white-space: nowrap; }
     .navbar-cta {
-        position: absolute;
-        z-index: 3;
-        right: 8%;
-        bottom: 8%;
-        left: 8%;
+        grid-row: 3;
+        position: relative;
         min-height: 46px;
-        height: 13%;
         margin: 0;
         padding: 8px;
     }
