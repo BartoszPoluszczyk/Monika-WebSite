@@ -1,14 +1,30 @@
 {% extends "main/base.html" %}
+{% load static %}
 
 {% block title %}
 Strona główna | Dietetyk Monika
 {% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/home-photo.css' %}?v=20260909">
+{% endblock %}
+
 {% block content %}
 
-    {% include "main/partials/hero.html" %}
-
-    {% include "main/partials/about_preview.html" %}
+    <div class="home-photo-intro">
+        <img
+            class="home-photo-background"
+            src="{% static 'images/backgrounds/monika-kitchen-20260909.webp' %}"
+            alt=""
+            aria-hidden="true"
+            width="1821"
+            height="864"
+            fetchpriority="high"
+            decoding="async"
+        >
+        {% include "main/partials/hero.html" with shared_photo_background=True %}
+        {% include "main/partials/about_preview.html" with shared_photo_background=True %}
+    </div>
 
     {% include "main/partials/help.html" %}
 

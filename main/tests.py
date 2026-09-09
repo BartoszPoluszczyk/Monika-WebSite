@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 from pathlib import Path
 
 from PIL import Image
@@ -204,6 +205,79 @@ class WebsitePortraitTests(SimpleTestCase):
                     if has_alpha:
                         self.assertEqual(portrait.getpixel((0, 0))[3], 0)
                         self.assertEqual(portrait.getpixel((550, 300))[3], 255)
+
+
+class HomeSharedPhotoTests(TestCase):
+    photo_asset = "images/backgrounds/monika-kitchen-20260909.webp"
+
+    def test_one_background_wraps_exactly_the_first_two_sections(self):
+        class IntroParser(HTMLParser):
+            depth = 0
+            sections = None
+            photos = 0
+
+            def __init__(self):
+                super().__init__()
+                self.sections = []
+
+            def handle_starttag(self, tag, attributes):
+                attrs = dict(attributes)
+                if tag == "div":
+                    if self.depth or attrs.get("class") == "home-photo-intro":
+                        self.depth += 1
+                if self.depth and tag == "section":
+                    self.sections.append(attrs.get("class"))
+                if self.depth and tag == "img":
+                    if attrs.get("class") == "home-photo-background":
+                        self.photos += 1
+
+            def handle_endtag(self, tag):
+                if tag == "div" and self.depth:
+                    self.depth -= 1
+
+        response = self.client.get(reverse("home"))
+        self.assertEqual(response.status_code, 200)
+        parser = IntroParser()
+        parser.feed(response.content.decode())
+        self.assertEqual(parser.sections, ["hero", "home-about"])
+        self.assertEqual(parser.photos, 1)
+        self.assertContains(response, self.photo_asset, count=1)
+        self.assertNotContains(response, 'class="hero-person"')
+        self.assertNotContains(response, 'class="home-about-image"')
+        for anchor in ('id="o-mnie"', 'id="pomoc"', 'id="oferta"', 'id="wspolpraca"'):
+            self.assertContains(response, anchor)
+
+    def test_other_pages_do_not_load_the_home_photo_or_its_styles(self):
+        for name in ("about", "calorie_calculator", "booking:book"):
+            with self.subTest(page=name):
+                response = self.client.get(reverse(name))
+                self.assertEqual(response.status_code, 200)
+                self.assertNotContains(response, self.photo_asset)
+                self.assertNotContains(response, "css/home-photo.css")
+
+    def test_shared_photo_preserves_admin_text_and_suppresses_duplicate_portraits(self):
+        home = HomePage(
+            hero_title="Indywidualny tytuł",
+            hero_description="Indywidualny opis strony",
+            hero_photo="home/hero/custom.png",
+        )
+        about = AboutPage(
+            title="O mnie", subtitle="Indywidualny podtytuł",
+            description="Opis Moniki z panelu administratora.", photo="about/custom.png",
+        )
+        html = render_to_string("main/home.html", {"home_page": home, "about_page": about})
+        for content in (home.hero_title, home.hero_description, about.subtitle, about.description):
+            self.assertIn(content, html)
+        self.assertNotIn(home.hero_photo.url, html)
+        self.assertNotIn(about.photo.url, html)
+
+    def test_background_keeps_the_full_source_frame_in_a_small_web_asset(self):
+        path = Path(finders.find(self.photo_asset))
+        self.assertLess(path.stat().st_size, 300_000)
+        with Image.open(path) as image:
+            self.assertEqual(image.format, "WEBP")
+            self.assertEqual(image.size, (1821, 864))
+            image.verify()
 
 
 class CalorieCalculatorPageTests(TestCase):
