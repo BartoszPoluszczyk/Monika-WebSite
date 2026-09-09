@@ -91,27 +91,30 @@ class NavbarBrandingTests(SimpleTestCase):
             "css/navigation.css",
             "js/navigation.js",
             "fonts/caveat-latin.woff2",
-            "fonts/amsterdam-one.ttf",
+            "fonts/alex-brush.ttf",
         ):
             self.assertIsNotNone(finders.find(asset))
             self.assertIn(asset, html)
         css = Path(finders.find("css/navigation.css")).read_text(encoding="utf-8")
-        self.assertIn('font-family: "Amsterdam One", "Caveat", cursive;', css)
-        self.assertIn('src: url("../fonts/amsterdam-one.ttf") format("truetype");', css)
+        self.assertIn('font-family: "Alex Brush", cursive;', css)
+        self.assertIn('src: url("../fonts/alex-brush.ttf") format("truetype");', css)
         self.assertIn("padding-left: var(--navbar-width)", css)
         self.assertNotIn("radial-gradient", css)
 
-    def test_amsterdam_one_signature_font_is_embedded_with_polish_fallback(self):
-        font = TTFont(finders.find("fonts/amsterdam-one.ttf"))
+    def test_alex_brush_signature_font_has_polish_glyphs(self):
+        font = TTFont(finders.find("fonts/alex-brush.ttf"))
         family_names = {
             record.toUnicode()
             for record in font["name"].names
             if record.nameID in (1, 4)
         }
-        self.assertIn("Amsterdam One", family_names)
-        # The supplied regular face lacks e-ogonek. Keep the text correct and
-        # let the explicit Caveat fallback draw only that character.
-        self.assertNotIn(ord("ę"), font.getBestCmap())
+        self.assertIn("Alex Brush", family_names)
+        self.assertTrue(
+            all(
+                ord(character) in font.getBestCmap()
+                for character in "Zdrowie zaczyna się od dobrych wyborów"
+            )
+        )
 
     def test_decorations_are_filled_paths_not_disconnected_rings(self):
         for filename, viewbox in (

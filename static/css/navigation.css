@@ -1,18 +1,10 @@
 /* The sidebar is one layout: no independent circles or footer gradients.
    Keep --navbar-width shared by the panel and the page to avoid a white gap. */
+/* Alex Brush is locally bundled from Google Fonts. Its Latin Extended
+   repertoire includes the Polish characters used in the sidebar signature. */
 @font-face {
-    font-family: "Caveat";
-    src: url("../fonts/caveat-latin.woff2") format("woff2");
-    font-style: normal;
-    font-weight: 400 700;
-    font-display: swap;
-}
-
-/* Supplied Amsterdam One has a regular face only. Caveat remains after it
-   solely as a glyph fallback for Polish letters missing from that font. */
-@font-face {
-    font-family: "Amsterdam One";
-    src: url("../fonts/amsterdam-one.ttf") format("truetype");
+    font-family: "Alex Brush";
+    src: url("../fonts/alex-brush.ttf") format("truetype");
     font-style: normal;
     font-weight: 400;
     font-display: swap;
@@ -222,7 +214,7 @@
         display: block;
         margin: 0;
         color: var(--navbar-icon);
-        font-family: "Amsterdam One", "Caveat", cursive;
+        font-family: "Alex Brush", cursive;
         font-size: 25px;
         font-size: 10.5cqi;
         font-weight: 400;
