@@ -1,4 +1,4 @@
-{% load static %}
+{% load static content_formatting %}
 
 <section class="home-about" id="o-mnie">
 
@@ -73,7 +73,7 @@
 
                 <div class="home-about-description">
 
-                    {{ about_page.description|truncatewords:45|linebreaks }}
+                    {{ about_page.description|truncatewords:45|accent_text|linebreaks }}
 
                 </div>
 

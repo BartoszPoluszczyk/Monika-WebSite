@@ -74,6 +74,10 @@ class AboutPage(models.Model):
 
     description = models.TextField(
         verbose_name="Opis",
+        help_text=(
+            'Aby wyróżnić fragment na stronie, otocz go podwójnymi gwiazdkami. '
+            'Przykład: **odŻYWIENIE**.'
+        ),
     )
 
     photo = models.ImageField(

@@ -1598,3 +1598,11 @@ a {
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
+
+
+/* Fragments marked in the admin description as **tekst**. */
+.content-accent {
+    color: var(--palette-green-accent);
+    font-style: italic;
+    font-weight: 600;
+}

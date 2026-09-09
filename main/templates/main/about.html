@@ -1,6 +1,6 @@
 {% extends "main/base.html" %}
 
-{% load static %}
+{% load static content_formatting %}
 
 {% block title %}
     {% if about_page %}
@@ -66,7 +66,7 @@
                     {% endif %}
 
                     <div class="about-description mt-4">
-                        {{ about_page.description|linebreaks }}
+                        {{ about_page.description|accent_text|linebreaks }}
                     </div>
 
                 </div>
