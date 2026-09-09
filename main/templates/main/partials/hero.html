@@ -1,4 +1,4 @@
-{% load static %}
+{% load static content_formatting %}
 
 <section class="hero">
 
@@ -17,7 +17,7 @@
                 </h1>
 
                 <p class="hero-description">
-                    {{ home_page.hero_description }}
+                    {{ home_page.hero_description|accent_text|linebreaksbr }}
                 </p>
 
             {% else %}

@@ -41,6 +41,10 @@ class HomePage(models.Model):
             "samopoczuciem i codziennym stylem życia."
         ),
         verbose_name="Opis Hero",
+        help_text=(
+            'Aby wyróżnić fragment na stronie, otocz go podwójnymi gwiazdkami. '
+            'Przykład: **odŻYWIENIE**.'
+        ),
     )
 
     hero_photo = models.ImageField(
