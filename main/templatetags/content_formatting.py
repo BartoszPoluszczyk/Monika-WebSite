@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe
 
 
 register = template.Library()
-ACCENT_MARKER = re.compile(r"\\*\\*(.+?)\\*\\*")
+ACCENT_MARKER = re.compile(r"\*\*(.+?)\*\*")
 
 
 @register.filter(needs_autoescape=True)

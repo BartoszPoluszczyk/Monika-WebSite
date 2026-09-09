@@ -11,6 +11,11 @@ class AccentTextFilterTests(SimpleTestCase):
         self.assertIn('&lt;script&gt;alert(1)&lt;/script&gt;', rendered)
         self.assertNotIn('<script>', rendered)
 
+    def test_plain_text_remains_unaccented(self):
+        rendered = accent_text("Zwykły opis bez wyróżnienia.")
+        self.assertNotIn("content-accent", rendered)
+        self.assertEqual(rendered, "Zwykły opis bez wyróżnienia.")
+
     def test_can_be_used_before_linebreaks_in_templates(self):
         rendered = Template(
             "{% load content_formatting %}{{ text|accent_text|linebreaks }}"
