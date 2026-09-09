@@ -2,7 +2,7 @@
    Home: one stationary logo. Other pages: marks scroll with their sections. */
 :root {
     --watermark-opacity: 0.055;
-    --watermark-size: clamp(200px, 36vw, 460px);
+    --watermark-size: clamp(100px, 36vw, 260px);
     --watermark-position: right 5% center;
 }
 
