@@ -1,24 +1,35 @@
-/* One photograph spans the hero and About preview. Other sections and the
-   navbar are outside this wrapper. Adjust the focal point here if needed. */
+/* Reference composition: clear kitchen photograph, large left-aligned copy.
+   One backdrop remains bounded by the hero + About wrapper. */
 .home-photo-intro {
     --home-photo-focus: 65% center;
-    --home-copy-width: 54%;
-    --home-copy-padding: clamp(28px, 4.5vw, 76px);
+    --home-photo-top: 0px;
+    --home-photo-height: max(660px, 100svh);
+    --home-copy-width: 58%;
+    --home-copy-padding: 11.5%;
     position: relative;
     z-index: 2;
     isolation: isolate;
+    container-type: inline-size;
     background: #FFFFFF;
-    /* Its opaque surface also keeps the fixed watermark off this photograph.
-       The existing watermark remains visible in subsequent home sections. */
 }
 
-.home-photo-background {
+/* This full-height rail bounds the sticky image to the first two sections.
+   Do not add overflow:hidden/auto to the rail or its ancestors: that would
+   change the sticky scrolling container. The image is sized to the viewport,
+   not to the combined height of both sections. */
+.home-photo-backdrop {
     position: absolute;
     inset: 0;
     z-index: 0;
+    pointer-events: none;
+}
+
+.home-photo-background {
+    position: sticky;
+    top: var(--home-photo-top);
     display: block;
     width: 100%;
-    height: 100%;
+    height: var(--home-photo-height);
     max-width: none;
     object-fit: cover;
     object-position: var(--home-photo-focus);
@@ -26,7 +37,8 @@
     user-select: none;
 }
 
-/* One continuous veil, so no image restart or hard seam between sections. */
+/* Retain the warm cabinetry and daylight instead of whitening the whole left
+   half. Only a light veil sits below the live text and buttons. */
 .home-photo-intro::before {
     content: "";
     position: absolute;
@@ -35,10 +47,10 @@
     pointer-events: none;
     background: linear-gradient(
         90deg,
-        rgba(255, 255, 255, 0.95) 0%,
-        rgba(255, 255, 255, 0.88) 34%,
-        rgba(255, 255, 255, 0.36) 53%,
-        rgba(255, 255, 255, 0) 70%
+        rgba(255, 255, 255, 0.06) 0%,
+        rgba(255, 255, 255, 0.28) 16%,
+        rgba(255, 255, 255, 0.18) 43%,
+        rgba(255, 255, 255, 0) 62%
     );
 }
 
@@ -59,59 +71,117 @@
     background: transparent;
 }
 
-.home-photo-intro .hero-container { min-height: 560px; }
+.home-photo-intro .hero-container {
+    min-height: var(--home-photo-height);
+}
 
 .home-photo-intro .hero-content,
 .home-photo-intro .home-about-content {
     width: var(--home-copy-width);
-    max-width: 780px;
+    max-width: none;
     min-width: 0;
-    padding-inline: var(--home-copy-padding);
+    padding-left: var(--home-copy-padding);
+    padding-right: 3%;
 }
 
 .home-photo-intro .hero-content {
     min-height: 0;
-    padding-top: clamp(56px, 6vw, 88px);
-    padding-bottom: 40px;
+    padding-top: clamp(76px, 13svh, 144px);
+    padding-bottom: 64px;
+}
+
+.home-photo-intro .hero-content > .section-eyebrow {
+    font-size: clamp(10px, 0.8cqi, 15px);
+    letter-spacing: 0.22em;
+    margin-bottom: 24px;
 }
 
 .home-photo-intro .hero-title {
-    font-size: clamp(2.7rem, 4vw, 4.1rem);
+    max-width: none;
+    font-size: clamp(48px, 5cqi, 100px);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+}
+
+.home-photo-intro .hero-description {
+    max-width: 100%;
+    margin-top: 24px;
+    font-size: clamp(14px, 1.25cqi, 24px);
+    line-height: 1.55;
+}
+
+.home-photo-intro .hero-buttons {
+    margin-top: 32px;
+    gap: 16px;
+}
+
+.home-photo-intro .hero-buttons > a {
+    min-height: clamp(46px, 3.5cqi, 68px);
+    padding-inline: clamp(20px, 2.1cqi, 42px);
+    font-size: clamp(12px, 0.95cqi, 18px);
+}
+
+.home-photo-intro .hero-benefits {
+    margin-top: 36px;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.home-photo-intro .hero-benefit {
+    padding-inline: clamp(8px, 1cqi, 20px);
+}
+
+.home-photo-intro .hero-benefit p {
+    font-size: clamp(10px, 0.85cqi, 16px);
 }
 
 .home-photo-intro .home-about { padding: 0; }
+
 .home-photo-intro .home-about-content {
-    padding-top: 34px;
-    padding-bottom: clamp(54px, 6vw, 88px);
+    padding-top: 56px;
+    padding-bottom: 96px;
 }
 
-.home-photo-intro .home-about-description { font-size: 0.85rem; }
+.home-photo-intro .home-about-description {
+    font-size: clamp(14px, 1.1cqi, 18px);
+    line-height: 1.7;
+}
 
-@media (min-width: 861px) and (max-width: 1200px) {
+@media (min-width: 861px) and (max-width: 1100px) {
     .home-photo-intro {
-        --home-copy-width: 57%;
-        --home-copy-padding: 32px;
-        --home-photo-focus: 68% center;
+        --home-photo-top: 103px;
+        --home-photo-height: max(600px, calc(100svh - 103px));
+        --home-copy-padding: 8%;
     }
 }
 
+/* On phones use the existing natural scroll, with a stronger veil for text.
+   Sticky desktop framing must not create extra empty space on small screens. */
 @media (max-width: 860px) {
     .home-photo-intro {
         --home-copy-width: 100%;
         --home-copy-padding: clamp(24px, 6vw, 52px);
         --home-photo-focus: 72% center;
     }
-    /* Narrow viewports need a stronger veil behind the full-width text.
-       The image is still a single background spanning both sections. */
+    .home-photo-background {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+    }
     .home-photo-intro::before {
         background: linear-gradient(
             90deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(255, 255, 255, 0.88) 58%,
-            rgba(255, 255, 255, 0.70) 100%
+            rgba(255, 255, 255, 0.93) 0%,
+            rgba(255, 255, 255, 0.84) 58%,
+            rgba(255, 255, 255, 0.62) 100%
         );
     }
     .home-photo-intro .hero-container { min-height: 0; }
+    .home-photo-intro .hero-content,
+    .home-photo-intro .home-about-content {
+        padding-inline: var(--home-copy-padding);
+    }
     .home-photo-intro .hero-content {
         padding-top: 56px;
         padding-bottom: 32px;
@@ -120,8 +190,18 @@
         max-width: 560px;
         font-size: clamp(2.45rem, 9vw, 3.6rem);
     }
+    .home-photo-intro .hero-content > .section-eyebrow {
+        letter-spacing: 0.17em;
+        margin-bottom: 18px;
+    }
+    .home-photo-intro .hero-buttons { gap: 12px; }
     .home-photo-intro .home-about-content {
         padding-top: 28px;
         padding-bottom: 56px;
     }
+}
+
+@media print {
+    .home-photo-background { position: absolute; inset: 0; height: 100%; }
+    .home-photo-intro .hero-container { min-height: 0; }
 }

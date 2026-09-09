@@ -6,12 +6,13 @@ Strona główna | Dietetyk Monika
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/home-photo.css' %}?v=20260909">
+    <link rel="stylesheet" href="{% static 'css/home-photo.css' %}?v=20260909-reference">
 {% endblock %}
 
 {% block content %}
 
     <div class="home-photo-intro">
+        <div class="home-photo-backdrop" aria-hidden="true">
         <img
             class="home-photo-background"
             src="{% static 'images/backgrounds/monika-kitchen-20260909.webp' %}"
@@ -22,6 +23,7 @@ Strona główna | Dietetyk Monika
             fetchpriority="high"
             decoding="async"
         >
+        </div>
         {% include "main/partials/hero.html" with shared_photo_background=True %}
         {% include "main/partials/about_preview.html" with shared_photo_background=True %}
     </div>
