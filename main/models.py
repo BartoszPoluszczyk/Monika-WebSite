@@ -49,14 +49,21 @@ class HomePage(models.Model):
 
     help_eyebrow = models.CharField(
         max_length=150,
-        default="Jak pomagam",
-        verbose_name="Mały nagłówek sekcji Jak pomagam",
+        default="Indywidualne podejście",
+        verbose_name="Nadtytuł sekcji Jak pomagam",
     )
 
     help_title = models.CharField(
         max_length=250,
-        default="Od poznania Twojej historii do stworzenia planu, który działa",
+        default="Jak pomagam?",
         verbose_name="Główny nagłówek sekcji Jak pomagam",
+    )
+
+    help_lead = models.CharField(
+        max_length=250,
+        default="Od poznania Twojej historii do stworzenia planu, który działa",
+        verbose_name="Krótki wstęp sekcji Jak pomagam",
+        help_text="Tekst widoczny pod dużym nagłówkiem po lewej stronie sekcji.",
     )
 
     help_description = models.TextField(
@@ -237,6 +244,14 @@ class CooperationStep(models.Model):
     description = models.TextField(
         verbose_name="Opis etapu",
         help_text="Opis etapu widoczny pod jego tytułem na stronie głównej.",
+    )
+
+    image = models.ImageField(
+        upload_to="help_steps/",
+        blank=True,
+        null=True,
+        verbose_name="Zdjęcie etapu",
+        help_text="Poziome zdjęcie po prawej stronie etapu. Najlepiej w proporcji około 2:1.",
     )
 
     order = models.PositiveIntegerField(

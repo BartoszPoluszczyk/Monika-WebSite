@@ -17,6 +17,32 @@ class HomePageAdmin(admin.ModelAdmin):
         "__str__",
     )
 
+    fieldsets = (
+        (
+            "Sekcja Hero",
+            {
+                "fields": (
+                    "hero_eyebrow",
+                    "hero_title",
+                    "hero_description",
+                    "hero_photo",
+                )
+            },
+        ),
+        (
+            "Sekcja Jak pomagam",
+            {
+                "fields": (
+                    "help_eyebrow",
+                    "help_title",
+                    "help_lead",
+                    "help_description",
+                    "help_specializations_title",
+                )
+            },
+        ),
+    )
+
     def has_add_permission(self, request):
         if HomePage.objects.exists():
             return False
@@ -91,12 +117,17 @@ class CooperationStepAdmin(admin.ModelAdmin):
     list_display = (
         "order",
         "title",
+        "has_image",
         "is_active",
     )
 
     list_editable = (
         "is_active",
     )
+
+    @admin.display(boolean=True, description="Zdjęcie")
+    def has_image(self, obj):
+        return bool(obj.image)
 
     search_fields = (
         "title",

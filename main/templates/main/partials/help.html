@@ -1,71 +1,111 @@
 {% load content_formatting %}
-<section class="help-section" id="pomoc">
+<section class="help-section help-section--editorial" id="pomoc">
     <div class="site-container">
-        <div class="help-heading">
-            <p class="section-eyebrow">
-                {{ home_page.help_eyebrow|default:"Jak pomagam" }}
-            </p>
-            <h2 class="section-title">
-                {{ home_page.help_title|default:"Od poznania Twojej historii do stworzenia planu, który działa" }}
-            </h2>
-            <div class="help-description">
-                {{ home_page.help_description|accent_text|linebreaks }}
-            </div>
-        </div>
+        <div class="help-editorial-frame">
+            <div class="help-editorial-layout">
+                <header class="help-editorial-intro">
+                    <p class="section-eyebrow">
+                        {{ home_page.help_eyebrow|default:"Indywidualne podejście" }}
+                    </p>
+                    <h2 class="help-editorial-title">
+                        {{ home_page.help_title|default:"Jak pomagam?" }}
+                    </h2>
+                    <p class="help-editorial-lead">
+                        {{ home_page.help_lead|default:"Od poznania Twojej historii do stworzenia planu, który działa" }}
+                    </p>
+                    <span class="help-editorial-rule" aria-hidden="true"></span>
+                </header>
 
-        <div class="help-journey" aria-label="Trzy etapy współpracy">
-            {% for step in cooperation_steps %}
-                <article class="help-step">
-                    <div class="help-step-top">
-                        <span class="help-step-number">
-                            {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
-                        </span>
-                        <span class="help-step-icon" aria-hidden="true">
-                            {% if forloop.counter == 1 %}
-                                <svg viewBox="0 0 48 48"><path d="M24 41V19"/><path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14"/><path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16"/></svg>
-                            {% elif forloop.counter == 2 %}
-                                <svg viewBox="0 0 48 48"><path d="M10 34V16h28v18H10Z"/><path d="M16 16v-5h16v5M17 25h14M17 30h9"/></svg>
-                            {% else %}
-                                <svg viewBox="0 0 48 48"><path d="M13 25 21 33 36 16"/><circle cx="24" cy="24" r="18"/></svg>
-                            {% endif %}
-                        </span>
-                    </div>
-                    <h3>{{ step.title }}</h3>
-                    <p>{{ step.description }}</p>
-                </article>
-            {% empty %}
-                <article class="help-step"><div class="help-step-top"><span class="help-step-number">01</span></div><h3>Poznaję Twój punkt wyjścia</h3><p>Przed konsultacją poznaję Twoją ankietę zdrowotną, wyniki badań oraz cele współpracy.</p></article>
-                <article class="help-step"><div class="help-step-top"><span class="help-step-number">02</span></div><h3>Tworzę plan działania</h3><p>Łączę analizę potrzeb z zaleceniami żywieniowymi, stylem życia i suplementacją.</p></article>
-                <article class="help-step"><div class="help-step-top"><span class="help-step-number">03</span></div><h3>Towarzyszę Ci w zmianie</h3><p>Monitorujemy efekty i wspólnie dostosowujemy plan do codziennego życia.</p></article>
-            {% endfor %}
-        </div>
-
-        <div class="specializations-heading">
-            <p class="section-eyebrow">Specjalności</p>
-            <h3>{{ home_page.help_specializations_title|default:"Obszary, w których mogę Ci pomóc" }}</h3>
-        </div>
-
-        {% if specializations %}
-            <div class="specializations-carousel" data-specializations-carousel>
-                <div class="specializations-controls" aria-label="Sterowanie listą specjalizacji">
-                    <button class="specializations-control" type="button" data-slider-previous aria-label="Poprzednia specjalizacja">←</button>
-                    <button class="specializations-control" type="button" data-slider-next aria-label="Następna specjalizacja">→</button>
-                </div>
-                <div class="specializations-track" id="specializations-list">
-                    {% for specialization in specializations %}
-                        <article class="specialization-card">
-                            <span class="specialization-card-number">{% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}</span>
-                            <div class="specialization-card-icon" aria-hidden="true">
-                                <svg viewBox="0 0 48 48"><path d="M24 41V19"/><path d="M24 30C15 30 9 24 9 14c9 0 15 5 15 14"/><path d="M24 25c0-9 6-15 16-16 0 10-6 16-16 16"/></svg>
+                <div class="help-process-list" aria-label="Trzy etapy współpracy">
+                    {% for step in cooperation_steps %}
+                        <article class="help-process-row">
+                            <span class="help-process-number" aria-hidden="true">{{ forloop.counter }}</span>
+                            <div class="help-process-copy">
+                                <h3>{{ step.title }}</h3>
+                                <p>{{ step.description }}</p>
                             </div>
-                            <h4>{{ specialization.name }}</h4>
-                            {% if specialization.description %}<p>{{ specialization.description }}</p>{% endif %}
+                            <div class="help-process-media">
+                                {% if step.image %}
+                                    <img
+                                        src="{{ step.image.url }}"
+                                        alt="Zdjęcie ilustrujące etap: {{ step.title }}"
+                                        loading="lazy"
+                                    >
+                                {% else %}
+                                    <div class="help-process-media-placeholder" aria-hidden="true">
+                                        <span>Zdjęcie etapu</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </article>
+                    {% empty %}
+                        <article class="help-process-row">
+                            <span class="help-process-number" aria-hidden="true">1</span>
+                            <div class="help-process-copy">
+                                <h3>Poznaję Twój punkt wyjścia</h3>
+                                <p>Przed konsultacją poznaję Twoją ankietę zdrowotną, wyniki badań oraz cele i priorytety współpracy.</p>
+                            </div>
+                            <div class="help-process-media"><div class="help-process-media-placeholder" aria-hidden="true"><span>Zdjęcie etapu</span></div></div>
+                        </article>
+                        <article class="help-process-row">
+                            <span class="help-process-number" aria-hidden="true">2</span>
+                            <div class="help-process-copy">
+                                <h3>Tworzę plan działania dopasowany do Twoich potrzeb</h3>
+                                <p>Łączę analizę potrzeb z zaleceniami żywieniowymi, stylem życia i suplementacją.</p>
+                            </div>
+                            <div class="help-process-media"><div class="help-process-media-placeholder" aria-hidden="true"><span>Zdjęcie etapu</span></div></div>
+                        </article>
+                        <article class="help-process-row">
+                            <span class="help-process-number" aria-hidden="true">3</span>
+                            <div class="help-process-copy">
+                                <h3>Towarzyszę Ci w procesie zmiany</h3>
+                                <p>Monitorujemy efekty i wspólnie dostosowujemy plan do codziennego życia.</p>
+                            </div>
+                            <div class="help-process-media"><div class="help-process-media-placeholder" aria-hidden="true"><span>Zdjęcie etapu</span></div></div>
                         </article>
                     {% endfor %}
                 </div>
             </div>
-        {% else %}
-            <p class="specializations-empty">Specjalności pojawią się tutaj wkrótce.</p>
-        {% endif %}
+
+            {% if home_page.help_description %}
+                <div class="help-editorial-story">
+                    {{ home_page.help_description|accent_text|linebreaksbr }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="specializations-editorial">
+            <div class="specializations-heading">
+                <p class="section-eyebrow">Specjalności</p>
+                <h3>{{ home_page.help_specializations_title|default:"Obszary, w których mogę Ci pomóc" }}</h3>
+            </div>
+
+            {% if specializations %}
+                <div class="specializations-marquee" data-specializations-marquee>
+                    <div class="specializations-marquee-viewport">
+                        <div class="specializations-marquee-track">
+                            <div class="specializations-marquee-set" data-specializations-original>
+                                {% for specialization in specializations %}
+                                    <article class="specialization-band">
+                                        <span class="specialization-band-number" aria-hidden="true">
+                                            {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
+                                        </span>
+                                        <div class="specialization-band-copy">
+                                            <h4>{{ specialization.name }}</h4>
+                                            {% if specialization.description %}
+                                                <p>{{ specialization.description }}</p>
+                                            {% endif %}
+                                        </div>
+                                        <span class="specialization-band-arrow" aria-hidden="true">→</span>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="specializations-empty">Specjalności pojawią się tutaj wkrótce.</p>
+            {% endif %}
+        </div>
     </div>
 </section>
