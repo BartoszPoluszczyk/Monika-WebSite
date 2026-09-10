@@ -271,3 +271,80 @@ class CooperationStep(models.Model):
         verbose_name = "Etap „Jak pomagam”"
         verbose_name_plural = "Etapy „Jak pomagam”"
         ordering = ["order"]
+
+
+class Testimonial(models.Model):
+    RATING_CHOICES = [(value, str(value)) for value in range(1, 6)]
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Oczekuje na moderację"
+        APPROVED = "approved", "Zaakceptowana"
+        REJECTED = "rejected", "Odrzucona"
+
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.PENDING,
+        verbose_name="Status moderacji",
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data zgłoszenia",
+    )
+
+    author_name = models.CharField(
+        max_length=150,
+        verbose_name="Imię pacjenta / inicjały",
+        help_text="Np. „Anna K.” — dokładnie tak, jak pacjent zgodził się to opublikować.",
+    )
+
+    content = models.TextField(
+        verbose_name="Treść opinii",
+    )
+
+    rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Ocena (1-5)",
+    )
+
+    photo = models.ImageField(
+        upload_to="testimonials/",
+        blank=True,
+        null=True,
+        verbose_name="Zdjęcie pacjenta",
+    )
+
+    consent_confirmed = models.BooleanField(
+        default=False,
+        verbose_name="Pacjent wyraził zgodę na publikację",
+        help_text="Zaznacz dopiero po uzyskaniu wyraźnej zgody pacjenta. Opinia nie pojawi się na stronie bez tego.",
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Kolejność",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Wyświetlaj na stronie",
+    )
+
+    @property
+    def full_stars(self):
+        return range(self.rating or 0)
+
+    @property
+    def empty_stars(self):
+        return range(5 - (self.rating or 0))
+
+    def __str__(self):
+        return self.author_name
+
+    class Meta:
+        verbose_name = "Opinia pacjenta"
+        verbose_name_plural = "Opinie pacjentów"
+        ordering = ["order"]

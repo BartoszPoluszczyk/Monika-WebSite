@@ -7,6 +7,7 @@ from .models import (
     SiteSettings,
     Specialization,
     CooperationStep,
+    Testimonial,
 )
 
 
@@ -139,4 +140,48 @@ class CooperationStepAdmin(admin.ModelAdmin):
     )
 
 
-        
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    list_display = (
+        "author_name",
+        "status",
+        "rating",
+        "consent_confirmed",
+        "is_active",
+        "order",
+        "created_at",
+    )
+
+    list_editable = (
+        "status",
+        "is_active",
+        "order",
+    )
+
+    list_filter = (
+        "status",
+        "consent_confirmed",
+        "is_active",
+    )
+
+    search_fields = (
+        "author_name",
+        "content",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    actions = (
+        "approve_testimonials",
+        "reject_testimonials",
+    )
+
+    @admin.action(description="Zaakceptuj wybrane opinie")
+    def approve_testimonials(self, request, queryset):
+        queryset.update(status=Testimonial.Status.APPROVED)
+
+    @admin.action(description="Odrzuć wybrane opinie")
+    def reject_testimonials(self, request, queryset):
+        queryset.update(status=Testimonial.Status.REJECTED)

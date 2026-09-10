@@ -1,0 +1,78 @@
+<section class="testimonials-section" id="opinie">
+    <div class="site-container">
+        <div class="testimonials-heading">
+            <p class="section-eyebrow">Opinie pacjentów</p>
+            <h2 class="section-title">Co mówią <span>osoby, które mi zaufały</span></h2>
+            <p class="section-description">Prawdziwe doświadczenia osób, z którymi miałam przyjemność współpracować.</p>
+        </div>
+
+        {% if testimonials %}
+            <div id="testimonialsCarousel" class="carousel slide testimonials-carousel">
+
+                {% if testimonials|length > 1 %}
+                    <div class="carousel-indicators">
+                        {% for testimonial in testimonials %}
+                            <button
+                                type="button"
+                                data-bs-target="#testimonialsCarousel"
+                                data-bs-slide-to="{{ forloop.counter0 }}"
+                                {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                                aria-label="Opinia {{ forloop.counter }}"
+                            ></button>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="carousel-inner">
+                    {% for testimonial in testimonials %}
+                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                            <figure class="testimonial-card">
+                                {% if testimonial.photo %}
+                                    <img
+                                        src="{{ testimonial.photo.url }}"
+                                        alt=""
+                                        class="testimonial-photo"
+                                        loading="lazy"
+                                    >
+                                {% endif %}
+
+                                {% if testimonial.rating %}
+                                    <div class="testimonial-rating" aria-label="Ocena: {{ testimonial.rating }} na 5">
+                                        {% for _ in testimonial.full_stars %}<span class="star star-filled" aria-hidden="true">★</span>{% endfor %}{% for _ in testimonial.empty_stars %}<span class="star star-empty" aria-hidden="true">★</span>{% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <blockquote class="testimonial-quote">
+                                    <p>„{{ testimonial.content }}”</p>
+                                </blockquote>
+
+                                <figcaption class="testimonial-author">{{ testimonial.author_name }}</figcaption>
+                            </figure>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% if testimonials|length > 1 %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                        <span class="testimonial-nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+                        </span>
+                        <span class="visually-hidden">Poprzednia opinia</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                        <span class="testimonial-nav-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                        </span>
+                        <span class="visually-hidden">Następna opinia</span>
+                    </button>
+                {% endif %}
+            </div>
+        {% else %}
+            <p class="testimonials-empty">Opinie pacjentów pojawią się tutaj wkrótce.</p>
+        {% endif %}
+
+        <p class="testimonials-cta">
+            <a href="{% url 'submit_testimonial' %}">Podziel się swoją opinią <span aria-hidden="true">→</span></a>
+        </p>
+    </div>
+</section>

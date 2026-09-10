@@ -1,0 +1,60 @@
+{% extends "main/base.html" %}
+
+{% block title %}Dodaj opinię | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="testimonial-submit-page">
+    <div class="site-container testimonial-submit-container">
+        <header class="testimonial-submit-heading">
+            <p class="section-eyebrow">Opinie pacjentów</p>
+            <h1 class="section-title">Podziel się <span>swoją opinią</span></h1>
+            <p class="section-description">
+                Twoja opinia zostanie sprawdzona przed publikacją i pojawi się na stronie po zatwierdzeniu.
+            </p>
+        </header>
+
+        {% if submitted %}
+            <div class="testimonial-submit-thanks">
+                <p>Dziękujemy za podzielenie się opinią! Po sprawdzeniu pojawi się na stronie głównej.</p>
+                <a href="{% url 'home' %}#opinie" class="button-secondary">Wróć do strony głównej</a>
+            </div>
+        {% else %}
+            <form method="post" class="booking-form testimonial-form" novalidate>
+                {% csrf_token %}
+
+                <div class="booking-field">
+                    <label for="{{ form.author_name.id_for_label }}">{{ form.author_name.label }}</label>
+                    {{ form.author_name }}{{ form.author_name.errors }}
+                </div>
+
+                <div class="booking-field">
+                    <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+                    {{ form.content }}{{ form.content.errors }}
+                </div>
+
+                <fieldset class="testimonial-rating-fieldset">
+                    <legend>{{ form.rating.label }}</legend>
+                    <div class="testimonial-rating-grid">
+                        {% for choice in form.rating %}
+                            <label class="testimonial-rating-option">
+                                {{ choice.tag }}
+                                <span>{{ choice.choice_label }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    {{ form.rating.errors }}
+                </fieldset>
+
+                <label class="booking-consent">
+                    {{ form.consent_confirmed }}
+                    <span>{{ form.consent_confirmed.label }}</span>
+                </label>
+                {{ form.consent_confirmed.errors }}
+                {{ form.non_field_errors }}
+
+                <button type="submit" class="booking-submit">Wyślij opinię <span>→</span></button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
