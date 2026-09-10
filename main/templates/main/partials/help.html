@@ -77,31 +77,21 @@
         <div class="specializations-editorial">
             <div class="specializations-heading">
                 <p class="section-eyebrow">Specjalności</p>
-                <h3>{{ home_page.help_specializations_title|default:"Obszary, w których mogę Ci pomóc" }}</h3>
+                <h3 id="specializations-title">{{ home_page.help_specializations_title|default:"Obszary, w których mogę Ci pomóc" }}</h3>
             </div>
 
             {% if specializations %}
-                <div class="specializations-marquee" data-specializations-marquee>
-                    <div class="specializations-marquee-viewport">
-                        <div class="specializations-marquee-track">
-                            <div class="specializations-marquee-set" data-specializations-original>
-                                {% for specialization in specializations %}
-                                    <article class="specialization-band">
-                                        <span class="specialization-band-number" aria-hidden="true">
-                                            {% if forloop.counter < 10 %}0{% endif %}{{ forloop.counter }}
-                                        </span>
-                                        <div class="specialization-band-copy">
-                                            <h4>{{ specialization.name }}</h4>
-                                            {% if specialization.description %}
-                                                <p>{{ specialization.description }}</p>
-                                            {% endif %}
-                                        </div>
-                                        <span class="specialization-band-arrow" aria-hidden="true">→</span>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+                <div class="specializations-reveal-viewport">
+                    <ul class="specializations-list" data-specializations-reveal aria-labelledby="specializations-title" role="list">
+                        {% for specialization in specializations %}
+                            <li class="specialization-band">
+                                <h4>{{ specialization.name }}</h4>
+                                {% if specialization.description %}
+                                    <p>{{ specialization.description }}</p>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% else %}
                 <p class="specializations-empty">Specjalności pojawią się tutaj wkrótce.</p>

@@ -1838,107 +1838,93 @@ a {
     line-height: 1.02;
 }
 
-.specializations-marquee {
-    position: relative;
-}
-
-.specializations-marquee-viewport {
+/* Full-width, stacked strips; scroll reveals each strip once from the left. */
+.specializations-reveal-viewport {
     overflow: hidden;
 }
 
-.specializations-marquee-track {
-    display: flex;
-    width: max-content;
-    gap: 16px;
-    will-change: transform;
-}
-
-.specializations-marquee-track.is-animated {
-    animation: specializations-marquee 36s linear infinite;
-}
-
-.specializations-marquee-track.is-paused {
-    animation-play-state: paused;
-}
-
-.specializations-marquee:hover .specializations-marquee-track.is-animated,
-.specializations-marquee:focus-within .specializations-marquee-track.is-animated {
-    animation-play-state: paused;
-}
-
-.specializations-marquee-set {
-    display: flex;
-    flex: 0 0 auto;
-    gap: 16px;
+.specializations-list {
+    /* Zmień na 0, jeśli paski mają mieć prostokątne zakończenia. */
+    --specialization-radius: 32px;
+    --specialization-reveal-duration: 1.25s;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
 }
 
 .specialization-band {
-    width: clamp(278px, 29vw, 418px);
-    min-height: 142px;
-    padding: 22px clamp(18px, 2.25vw, 30px);
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 16px;
-    border: 1px solid color-mix(in srgb, var(--palette-navy) 16%, var(--palette-white));
-    border-radius: 0;
-    background: var(--color-surface-default);
-    transition: background-color var(--transition), border-color var(--transition), transform var(--transition);
-}
-
-.specialization-band:nth-child(even) {
-    background: var(--palette-green-pastel);
-}
-
-.specialization-band:hover {
-    border-color: color-mix(in srgb, var(--palette-green-accent) 55%, var(--palette-white));
-    background: color-mix(in srgb, var(--palette-green-pastel) 72%, var(--palette-white));
-    transform: translateY(-3px);
-}
-
-.specialization-band-number {
-    color: var(--palette-orange);
-    font-family: var(--font-heading);
-    font-size: clamp(1.7rem, 2.45vw, 2.7rem);
-    font-weight: 400;
-    letter-spacing: -0.06em;
-    line-height: 1;
-}
-
-.specialization-band:nth-child(even) .specialization-band-number {
-    color: var(--palette-green-accent);
-}
-
-.specialization-band-copy {
+    width: 100%;
     min-width: 0;
+    min-height: 64px;
+    margin: 0;
+    padding: 18px clamp(22px, 2.6vw, 36px);
+    border: 0;
+    border-radius: var(--specialization-radius);
+    background: var(--palette-green-pastel-strong);
+    color: var(--palette-navy);
+    font-family: var(--font-body);
+    font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+/* A light-to-dark progression in Monika's palette. Dark text on light strips
+   keeps normal-sized copy readable (all pairs have contrast above 4.5:1). */
+.specialization-band:nth-child(2) {
+    background: #9DB8A1;
+}
+
+.specialization-band:nth-child(3) {
+    background: #7FA086;
+}
+
+.specialization-band:nth-child(n + 4) {
+    color: var(--palette-white);
+}
+
+.specialization-band:nth-child(4) {
+    background: #56735C;
+}
+
+.specialization-band:nth-child(5) {
+    background: #3F5D50;
+}
+
+.specialization-band:nth-child(6) {
+    background: #29473F;
+}
+
+.specialization-band:nth-child(n + 7) {
+    background: var(--palette-navy);
+}
+
+.specialization-band h4,
+.specialization-band p {
+    display: inline;
+    margin: 0;
+    color: inherit;
+    font: inherit;
+    letter-spacing: normal;
 }
 
 .specialization-band h4 {
-    margin: 0;
-    color: var(--color-text-primary);
-    font-family: var(--font-heading);
-    font-size: clamp(1.14rem, 1.52vw, 1.46rem);
     font-weight: 500;
-    letter-spacing: -0.025em;
-    line-height: 1.08;
 }
 
-.specialization-band p {
-    margin: 8px 0 0;
-    color: var(--color-text-secondary);
-    font-size: 0.69rem;
-    line-height: 1.52;
+/* JS adds these only after IntersectionObserver has initialized successfully.
+   Without JS, or if initialization fails, every strip is visible normally. */
+.specialization-band.is-reveal-pending {
+    opacity: 0;
 }
 
-.specialization-band-arrow {
-    color: var(--color-accent-strong);
-    font-size: 1.36rem;
-    line-height: 1;
-    transition: transform var(--transition);
-}
-
-.specialization-band:hover .specialization-band-arrow {
-    transform: translateX(4px);
+.specialization-band.is-reveal-entering {
+    animation: specialization-slide-in var(--specialization-reveal-duration)
+        cubic-bezier(0.22, 0.61, 0.36, 1) var(--specialization-reveal-delay, 0ms) both;
+    will-change: transform, opacity;
 }
 
 .specializations-empty {
@@ -1947,9 +1933,14 @@ a {
     font-size: 0.84rem;
 }
 
-@keyframes specializations-marquee {
+@keyframes specialization-slide-in {
+    from {
+        opacity: 0;
+        transform: translate3d(-100%, 0, 0);
+    }
     to {
-        transform: translate3d(calc(-1 * var(--specializations-loop-width)), 0, 0);
+        opacity: 1;
+        transform: none;
     }
 }
 
@@ -2032,27 +2023,32 @@ a {
         padding-top: 28px;
     }
 
-    .specializations-marquee-viewport {
-        overflow-x: auto;
-        padding-bottom: 12px;
-        scroll-snap-type: x mandatory;
-        scrollbar-color: var(--color-border-emphasis) transparent;
-        scrollbar-width: thin;
-    }
-
-    .specializations-marquee-track.is-animated {
-        animation: none;
+    .specializations-list {
+        gap: 14px;
     }
 
     .specialization-band {
-        width: min(82vw, 340px);
-        min-height: 132px;
-        scroll-snap-align: start;
+        padding: 16px 22px;
+        font-size: 0.9375rem;
+        line-height: 1.6;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .specializations-marquee-track.is-animated {
+    .specialization-band.is-reveal-pending,
+    .specialization-band.is-reveal-entering {
+        opacity: 1;
+        transform: none;
+        animation: none;
+        will-change: auto;
+    }
+}
+
+@media print {
+    .specialization-band.is-reveal-pending,
+    .specialization-band.is-reveal-entering {
+        opacity: 1;
+        transform: none;
         animation: none;
     }
 }
