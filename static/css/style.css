@@ -422,7 +422,7 @@ a {
     background: var(--palette-green-pastel-strong);
 }
 
-.help-heading, .offer-heading, .cooperation-heading {
+.help-heading, .offer-heading, .cooperation-heading, .testimonials-heading {
     max-width: 680px;
     margin: 0 auto 39px;
     text-align: center;
@@ -669,6 +669,232 @@ a {
 }
 
 .cooperation-heading { margin-bottom: 44px; }
+
+.testimonials-section { padding: 10px 0 14px; }
+
+.testimonials-section > .site-container {
+    padding: clamp(56px, 7vw, 86px) clamp(26px, 5vw, 70px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface-subtle);
+}
+
+.testimonials-heading { margin-bottom: 44px; }
+
+.testimonials-carousel { position: relative; }
+
+.testimonial-card {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 8px 64px;
+    text-align: center;
+}
+
+.testimonial-photo {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.testimonial-rating {
+    margin-bottom: 14px;
+    font-size: 1.05rem;
+    letter-spacing: 2px;
+}
+
+.star-filled { color: var(--color-cta-background); }
+.star-empty { color: var(--color-border-subtle); }
+
+.testimonial-quote {
+    margin: 0 0 20px;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.testimonial-quote p { margin: 0; }
+
+.testimonial-author {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+}
+
+.testimonials-carousel .carousel-control-prev,
+.testimonials-carousel .carousel-control-next {
+    width: 44px;
+    height: 44px;
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    border: 1px solid var(--color-border-subtle);
+    background-color: var(--color-surface-default);
+    color: var(--color-text-primary);
+    opacity: 1;
+    filter: none;
+    transition: border-color var(--transition), background var(--transition);
+}
+
+.testimonials-carousel .carousel-control-prev:hover,
+.testimonials-carousel .carousel-control-next:hover {
+    border-color: var(--color-accent-soft);
+    background-color: var(--color-selection-background);
+}
+
+.testimonials-carousel .carousel-control-prev { left: -4px; }
+.testimonials-carousel .carousel-control-next { right: -4px; }
+
+.testimonial-nav-icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+}
+
+.testimonial-nav-icon svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.testimonials-carousel .carousel-indicators {
+    position: static;
+    margin: 28px 0 0;
+}
+
+.testimonials-carousel .carousel-indicators [data-bs-target] {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-border-subtle);
+    opacity: 1;
+}
+
+.testimonials-carousel .carousel-indicators .active {
+    background-color: var(--color-accent-strong);
+}
+
+.testimonials-empty {
+    margin: 0;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.84rem;
+}
+
+.testimonials-cta {
+    margin: 30px 0 0;
+    text-align: center;
+}
+
+.testimonials-cta a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.testimonials-cta a:hover { text-decoration: underline; }
+
+.testimonial-submit-page { padding: 10px 0 14px; }
+
+.testimonial-submit-container {
+    padding: clamp(54px, 7vw, 90px) clamp(24px, 5vw, 72px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface-subtle);
+}
+
+.testimonial-submit-heading {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+.testimonial-form {
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.testimonial-rating-fieldset {
+    margin: 0 0 23px;
+    padding: 0;
+    border: 0;
+}
+
+.testimonial-rating-fieldset legend {
+    margin: 0 0 9px;
+    color: var(--color-text-secondary);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.testimonial-rating-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+}
+
+.testimonial-rating-option { cursor: pointer; }
+
+.testimonial-rating-option input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.testimonial-rating-option span {
+    min-height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--color-border-emphasis);
+    border-radius: 8px;
+    background: var(--color-surface-default);
+    font-size: 0.68rem;
+    transition: border-color var(--transition), background var(--transition), color var(--transition);
+}
+
+.testimonial-rating-option:hover span,
+.testimonial-rating-option input:checked + span {
+    border-color: var(--palette-navy);
+    background: var(--palette-navy);
+    color: var(--color-on-dark);
+}
+
+.testimonial-rating-option input:focus-visible + span {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 2px;
+}
+
+.testimonial-form .errorlist {
+    margin: 6px 0 0;
+    padding: 0 0 0 9px;
+    border-left: 2px solid var(--color-feedback-border);
+    list-style: none;
+    color: var(--color-feedback-text);
+    font-size: 0.62rem;
+}
+
+.testimonial-submit-thanks {
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.testimonial-submit-thanks p {
+    margin: 0 0 20px;
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+}
 
 .cooperation-steps {
     max-width: 1050px;
@@ -1525,12 +1751,16 @@ a {
         margin: 3px 0 0;
     }
 
-    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container {
+    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container, .testimonials-section > .site-container {
         padding: 48px 20px;
     }
 
-    .help-heading, .offer-heading, .cooperation-heading { margin-bottom: 32px; }
+    .help-heading, .offer-heading, .cooperation-heading, .testimonials-heading { margin-bottom: 32px; }
     .section-title { font-size: clamp(2rem, 10vw, 2.65rem); }
+
+    .testimonial-card { padding: 8px 44px; }
+    .testimonials-carousel .carousel-control-prev { left: -14px; }
+    .testimonials-carousel .carousel-control-next { right: -14px; }
     .help-card, .service-card { max-width: none; }
 
     .cooperation-steps {

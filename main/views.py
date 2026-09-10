@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_GET
 
+from .forms import TestimonialSubmissionForm
 from .models import (
     AboutPage,
     CooperationStep,
     HomePage,
     Service,
     Specialization,
+    Testimonial,
 )
 
 
@@ -26,12 +29,19 @@ def home(request):
         is_active=True
     )
 
+    testimonials = Testimonial.objects.filter(
+        is_active=True,
+        consent_confirmed=True,
+        status=Testimonial.Status.APPROVED,
+    )
+
     context = {
         "home_page": home_page,
         "about_page": about_page,
         "specializations": specializations,
         "services": services,
         "cooperation_steps": cooperation_steps,
+        "testimonials": testimonials,
     }
 
     return render(
@@ -62,5 +72,26 @@ def about(request):
     return render(
         request,
         "main/about.html",
+        context,
+    )
+
+
+def submit_testimonial(request):
+    if request.method == "POST":
+        form = TestimonialSubmissionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(f"{reverse('submit_testimonial')}?wyslano=1")
+    else:
+        form = TestimonialSubmissionForm()
+
+    context = {
+        "form": form,
+        "submitted": request.GET.get("wyslano") == "1",
+    }
+
+    return render(
+        request,
+        "main/submit_testimonial.html",
         context,
     )
