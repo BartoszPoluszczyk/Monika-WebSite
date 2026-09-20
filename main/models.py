@@ -89,6 +89,32 @@ class HomePage(models.Model):
         verbose_name="Nagłówek specjalizacji",
     )
 
+    newsletter_eyebrow = models.CharField(
+        max_length=100,
+        default="Newsletter",
+        verbose_name="Nadtytuł sekcji Newsletter",
+    )
+
+    newsletter_title = models.CharField(
+        max_length=250,
+        default="Zdrowa wiedza prosto na Twoją skrzynkę",
+        verbose_name="Nagłówek sekcji Newsletter",
+    )
+
+    newsletter_description = models.TextField(
+        default=(
+            "Zapisz się, aby otrzymywać praktyczne wskazówki żywieniowe, "
+            "inspiracje i informacje o nowych materiałach."
+        ),
+        verbose_name="Opis sekcji Newsletter",
+    )
+
+    newsletter_button_label = models.CharField(
+        max_length=100,
+        default="Zapisz się na newsletter",
+        verbose_name="Tekst przycisku Newsletter",
+    )
+
     hero_photo = models.ImageField(
         upload_to="home/hero/",
         blank=True,
@@ -348,3 +374,55 @@ class Testimonial(models.Model):
         verbose_name = "Opinia pacjenta"
         verbose_name_plural = "Opinie pacjentów"
         ordering = ["order"]
+
+NEWSLETTER_CONSENT_TEXT = (
+    "Wyrażam zgodę na przetwarzanie moich danych osobowych (imienia i adresu "
+    "e-mail) w celu wysyłki newslettera zawierającego treści informacyjne "
+    "i handlowe (marketing)."
+)
+
+
+class NewsletterSubscriber(models.Model):
+    name = models.CharField(
+        max_length=120,
+        verbose_name="Imię",
+    )
+
+    email = models.EmailField(
+        unique=True,
+        verbose_name="Adres e-mail",
+    )
+
+    consent_confirmed = models.BooleanField(
+        default=False,
+        verbose_name="Zgoda marketingowa",
+    )
+
+    consent_text = models.TextField(
+        verbose_name="Treść udzielonej zgody",
+        help_text="Treść zgody zapisana w chwili zapisu do newslettera.",
+    )
+
+    consented_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data udzielenia zgody",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Aktywny zapis",
+    )
+
+    unsubscribed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Data rezygnacji",
+    )
+
+    def __str__(self):
+        return f"{self.name} <{self.email}>"
+
+    class Meta:
+        verbose_name = "Zapis do newslettera"
+        verbose_name_plural = "Zapisy do newslettera"
+        ordering = ["-consented_at"]

@@ -1,0 +1,47 @@
+{% extends "main/base.html" %}
+
+{% block title %}Polityka prywatności | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="newsletter-page">
+    <div class="site-container newsletter-page-card">
+        <header class="newsletter-page-heading">
+            <p class="section-eyebrow">Twoje dane</p>
+            <h1 class="section-title">Polityka <span>prywatności</span></h1>
+        </header>
+
+        <div class="privacy-page-copy">
+            <p>
+                Administratorem danych przekazanych przy zapisie do newslettera jest Monika Kulik.
+                Dane obejmują imię i adres e-mail.
+            </p>
+
+            <h2>W jakim celu przetwarzamy dane?</h2>
+            <p>
+                Dane są przetwarzane na podstawie dobrowolnej zgody w celu wysyłania newslettera
+                zawierającego treści informacyjne i handlowe związane z dietetyką oraz ofertą.
+            </p>
+
+            <h2>Jak długo przechowujemy dane?</h2>
+            <p>
+                Dane są wykorzystywane do chwili wycofania zgody lub zakończenia prowadzenia
+                newslettera, z uwzględnieniem okresu niezbędnego do wykazania udzielonej zgody.
+            </p>
+
+            <h2>Twoje prawa</h2>
+            <p>
+                Możesz zażądać dostępu do danych, ich sprostowania, usunięcia lub ograniczenia
+                przetwarzania, a także wycofać zgodę. Wycofanie zgody nie wpływa na zgodność
+                z prawem działań podjętych przed jej wycofaniem. W sprawach dotyczących danych
+                skontaktuj się z administratorem za pomocą danych kontaktowych podanych na stronie.
+            </p>
+
+            <p>
+                Masz również prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.
+            </p>
+
+            <p><a href="{% url 'newsletter_signup' %}">← Wróć do formularza newslettera</a></p>
+        </div>
+    </div>
+</section>
+{% endblock %}

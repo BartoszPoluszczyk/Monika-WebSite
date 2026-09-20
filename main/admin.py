@@ -1,8 +1,10 @@
 from django.contrib import admin
+from django.utils import timezone
 
 from .models import (
     AboutPage,
     HomePage,
+    NewsletterSubscriber,
     Service,
     SiteSettings,
     Specialization,
@@ -39,6 +41,17 @@ class HomePageAdmin(admin.ModelAdmin):
                     "help_lead",
                     "help_description",
                     "help_specializations_title",
+                )
+            },
+        ),
+        (
+            "Sekcja Newsletter",
+            {
+                "fields": (
+                    "newsletter_eyebrow",
+                    "newsletter_title",
+                    "newsletter_description",
+                    "newsletter_button_label",
                 )
             },
         ),
@@ -185,3 +198,53 @@ class TestimonialAdmin(admin.ModelAdmin):
     @admin.action(description="Odrzuć wybrane opinie")
     def reject_testimonials(self, request, queryset):
         queryset.update(status=Testimonial.Status.REJECTED)
+
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = (
+        "email",
+        "name",
+        "consent_confirmed",
+        "is_active",
+        "consented_at",
+        "unsubscribed_at",
+    )
+
+    list_filter = (
+        "consent_confirmed",
+        "is_active",
+    )
+
+    search_fields = (
+        "email",
+        "name",
+    )
+
+    ordering = (
+        "-consented_at",
+    )
+
+    readonly_fields = (
+        "email",
+        "name",
+        "consent_confirmed",
+        "consent_text",
+        "consented_at",
+        "unsubscribed_at",
+    )
+
+    actions = (
+        "deactivate_subscriptions",
+    )
+
+    @admin.action(description="Oznacz wybrane zapisy jako wypisane")
+    def deactivate_subscriptions(self, request, queryset):
+        queryset.filter(is_active=True).update(
+            is_active=False,
+            unsubscribed_at=timezone.now(),
+        )
+
+    def has_add_permission(self, request):
+        return False

@@ -1,0 +1,19 @@
+<section class="newsletter-cta-section" id="newsletter">
+    <div class="site-container">
+        <div class="newsletter-cta-card">
+            <div class="newsletter-cta-copy">
+                <p class="section-eyebrow">{{ home_page.newsletter_eyebrow|default:"Newsletter" }}</p>
+                <h2 class="newsletter-cta-title">{{ home_page.newsletter_title|default:"Zdrowa wiedza prosto na Twoją skrzynkę" }}</h2>
+                <p class="newsletter-cta-description">
+                    {{ home_page.newsletter_description|default:"Zapisz się, aby otrzymywać praktyczne wskazówki żywieniowe, inspiracje i informacje o nowych materiałach." }}
+                </p>
+            </div>
+            <div class="newsletter-cta-action">
+                <a class="newsletter-cta-button" href="{% url 'newsletter_signup' %}">
+                    <span>{{ home_page.newsletter_button_label|default:"Zapisz się na newsletter" }}</span>
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,64 @@
+{% extends "main/base.html" %}
+
+{% block title %}Newsletter | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="newsletter-page">
+    <div class="site-container newsletter-page-card">
+        <header class="newsletter-page-heading">
+            <p class="section-eyebrow">Newsletter</p>
+            <h1 class="section-title">Zapisz się po <span>zdrową dawkę wiedzy</span></h1>
+            <p class="section-description">
+                Podaj imię i adres e-mail. Będę przesyłać Ci praktyczne materiały,
+                inspiracje oraz informacje o nowych treściach.
+            </p>
+        </header>
+
+        {% if subscribed %}
+            <div class="newsletter-thanks" role="status">
+                <h2>Dziękuję za zapis!</h2>
+                <p>Twój adres został dodany do listy newslettera.</p>
+                <a href="{% url 'home' %}#newsletter" class="button-secondary">Wróć do strony głównej</a>
+            </div>
+        {% else %}
+            <form method="post" class="newsletter-form" novalidate>
+                {% csrf_token %}
+
+                <div class="booking-field">
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    {{ form.name }}
+                    {{ form.name.errors }}
+                </div>
+
+                <div class="booking-field">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {{ form.email.errors }}
+                </div>
+
+                <div class="newsletter-honeypot" aria-hidden="true">
+                    {{ form.website.label_tag }}
+                    {{ form.website }}
+                </div>
+                {{ form.website.errors }}
+
+                <label class="booking-consent newsletter-consent">
+                    {{ form.consent }}
+                    <span>
+                        {{ form.consent.label }}
+                        Więcej informacji znajdziesz w
+                        <a href="{% url 'privacy_policy' %}" target="_blank" rel="noopener">polityce prywatności</a>.
+                    </span>
+                </label>
+                {{ form.consent.errors }}
+                {{ form.non_field_errors }}
+
+                <button type="submit" class="booking-submit">
+                    <span>Zapisz się na newsletter</span>
+                    <span aria-hidden="true">→</span>
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

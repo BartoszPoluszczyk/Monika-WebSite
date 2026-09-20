@@ -670,6 +670,193 @@ a {
 
 .cooperation-heading { margin-bottom: 44px; }
 
+
+/* Newsletter */
+
+.newsletter-cta-section { padding: 10px 0 14px; }
+
+.newsletter-cta-card {
+    position: relative;
+    min-height: 300px;
+    padding: clamp(44px, 6vw, 76px) clamp(28px, 6vw, 82px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(250px, 0.65fr);
+    align-items: center;
+    gap: clamp(30px, 5vw, 72px);
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background:
+        radial-gradient(circle at 92% 12%, rgba(189, 208, 192, 0.9) 0 18%, transparent 18.2%),
+        linear-gradient(125deg, var(--palette-green-pastel) 0 67%, #f7f2ea 67% 100%);
+}
+
+.newsletter-cta-card::after {
+    content: "";
+    position: absolute;
+    right: clamp(22px, 5vw, 76px);
+    bottom: -76px;
+    width: 180px;
+    height: 180px;
+    border: 1px solid rgba(111, 143, 116, 0.35);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.newsletter-cta-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+}
+
+.newsletter-cta-title {
+    max-width: 13ch;
+    margin: 0;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(2.3rem, 4.4vw, 4.6rem);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
+}
+
+.newsletter-cta-description {
+    max-width: 56ch;
+    margin: 22px 0 0;
+    color: var(--color-text-secondary);
+    font-size: clamp(0.8rem, 1vw, 0.94rem);
+    line-height: 1.8;
+}
+
+.newsletter-cta-action {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.newsletter-cta-button {
+    width: min(100%, 300px);
+    min-height: 56px;
+    padding: 0 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border: 1px solid var(--color-cta-background);
+    border-radius: 10px;
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--transition), transform var(--transition);
+}
+
+.newsletter-cta-button:hover {
+    background: var(--color-cta-background-hover);
+    color: var(--palette-navy);
+    transform: translateY(-2px);
+}
+
+.newsletter-page { padding: 10px 0 14px; }
+
+.newsletter-page-card {
+    padding: clamp(50px, 7vw, 92px) clamp(24px, 6vw, 84px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background:
+        linear-gradient(135deg, rgba(228, 236, 231, 0.96), rgba(255, 255, 255, 0.98));
+}
+
+.newsletter-page-heading {
+    max-width: 720px;
+    margin: 0 auto 34px;
+    text-align: center;
+}
+
+.newsletter-form {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 42px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.86);
+    box-shadow: 0 18px 48px rgba(16, 47, 58, 0.07);
+}
+
+.newsletter-form .booking-field + .booking-field { margin-top: 18px; }
+
+.newsletter-consent {
+    margin-top: 23px;
+    padding: 17px 18px;
+    border-radius: 10px;
+    background: #f9ecdf;
+    color: var(--color-text-primary);
+    font-size: 0.72rem;
+    line-height: 1.65;
+}
+
+.newsletter-consent a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+}
+
+.newsletter-form .booking-submit {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.newsletter-thanks {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: clamp(30px, 5vw, 50px);
+    border: 1px solid var(--color-accent-soft);
+    border-radius: 14px;
+    background: var(--palette-white);
+    text-align: center;
+}
+
+.newsletter-thanks h2 {
+    margin: 0 0 12px;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 400;
+}
+
+.newsletter-thanks p {
+    margin: 0 0 24px;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+.newsletter-honeypot {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.privacy-page-copy {
+    max-width: 760px;
+    margin: 0 auto;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+}
+
+.privacy-page-copy h2 {
+    margin: 32px 0 10px;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-weight: 400;
+}
+
+.privacy-page-copy a { color: var(--color-accent-strong); }
+
 .testimonials-section { padding: 10px 0 14px; }
 
 .testimonials-section > .site-container {
@@ -1751,12 +1938,22 @@ a {
         margin: 3px 0 0;
     }
 
-    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container, .testimonials-section > .site-container {
+    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container, .newsletter-cta-section > .site-container, .testimonials-section > .site-container {
         padding: 48px 20px;
     }
 
     .help-heading, .offer-heading, .cooperation-heading, .testimonials-heading { margin-bottom: 32px; }
     .section-title { font-size: clamp(2rem, 10vw, 2.65rem); }
+
+    .newsletter-cta-card {
+        min-height: 0;
+        grid-template-columns: 1fr;
+        background: var(--palette-green-pastel);
+    }
+
+    .newsletter-cta-title { max-width: 15ch; }
+    .newsletter-cta-action { justify-content: flex-start; }
+    .newsletter-cta-button { width: min(100%, 340px); }
 
     .testimonial-card { padding: 8px 44px; }
     .testimonials-carousel .carousel-control-prev { left: -14px; }
