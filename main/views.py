@@ -86,6 +86,11 @@ def about(request):
     )
 
 
+@require_GET
+def contact(request):
+    return render(request, "main/contact.html")
+
+
 def submit_testimonial(request):
     if request.method == "POST":
         form = TestimonialSubmissionForm(request.POST)

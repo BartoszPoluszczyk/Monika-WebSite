@@ -53,6 +53,55 @@ class SiteSettings(models.Model):
         verbose_name="Telefon kontaktowy",
     )
 
+    contact_heading = models.CharField(
+        max_length=180,
+        default="Porozmawiajmy o Twoim zdrowiu",
+        verbose_name="Nagłówek strony Kontakt",
+    )
+
+    contact_description = models.TextField(
+        default=(
+            "Masz pytanie dotyczące konsultacji lub nie wiesz, którą usługę wybrać? "
+            "Skontaktuj się ze mną w najwygodniejszy dla Ciebie sposób."
+        ),
+        verbose_name="Opis strony Kontakt",
+    )
+
+    contact_address = models.TextField(
+        blank=True,
+        verbose_name="Adres gabinetu",
+        help_text=(
+            "Adres wyświetlany pacjentom na stronie Kontakt. "
+            "Może być inny niż adres działalności używany w dokumentach prawnych."
+        ),
+    )
+
+    contact_hours = models.TextField(
+        blank=True,
+        verbose_name="Godziny kontaktu",
+        help_text="Np. poniedziałek–piątek, 9:00–17:00.",
+    )
+
+    google_maps_url = models.URLField(
+        blank=True,
+        verbose_name="Link do Google Maps",
+    )
+
+    instagram_url = models.URLField(
+        blank=True,
+        verbose_name="Instagram",
+    )
+
+    facebook_url = models.URLField(
+        blank=True,
+        verbose_name="Facebook",
+    )
+
+    tiktok_url = models.URLField(
+        blank=True,
+        verbose_name="TikTok",
+    )
+
     def __str__(self):
         return "Ustawienia strony"
 

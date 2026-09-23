@@ -179,7 +179,7 @@
         padding: 0;
     }
     .navigation-links {
-        grid-template-rows: repeat(6, 1fr);
+        grid-template-rows: repeat(8, minmax(40px, 1fr));
         gap: 5px;
         padding: 0 8% 9px;
     }

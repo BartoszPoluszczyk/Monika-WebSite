@@ -119,12 +119,31 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "business_name",
                     "business_address",
                     "tax_id",
-                    "contact_email",
-                    "contact_phone",
                 ),
                 "description": (
                     "Uzupełnij wszystkie pola przed uruchomieniem płatności "
                     "i publicznym udostępnieniem strony."
+                ),
+            },
+        ),
+        (
+            "Strona Kontakt",
+            {
+                "fields": (
+                    "contact_heading",
+                    "contact_description",
+                    "contact_email",
+                    "contact_phone",
+                    "contact_address",
+                    "contact_hours",
+                    "google_maps_url",
+                    "instagram_url",
+                    "facebook_url",
+                    "tiktok_url",
+                ),
+                "description": (
+                    "Te dane są wyświetlane na publicznej stronie Kontakt. "
+                    "Puste pola nie będą pokazywane."
                 ),
             },
         ),
