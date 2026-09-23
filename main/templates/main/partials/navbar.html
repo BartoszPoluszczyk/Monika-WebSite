@@ -27,22 +27,22 @@
 
         <div class="custom-navigation" id="mainNavigation">
             <div class="navigation-links">
-                <a class="navigation-link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
+                <a class="navigation-link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}" data-scrollspy-target="strona-glowna" href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}aria-current="page"{% endif %}>
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Strona główna</span>
                 </a>
-                <a class="navigation-link{% if request.resolver_match.url_name == 'about' %} is-active{% endif %}" href="{% url 'home' %}#o-mnie" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>
+                <a class="navigation-link{% if request.resolver_match.url_name == 'about' %} is-active{% endif %}" data-scrollspy-target="o-mnie" href="{% url 'home' %}#o-mnie" {% if request.resolver_match.url_name == 'about' %}aria-current="page"{% endif %}>
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="3.5"/><path d="M5 21c.5-4 3-6 7-6s6.5 2 7 6"/></svg><span>O mnie</span>
                 </a>
-                <a class="navigation-link" href="{% url 'home' %}#pomoc">
+                <a class="navigation-link" data-scrollspy-target="pomoc" href="{% url 'home' %}#pomoc">
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V10"/><path d="M12 14C7 14 5 10 5 5c5 0 7 3 7 9Z"/><path d="M12 17c0-5 2-8 7-9 0 5-2 9-7 9Z"/></svg><span>Jak pomagam</span>
                 </a>
-                <a class="navigation-link" href="{% url 'home' %}#oferta">
+                <a class="navigation-link" data-scrollspy-target="oferta" href="{% url 'home' %}#oferta">
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l3 3v15H6z"/><path d="M15 3v4h4M9 12h6M9 16h6"/></svg><span>Oferta</span>
                 </a>
-                <a class="navigation-link" href="{% url 'home' %}#wspolpraca">
+                <a class="navigation-link" data-scrollspy-target="wspolpraca" href="{% url 'home' %}#wspolpraca">
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="2.3"/><path d="M3.5 20c.5-4 2.5-6 5.5-6s5 2 5.5 6M14 20c.2-2.5 1.4-4.1 3.7-4.7 1.8.6 2.8 2.2 3 4.7"/></svg><span>Współpraca</span>
                 </a>
-                <a class="navigation-link" href="{% url 'home' %}#opinie">
+                <a class="navigation-link" data-scrollspy-target="opinie" href="{% url 'home' %}#opinie">
                     <svg class="navigation-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.3 6.2 20l1.1-6.4-4.6-4.5 6.4-.9L12 2.5l2.9 5.7 6.4.9-4.6 4.5 1.1 6.4z"/></svg><span>Opinie</span>
                 </a>
                 <a class="navigation-link{% if request.resolver_match.url_name == 'calorie_calculator' %} is-active{% endif %}" href="{% url 'calorie_calculator' %}" {% if request.resolver_match.url_name == 'calorie_calculator' %}aria-current="page"{% endif %}>
