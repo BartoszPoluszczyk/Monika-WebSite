@@ -14,10 +14,13 @@
             </p>
         </header>
 
-        {% if subscribed %}
+        {% if confirmation_sent %}
             <div class="newsletter-thanks" role="status">
-                <h2>Dziękuję za zapis!</h2>
-                <p>Twój adres został dodany do listy newslettera.</p>
+                <h2>Sprawdź swoją skrzynkę</h2>
+                <p>
+                    Wysłaliśmy link potwierdzający zapis. Newsletter zaczniemy
+                    wysyłać dopiero po jego kliknięciu.
+                </p>
                 <a href="{% url 'home' %}#newsletter" class="button-secondary">Wróć do strony głównej</a>
             </div>
         {% else %}

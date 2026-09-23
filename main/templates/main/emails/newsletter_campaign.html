@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{ campaign.subject }}</title>
+</head>
+<body style="margin:0;background:#E4ECE7;color:#102F3A;font-family:Arial,sans-serif;">
+    {% if campaign.preheader %}
+        <div style="display:none;max-height:0;overflow:hidden;opacity:0;">{{ campaign.preheader }}</div>
+    {% endif %}
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#E4ECE7;padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#FFFFFF;border-radius:22px;overflow:hidden;">
+                    {% if image_url %}
+                        <tr>
+                            <td>
+                                <img src="{{ image_url }}" alt="" width="680" style="display:block;width:100%;height:auto;border:0;">
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td style="padding:42px;">
+                            <p style="margin:0 0 12px;color:#6F8F74;font-size:13px;letter-spacing:2px;text-transform:uppercase;">{{ site_name }}</p>
+                            <h1 style="margin:0 0 24px;font-family:Georgia,serif;font-size:38px;line-height:1.15;color:#102F3A;">{{ campaign.heading }}</h1>
+                            <p style="font-size:17px;line-height:1.65;">Cześć {{ subscriber_name }},</p>
+                            <div style="font-size:17px;line-height:1.7;color:#102F3A;">
+                                {{ campaign.content|linebreaks }}
+                            </div>
+                            {% if campaign.button_label and campaign.button_url %}
+                                <p style="margin:32px 0 8px;">
+                                    <a href="{{ campaign.button_url }}" style="display:inline-block;padding:15px 24px;border-radius:10px;background:#D98262;color:#102F3A;text-decoration:none;font-weight:700;">{{ campaign.button_label }} →</a>
+                                </p>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:24px 42px;background:#BDD0C0;font-size:12px;line-height:1.6;color:#274652;">
+                            Otrzymujesz tę wiadomość, ponieważ potwierdziłeś zapis do newslettera.
+                            <a href="{{ unsubscribe_url }}" style="color:#102F3A;">Wypisz się</a>.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

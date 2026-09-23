@@ -1,0 +1,12 @@
+{{ campaign.heading }}
+
+Cześć {{ subscriber_name }},
+
+{{ campaign.content }}
+
+{% if campaign.button_label and campaign.button_url %}{{ campaign.button_label }}:
+{{ campaign.button_url }}
+{% endif %}
+---
+Otrzymujesz tę wiadomość, ponieważ potwierdziłeś zapis do newslettera {{ site_name }}.
+Rezygnacja: {{ unsubscribe_url }}

@@ -1,0 +1,9 @@
+Cześć {{ subscriber.name }},
+
+potwierdź zapis do newslettera {{ site_name }}, otwierając poniższy adres:
+
+{{ confirmation_url }}
+
+Dopiero po potwierdzeniu adres zostanie dodany do aktywnej listy odbiorców.
+
+Jeśli to nie Ty wypełniłeś formularz, zignoruj tę wiadomość.

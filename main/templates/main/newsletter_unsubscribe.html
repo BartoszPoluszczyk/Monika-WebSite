@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+
+{% block title %}Rezygnacja z newslettera | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="newsletter-page">
+    <div class="site-container newsletter-page-card newsletter-status-card">
+        <p class="section-eyebrow">Newsletter</p>
+        {% if unsubscribed %}
+            <h1 class="section-title">Adres został <span>wypisany</span></h1>
+            <p class="section-description">
+                Nie będziemy już wysyłać newslettera na {{ subscriber.email }}.
+                W każdej chwili możesz zapisać się ponownie.
+            </p>
+            <a href="{% url 'home' %}" class="button-secondary">Wróć na stronę główną</a>
+        {% else %}
+            <h1 class="section-title">Czy chcesz się <span>wypisać?</span></h1>
+            <p class="section-description">
+                Po potwierdzeniu przestaniemy wysyłać wiadomości na
+                {{ subscriber.email }}.
+            </p>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="booking-submit">Wypisz mnie z newslettera</button>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

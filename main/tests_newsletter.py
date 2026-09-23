@@ -1,4 +1,5 @@
-from django.test import TestCase
+from django.core import mail
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from .models import NEWSLETTER_CONSENT_TEXT, HomePage, NewsletterSubscriber
@@ -29,6 +30,10 @@ class NewsletterHomeSectionTests(TestCase):
         self.assertContains(response, "Dołącz teraz")
 
 
+@override_settings(
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    BOOKING_SITE_URL="https://example.com",
+)
 class NewsletterSignupTests(TestCase):
     def test_get_renders_signup_form(self):
         response = self.client.get(reverse("newsletter_signup"))
@@ -51,7 +56,7 @@ class NewsletterSignupTests(TestCase):
 
         self.assertRedirects(
             response,
-            f"{reverse('newsletter_signup')}?zapisano=1",
+            f"{reverse('newsletter_signup')}?potwierdzenie=wyslane",
         )
         subscriber = NewsletterSubscriber.objects.get()
         self.assertEqual(subscriber.name, "Anna Kowalska")
@@ -59,7 +64,10 @@ class NewsletterSignupTests(TestCase):
         self.assertTrue(subscriber.consent_confirmed)
         self.assertEqual(subscriber.consent_text, NEWSLETTER_CONSENT_TEXT)
         self.assertIsNotNone(subscriber.consented_at)
-        self.assertTrue(subscriber.is_active)
+        self.assertFalse(subscriber.is_active)
+        self.assertIsNone(subscriber.confirmed_at)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Potwierdź zapis", mail.outbox[0].subject)
 
     def test_consent_is_required(self):
         response = self.client.post(
@@ -81,6 +89,7 @@ class NewsletterSignupTests(TestCase):
             email="anna@example.com",
             consent_confirmed=True,
             consent_text=NEWSLETTER_CONSENT_TEXT,
+            is_active=True,
         )
 
         response = self.client.post(
@@ -119,9 +128,11 @@ class NewsletterSignupTests(TestCase):
         old.refresh_from_db()
         self.assertEqual(old.name, "Anna Nowa")
         self.assertEqual(old.email, "anna@example.com")
-        self.assertTrue(old.is_active)
+        self.assertFalse(old.is_active)
+        self.assertIsNone(old.confirmed_at)
         self.assertEqual(old.consent_text, NEWSLETTER_CONSENT_TEXT)
         self.assertIsNone(old.unsubscribed_at)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_honeypot_blocks_bot_submission(self):
         response = self.client.post(
@@ -139,10 +150,10 @@ class NewsletterSignupTests(TestCase):
 
     def test_success_message_is_shown_after_redirect(self):
         response = self.client.get(
-            f"{reverse('newsletter_signup')}?zapisano=1"
+            f"{reverse('newsletter_signup')}?potwierdzenie=wyslane"
         )
 
-        self.assertContains(response, "Dziękuję za zapis")
+        self.assertContains(response, "Sprawdź swoją skrzynkę")
 
 
 class PrivacyPolicyTests(TestCase):

@@ -2616,3 +2616,25 @@ a {
     .site-footer-bottom { flex-direction: column; }
     .cookie-notice { right: 10px; bottom: 10px; width: calc(100% - 20px); }
 }
+
+
+/* Newsletter: potwierdzenie zapisu i rezygnacja */
+.newsletter-status-card {
+    text-align: center;
+}
+
+.newsletter-status-card .section-description {
+    max-width: 680px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.newsletter-status-card form {
+    display: flex;
+    justify-content: center;
+}
+
+.newsletter-status-card .booking-submit {
+    width: auto;
+    min-width: 260px;
+}

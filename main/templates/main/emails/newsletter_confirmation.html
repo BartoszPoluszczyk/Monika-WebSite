@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Potwierdź zapis do newslettera</title>
+</head>
+<body style="margin:0;background:#E4ECE7;color:#102F3A;font-family:Arial,sans-serif;">
+    <div style="display:none;max-height:0;overflow:hidden;">
+        Potwierdź swój adres e-mail.
+    </div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#E4ECE7;padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;background:#FFFFFF;border-radius:22px;overflow:hidden;">
+                    <tr>
+                        <td style="padding:40px;">
+                            <p style="margin:0 0 12px;color:#6F8F74;font-size:13px;letter-spacing:2px;text-transform:uppercase;">Newsletter</p>
+                            <h1 style="margin:0 0 20px;font-family:Georgia,serif;font-size:34px;line-height:1.15;color:#102F3A;">Potwierdź swój adres e-mail</h1>
+                            <p style="font-size:17px;line-height:1.65;">Cześć {{ subscriber.name }},</p>
+                            <p style="font-size:17px;line-height:1.65;">
+                                kliknij poniższy przycisk, aby potwierdzić zapis do newslettera {{ site_name }}.
+                                Wiadomości zaczniemy wysyłać dopiero po potwierdzeniu.
+                            </p>
+                            <p style="margin:30px 0;">
+                                <a href="{{ confirmation_url }}" style="display:inline-block;padding:15px 24px;border-radius:10px;background:#D98262;color:#102F3A;text-decoration:none;font-weight:700;">Potwierdzam zapis →</a>
+                            </p>
+                            <p style="font-size:13px;line-height:1.6;color:#54707A;">
+                                Jeśli to nie Ty wypełniłeś formularz, zignoruj tę wiadomość.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

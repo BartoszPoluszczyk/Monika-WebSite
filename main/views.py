@@ -1,11 +1,14 @@
+import uuid
+
 from django.db import IntegrityError
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.urls import reverse
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_http_methods
 
 from .forms import NewsletterSignupForm, TestimonialSubmissionForm
+from .newsletter import send_confirmation_email
 from .models import (
     AboutPage,
     CooperationStep,
@@ -120,7 +123,11 @@ def newsletter_signup(request):
                 subscriber.consent_confirmed = True
                 subscriber.consent_text = NEWSLETTER_CONSENT_TEXT
                 subscriber.consented_at = timezone.now()
-                subscriber.is_active = True
+                subscriber.confirmation_token = uuid.uuid4()
+                subscriber.confirmation_sent_at = None
+                subscriber.confirmed_at = None
+                subscriber.unsubscribe_token = uuid.uuid4()
+                subscriber.is_active = False
                 subscriber.unsubscribed_at = None
                 subscriber.save(
                     update_fields=[
@@ -129,26 +136,45 @@ def newsletter_signup(request):
                         "consent_confirmed",
                         "consent_text",
                         "consented_at",
+                        "confirmation_token",
+                        "confirmation_sent_at",
+                        "confirmed_at",
+                        "unsubscribe_token",
                         "is_active",
                         "unsubscribed_at",
                     ]
                 )
-                return redirect(f"{reverse('newsletter_signup')}?zapisano=1")
-
-            try:
-                NewsletterSubscriber.objects.create(
-                    name=form.cleaned_data["name"],
-                    email=email,
-                    consent_confirmed=True,
-                    consent_text=NEWSLETTER_CONSENT_TEXT,
-                )
-            except IntegrityError:
-                form.add_error(
-                    "email",
-                    "Ten adres e-mail jest już zapisany do newslettera.",
-                )
             else:
-                return redirect(f"{reverse('newsletter_signup')}?zapisano=1")
+                try:
+                    subscriber = NewsletterSubscriber.objects.create(
+                        name=form.cleaned_data["name"],
+                        email=email,
+                        consent_confirmed=True,
+                        consent_text=NEWSLETTER_CONSENT_TEXT,
+                        is_active=False,
+                    )
+                except IntegrityError:
+                    form.add_error(
+                        "email",
+                        "Ten adres e-mail jest już zapisany do newslettera.",
+                    )
+                    subscriber = None
+
+            if subscriber is not None and not form.errors:
+                try:
+                    send_confirmation_email(subscriber)
+                except Exception:
+                    form.add_error(
+                        None,
+                        (
+                            "Zapis został przyjęty, ale nie udało się wysłać "
+                            "wiadomości potwierdzającej. Spróbuj ponownie później."
+                        ),
+                    )
+                else:
+                    return redirect(
+                        f"{reverse('newsletter_signup')}?potwierdzenie=wyslane"
+                    )
     else:
         form = NewsletterSignupForm()
 
@@ -157,10 +183,70 @@ def newsletter_signup(request):
         "main/newsletter_signup.html",
         {
             "form": form,
-            "subscribed": request.GET.get("zapisano") == "1",
+            "confirmation_sent": (
+                request.GET.get("potwierdzenie") == "wyslane"
+            ),
         },
     )
 
+
+@require_GET
+def newsletter_confirm(request, token):
+    subscriber = get_object_or_404(
+        NewsletterSubscriber,
+        confirmation_token=token,
+    )
+    already_confirmed = bool(
+        subscriber.confirmed_at and subscriber.is_active
+    )
+    previously_unsubscribed = subscriber.unsubscribed_at is not None
+    if not already_confirmed and not previously_unsubscribed:
+        subscriber.confirmed_at = timezone.now()
+        subscriber.is_active = True
+        subscriber.unsubscribed_at = None
+        subscriber.save(
+            update_fields=[
+                "confirmed_at",
+                "is_active",
+                "unsubscribed_at",
+            ]
+        )
+
+    return render(
+        request,
+        "main/newsletter_confirmation_result.html",
+        {
+            "subscriber": subscriber,
+            "already_confirmed": already_confirmed,
+            "previously_unsubscribed": previously_unsubscribed,
+        },
+    )
+
+
+@require_http_methods(["GET", "POST"])
+def newsletter_unsubscribe(request, token):
+    subscriber = get_object_or_404(
+        NewsletterSubscriber,
+        unsubscribe_token=token,
+    )
+    unsubscribed = not subscriber.is_active
+
+    if request.method == "POST" and subscriber.is_active:
+        subscriber.is_active = False
+        subscriber.unsubscribed_at = timezone.now()
+        subscriber.save(
+            update_fields=["is_active", "unsubscribed_at"]
+        )
+        unsubscribed = True
+
+    return render(
+        request,
+        "main/newsletter_unsubscribe.html",
+        {
+            "subscriber": subscriber,
+            "unsubscribed": unsubscribed,
+        },
+    )
 
 def _render_legal_document(request, document_type):
     document = LegalDocument.current(document_type)

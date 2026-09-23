@@ -1,3 +1,6 @@
+import uuid
+
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -443,9 +446,36 @@ class NewsletterSubscriber(models.Model):
         verbose_name="Data udzielenia zgody",
     )
 
+    confirmation_token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        verbose_name="Token potwierdzenia adresu",
+    )
+
+    confirmation_sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Wysłano prośbę o potwierdzenie",
+    )
+
+    confirmed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Adres potwierdzony",
+    )
+
+    unsubscribe_token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+        verbose_name="Token rezygnacji",
+    )
+
     is_active = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name="Aktywny zapis",
+        help_text="Wiadomości otrzymują tylko osoby z potwierdzonym adresem.",
     )
 
     unsubscribed_at = models.DateTimeField(
@@ -453,6 +483,15 @@ class NewsletterSubscriber(models.Model):
         null=True,
         verbose_name="Data rezygnacji",
     )
+
+    @property
+    def can_receive_newsletter(self):
+        return bool(
+            self.consent_confirmed
+            and self.is_active
+            and self.confirmed_at
+            and not self.unsubscribed_at
+        )
 
     def __str__(self):
         return f"{self.name} <{self.email}>"
@@ -462,6 +501,154 @@ class NewsletterSubscriber(models.Model):
         verbose_name_plural = "Zapisy do newslettera"
         ordering = ["-consented_at"]
 
+
+class NewsletterCampaign(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Wersja robocza"
+        READY = "ready", "Gotowa do wysyłki"
+        SENDING = "sending", "Wysyłanie"
+        SENT = "sent", "Wysłana"
+
+    title = models.CharField(
+        max_length=200,
+        verbose_name="Nazwa robocza kampanii",
+        help_text="Widoczna tylko w panelu administratora.",
+    )
+    subject = models.CharField(
+        max_length=200,
+        verbose_name="Temat wiadomości",
+    )
+    preheader = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name="Tekst podglądu",
+        help_text="Krótki tekst widoczny obok tematu w skrzynce odbiorczej.",
+    )
+    heading = models.CharField(
+        max_length=250,
+        verbose_name="Nagłówek wiadomości",
+    )
+    content = models.TextField(
+        verbose_name="Treść wiadomości",
+        help_text="Zwykły tekst. Nowe akapity zachowają się w wiadomości e-mail.",
+    )
+    image = models.ImageField(
+        upload_to="newsletter/campaigns/",
+        blank=True,
+        null=True,
+        verbose_name="Grafika",
+    )
+    button_label = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name="Tekst przycisku",
+    )
+    button_url = models.URLField(
+        blank=True,
+        verbose_name="Adres przycisku",
+    )
+    test_recipient_email = models.EmailField(
+        blank=True,
+        verbose_name="Adres do wysyłki testowej",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.DRAFT,
+        verbose_name="Status",
+    )
+    scheduled_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Planowana wysyłka",
+        help_text="Wymaga cyklicznego uruchamiania komendy wysyłającej na serwerze.",
+    )
+    sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Wysłano",
+    )
+    recipient_count = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+        verbose_name="Liczba odbiorców",
+    )
+    failed_count = models.PositiveIntegerField(
+        default=0,
+        editable=False,
+        verbose_name="Liczba błędów",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Zaktualizowano")
+
+    def clean(self):
+        super().clean()
+        if bool(self.button_label) != bool(self.button_url):
+            raise ValidationError(
+                "Tekst przycisku i jego adres muszą być uzupełnione razem."
+            )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Kampania newsletterowa"
+        verbose_name_plural = "Kampanie newsletterowe"
+        ordering = ["-created_at"]
+
+
+class NewsletterDelivery(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Oczekuje"
+        SENT = "sent", "Wysłana"
+        FAILED = "failed", "Błąd"
+
+    campaign = models.ForeignKey(
+        NewsletterCampaign,
+        on_delete=models.CASCADE,
+        related_name="deliveries",
+        verbose_name="Kampania",
+    )
+    subscriber = models.ForeignKey(
+        NewsletterSubscriber,
+        on_delete=models.PROTECT,
+        related_name="deliveries",
+        verbose_name="Odbiorca",
+    )
+    subscriber_email = models.EmailField(
+        verbose_name="Adres odbiorcy w chwili wysyłki",
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+        verbose_name="Status",
+    )
+    sent_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        verbose_name="Wysłano",
+    )
+    error_message = models.TextField(
+        blank=True,
+        verbose_name="Opis błędu",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Zaktualizowano")
+
+    def __str__(self):
+        return f"{self.campaign} → {self.subscriber_email}"
+
+    class Meta:
+        verbose_name = "Wysyłka newslettera"
+        verbose_name_plural = "Historia wysyłek newslettera"
+        ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["campaign", "subscriber"],
+                name="unique_newsletter_delivery",
+            ),
+        ]
 
 
 class LegalDocument(models.Model):

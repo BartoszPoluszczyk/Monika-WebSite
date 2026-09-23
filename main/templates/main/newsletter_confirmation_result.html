@@ -1,0 +1,30 @@
+{% extends "main/base.html" %}
+
+{% block title %}Potwierdzenie newslettera | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="newsletter-page">
+    <div class="site-container newsletter-page-card newsletter-status-card">
+        <p class="section-eyebrow">Newsletter</p>
+        {% if previously_unsubscribed %}
+            <h1 class="section-title">Zapis pozostaje <span>nieaktywny</span></h1>
+            <p class="section-description">
+                Ten adres został wcześniej wypisany. Aby wrócić do newslettera,
+                wypełnij formularz zapisu ponownie.
+            </p>
+        {% elif already_confirmed %}
+            <h1 class="section-title">Adres jest już <span>potwierdzony</span></h1>
+            <p class="section-description">
+                {{ subscriber.email }} znajduje się już na aktywnej liście newslettera.
+            </p>
+        {% else %}
+            <h1 class="section-title">Dziękuję za <span>potwierdzenie</span></h1>
+            <p class="section-description">
+                Adres {{ subscriber.email }} został potwierdzony. Od teraz możesz
+                otrzymywać wiadomości od Moniki.
+            </p>
+        {% endif %}
+        <a href="{% url 'home' %}" class="button-secondary">Wróć na stronę główną</a>
+    </div>
+</section>
+{% endblock %}
