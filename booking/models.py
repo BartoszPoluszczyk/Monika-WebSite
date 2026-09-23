@@ -182,8 +182,15 @@ class Appointment(models.Model):
     )
     consent_privacy = models.BooleanField(
         default=False,
-        verbose_name="Zgoda na przetwarzanie danych w celu obsługi rezerwacji",
+        verbose_name="Potwierdzenie zapoznania się z polityką prywatności",
     )
+    terms_accepted = models.BooleanField(default=False, verbose_name="Akceptacja regulaminu")
+    terms_accepted_at = models.DateTimeField(blank=True, null=True, verbose_name="Data akceptacji regulaminu")
+    terms_version = models.CharField(max_length=30, blank=True, verbose_name="Zaakceptowana wersja regulaminu")
+    terms_snapshot = models.TextField(blank=True, verbose_name="Treść zaakceptowanego regulaminu")
+    privacy_acknowledged_at = models.DateTimeField(blank=True, null=True, verbose_name="Data potwierdzenia polityki prywatności")
+    privacy_version = models.CharField(max_length=30, blank=True, verbose_name="Wersja polityki prywatności")
+    privacy_snapshot = models.TextField(blank=True, verbose_name="Treść polityki prywatności przy rezerwacji")
     status = models.CharField(
         max_length=20,
         choices=Status.choices,

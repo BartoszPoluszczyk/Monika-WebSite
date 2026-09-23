@@ -53,7 +53,15 @@ def _appointment_context(appointment, **extra):
     return context
 
 
-def _send_email(*, subject, recipients, template_name, context, reply_to=None):
+def _send_email(
+    *,
+    subject,
+    recipients,
+    template_name,
+    context,
+    reply_to=None,
+    attachments=None,
+):
     text_body = render_to_string(f"booking/emails/{template_name}.txt", context)
     html_body = render_to_string(f"booking/emails/{template_name}.html", context)
     message = EmailMultiAlternatives(
@@ -64,6 +72,8 @@ def _send_email(*, subject, recipients, template_name, context, reply_to=None):
         reply_to=reply_to or [],
     )
     message.attach_alternative(html_body, "text/html")
+    for filename, content, mimetype in attachments or []:
+        message.attach(filename, content, mimetype)
     return message.send()
 
 
@@ -78,12 +88,28 @@ def _send_patient_message(appointment, *, event, title, introduction, action_lab
         action_label=action_label,
         action_url=action_url,
     )
+    attachments = []
+    if event == "confirmation":
+        if appointment.terms_snapshot:
+            attachments.append((
+                f"regulamin-{appointment.terms_version or 'zaakceptowany'}.txt",
+                appointment.terms_snapshot,
+                "text/plain",
+            ))
+        if appointment.privacy_snapshot:
+            attachments.append((
+                f"polityka-prywatnosci-{appointment.privacy_version or 'zaakceptowana'}.txt",
+                appointment.privacy_snapshot,
+                "text/plain",
+            ))
+
     return _send_email(
         subject=f"{title} — {_site_name()}",
         recipients=[appointment.email],
         template_name="appointment",
         context=context,
         reply_to=reply_to,
+        attachments=attachments,
     )
 
 

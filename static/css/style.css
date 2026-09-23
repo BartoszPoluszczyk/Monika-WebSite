@@ -2479,3 +2479,140 @@ a {
         animation: none;
     }
 }
+
+
+/* Legal documents, footer and technical cookie notice */
+
+.legal-page { padding: 10px 0 24px; }
+.legal-page-card {
+    padding: clamp(48px, 7vw, 92px) clamp(24px, 6vw, 86px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--palette-white);
+}
+.legal-page-heading {
+    max-width: 760px;
+    margin: 0 auto clamp(34px, 5vw, 58px);
+    text-align: center;
+}
+.legal-version {
+    margin: 14px 0 0;
+    color: var(--color-text-secondary);
+    font-size: 0.72rem;
+}
+.legal-content {
+    max-width: 860px;
+    margin: 0 auto;
+    color: var(--color-text-secondary);
+    font-size: clamp(0.82rem, 1vw, 0.95rem);
+    line-height: 1.85;
+}
+.legal-content p { margin: 0; }
+.legal-content p + p { margin-top: 1.15em; }
+.booking-legal-checkboxes {
+    margin-top: 18px;
+    display: grid;
+    gap: 10px;
+}
+.booking-legal-checkboxes .booking-consent {
+    margin-top: 0;
+    padding: 13px 14px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--palette-green-pastel) 52%, var(--palette-white));
+}
+.booking-legal-checkboxes a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+}
+.testimonials-verification-note {
+    max-width: 620px;
+    margin: 18px auto 0;
+    color: var(--color-text-secondary);
+    font-size: 0.66rem;
+    line-height: 1.6;
+    text-align: center;
+}
+.site-footer {
+    margin-top: 12px;
+    padding: clamp(40px, 6vw, 68px) 0 24px;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--palette-navy);
+    color: var(--palette-white);
+}
+.site-footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.7fr) minmax(220px, 0.9fr);
+    gap: clamp(28px, 5vw, 72px);
+}
+.site-footer-brand strong {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 2.4vw, 2.35rem);
+    font-weight: 400;
+}
+.site-footer-brand p {
+    max-width: 34ch;
+    margin: 12px 0 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 0.76rem;
+    line-height: 1.7;
+}
+.site-footer-links { display: grid; align-content: start; gap: 11px; }
+.site-footer a { color: var(--palette-white); text-decoration: none; }
+.site-footer a:hover { color: var(--palette-green-pastel-strong); }
+.site-footer-contact {
+    margin: 0;
+    display: grid;
+    align-content: start;
+    gap: 7px;
+    color: rgba(255, 255, 255, 0.76);
+    font-size: 0.72rem;
+    font-style: normal;
+    line-height: 1.6;
+}
+.site-footer-contact strong { color: var(--palette-white); }
+.site-footer-bottom {
+    margin-top: 36px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 0.62rem;
+    line-height: 1.5;
+}
+.cookie-notice {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 1100;
+    width: min(420px, calc(100% - 36px));
+    padding: 18px;
+    border: 1px solid var(--palette-green-pastel-strong);
+    border-radius: 13px;
+    background: var(--palette-white);
+    box-shadow: 0 18px 55px rgba(16, 47, 58, 0.18);
+    color: var(--color-text-primary);
+}
+.cookie-notice[hidden] { display: none; }
+.cookie-notice p { margin: 0; font-size: 0.72rem; line-height: 1.65; }
+.cookie-notice a { color: var(--color-accent-strong); font-weight: 600; }
+.cookie-notice-actions { margin-top: 13px; display: flex; justify-content: flex-end; }
+.cookie-notice button {
+    min-height: 38px;
+    padding: 0 18px;
+    border: 1px solid var(--color-cta-background);
+    border-radius: 8px;
+    background: var(--color-cta-background);
+    color: var(--palette-navy);
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+@media (max-width: 760px) {
+    .site-footer-grid { grid-template-columns: 1fr; }
+    .site-footer-bottom { flex-direction: column; }
+    .cookie-notice { right: 10px; bottom: 10px; width: calc(100% - 20px); }
+}

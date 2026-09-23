@@ -1,4 +1,5 @@
 from django.db import IntegrityError
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.urls import reverse
@@ -9,6 +10,8 @@ from .models import (
     AboutPage,
     CooperationStep,
     HomePage,
+    LegalDocument,
+    SiteSettings,
     NEWSLETTER_CONSENT_TEXT,
     NewsletterSubscriber,
     Service,
@@ -159,6 +162,42 @@ def newsletter_signup(request):
     )
 
 
+def _render_legal_document(request, document_type):
+    document = LegalDocument.current(document_type)
+    if document is None:
+        raise Http404("Dokument nie został jeszcze opublikowany.")
+
+    return render(
+        request,
+        "main/legal_document.html",
+        {
+            "document": document,
+            "rendered_content": document.rendered_content(
+                SiteSettings.objects.first()
+            ),
+        },
+    )
+
+
+@require_GET
+def terms_of_service(request):
+    return _render_legal_document(
+        request,
+        LegalDocument.DocumentType.TERMS,
+    )
+
+
 @require_GET
 def privacy_policy(request):
-    return render(request, "main/privacy_policy.html")
+    return _render_legal_document(
+        request,
+        LegalDocument.DocumentType.PRIVACY,
+    )
+
+
+@require_GET
+def cookie_policy(request):
+    return _render_legal_document(
+        request,
+        LegalDocument.DocumentType.COOKIES,
+    )

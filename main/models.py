@@ -15,6 +15,41 @@ class SiteSettings(models.Model):
         verbose_name="Nazwa strony",
     )
 
+    owner_name = models.CharField(
+        max_length=180,
+        default="Monika Kulik",
+        verbose_name="Imię i nazwisko właścicielki",
+    )
+
+    business_name = models.CharField(
+        max_length=220,
+        blank=True,
+        verbose_name="Pełna nazwa działalności",
+        help_text="Nazwa używana w regulaminie i polityce prywatności.",
+    )
+
+    business_address = models.TextField(
+        blank=True,
+        verbose_name="Adres działalności",
+    )
+
+    tax_id = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name="NIP",
+    )
+
+    contact_email = models.EmailField(
+        blank=True,
+        verbose_name="E-mail kontaktowy",
+    )
+
+    contact_phone = models.CharField(
+        max_length=40,
+        blank=True,
+        verbose_name="Telefon kontaktowy",
+    )
+
     def __str__(self):
         return "Ustawienia strony"
 
@@ -426,3 +461,108 @@ class NewsletterSubscriber(models.Model):
         verbose_name = "Zapis do newslettera"
         verbose_name_plural = "Zapisy do newslettera"
         ordering = ["-consented_at"]
+
+
+
+class LegalDocument(models.Model):
+    class DocumentType(models.TextChoices):
+        TERMS = "terms", "Regulamin świadczenia usług"
+        PRIVACY = "privacy", "Polityka prywatności"
+        COOKIES = "cookies", "Polityka plików cookies"
+
+    document_type = models.CharField(
+        max_length=20,
+        choices=DocumentType.choices,
+        verbose_name="Rodzaj dokumentu",
+    )
+    title = models.CharField(max_length=200, verbose_name="Tytuł")
+    version = models.CharField(
+        max_length=30,
+        verbose_name="Wersja",
+        help_text="Np. 1.0 albo 2026-09-23.",
+    )
+    effective_from = models.DateField(verbose_name="Obowiązuje od")
+    content = models.TextField(
+        verbose_name="Treść dokumentu",
+        help_text=(
+            "Możesz użyć znaczników: {{BUSINESS_NAME}}, {{OWNER_NAME}}, "
+            "{{ADDRESS}}, {{TAX_ID}}, {{EMAIL}}, {{PHONE}}."
+        ),
+    )
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name="Opublikowany",
+        help_text="Tylko opublikowane dokumenty są widoczne na stronie.",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Utworzono")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Zaktualizowano")
+
+    @classmethod
+    def current(cls, document_type, on_date=None):
+        from django.utils import timezone
+
+        on_date = on_date or timezone.localdate()
+        return (
+            cls.objects.filter(
+                document_type=document_type,
+                is_published=True,
+                effective_from__lte=on_date,
+            )
+            .order_by("-effective_from", "-pk")
+            .first()
+        )
+
+    def rendered_content(self, site_settings=None):
+        site_settings = site_settings or SiteSettings.objects.first()
+        owner_name = (
+            site_settings.owner_name
+            if site_settings and site_settings.owner_name
+            else "Monika Kulik"
+        )
+        business_name = (
+            site_settings.business_name
+            if site_settings and site_settings.business_name
+            else owner_name
+        )
+        replacements = {
+            "{{BUSINESS_NAME}}": business_name,
+            "{{OWNER_NAME}}": owner_name,
+            "{{ADDRESS}}": (
+                site_settings.business_address
+                if site_settings and site_settings.business_address
+                else "[uzupełnij adres w panelu administratora]"
+            ),
+            "{{TAX_ID}}": (
+                site_settings.tax_id
+                if site_settings and site_settings.tax_id
+                else "[uzupełnij NIP w panelu administratora]"
+            ),
+            "{{EMAIL}}": (
+                site_settings.contact_email
+                if site_settings and site_settings.contact_email
+                else "[uzupełnij e-mail w panelu administratora]"
+            ),
+            "{{PHONE}}": (
+                site_settings.contact_phone
+                if site_settings and site_settings.contact_phone
+                else "[uzupełnij telefon w panelu administratora]"
+            ),
+        }
+        rendered = self.content
+        for marker, value in replacements.items():
+            rendered = rendered.replace(marker, value)
+        return rendered
+
+    def __str__(self):
+        return f"{self.get_document_type_display()} — {self.version}"
+
+    class Meta:
+        verbose_name = "Dokument prawny"
+        verbose_name_plural = "Dokumenty prawne"
+        ordering = ["document_type", "-effective_from", "-pk"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["document_type", "version"],
+                name="unique_legal_document_version",
+            ),
+        ]

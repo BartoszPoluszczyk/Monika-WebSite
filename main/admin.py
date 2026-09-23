@@ -4,6 +4,7 @@ from django.utils import timezone
 from .models import (
     AboutPage,
     HomePage,
+    LegalDocument,
     NewsletterSubscriber,
     Service,
     SiteSettings,
@@ -94,6 +95,29 @@ class SpecializationAdmin(admin.ModelAdmin):
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (
+            "Marka",
+            {"fields": ("logo", "site_name")},
+        ),
+        (
+            "Dane działalności do dokumentów prawnych",
+            {
+                "fields": (
+                    "owner_name",
+                    "business_name",
+                    "business_address",
+                    "tax_id",
+                    "contact_email",
+                    "contact_phone",
+                ),
+                "description": (
+                    "Uzupełnij wszystkie pola przed uruchomieniem płatności "
+                    "i publicznym udostępnieniem strony."
+                ),
+            },
+        ),
+    )
 
     def has_add_permission(self, request):
         if SiteSettings.objects.exists():
@@ -248,3 +272,51 @@ class NewsletterSubscriberAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return False
+
+
+
+@admin.register(LegalDocument)
+class LegalDocumentAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "document_type",
+        "version",
+        "effective_from",
+        "is_published",
+        "updated_at",
+    )
+    list_filter = ("document_type", "is_published")
+    search_fields = ("title", "version", "content")
+    ordering = ("document_type", "-effective_from", "-pk")
+    readonly_fields = ("created_at", "updated_at")
+    fieldsets = (
+        (
+            "Dokument",
+            {
+                "fields": (
+                    "document_type",
+                    "title",
+                    "version",
+                    "effective_from",
+                    "is_published",
+                )
+            },
+        ),
+        (
+            "Treść",
+            {
+                "fields": ("content",),
+                "description": (
+                    "Nie nadpisuj starej wersji zaakceptowanej przez klientów. "
+                    "Przy większej zmianie utwórz nowy dokument z nowym numerem wersji."
+                ),
+            },
+        ),
+        (
+            "Historia",
+            {
+                "fields": ("created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
+    )

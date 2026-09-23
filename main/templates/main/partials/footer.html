@@ -1,0 +1,24 @@
+<footer class="site-footer">
+    <div class="site-container site-footer-grid">
+        <div class="site-footer-brand">
+            <strong>{{ site_settings.site_name|default:"Dietetyk Monika" }}</strong>
+            <p>Indywidualna dietoterapia i świadome wsparcie zdrowia.</p>
+        </div>
+        <nav class="site-footer-links" aria-label="Dokumenty i informacje prawne">
+            <a href="{% url 'terms_of_service' %}">Regulamin</a>
+            <a href="{% url 'privacy_policy' %}">Polityka prywatności</a>
+            <a href="{% url 'cookie_policy' %}">Polityka cookies</a>
+        </nav>
+        <address class="site-footer-contact">
+            {% if site_settings.business_name %}<strong>{{ site_settings.business_name }}</strong>{% endif %}
+            {% if site_settings.business_address %}<span>{{ site_settings.business_address|linebreaksbr }}</span>{% endif %}
+            {% if site_settings.tax_id %}<span>NIP: {{ site_settings.tax_id }}</span>{% endif %}
+            {% if site_settings.contact_email %}<a href="mailto:{{ site_settings.contact_email }}">{{ site_settings.contact_email }}</a>{% endif %}
+            {% if site_settings.contact_phone %}<a href="tel:{{ site_settings.contact_phone }}">{{ site_settings.contact_phone }}</a>{% endif %}
+        </address>
+    </div>
+    <div class="site-container site-footer-bottom">
+        <span>© {% now "Y" %} {{ site_settings.owner_name|default:"Monika Kulik" }}</span>
+        <span>Informacje na stronie nie zastępują indywidualnej konsultacji medycznej.</span>
+    </div>
+</footer>

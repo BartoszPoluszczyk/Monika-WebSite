@@ -10,6 +10,11 @@ Forma wizyty: {{ appointment.get_visit_type_display }}
 {% endif %}
 {{ action_label }}: {{ action_url }}
 
+{% if event == "confirmation" %}Zaakceptowany regulamin: wersja {{ appointment.terms_version }}
+Polityka prywatności: wersja {{ appointment.privacy_version }}
+Kopie obu dokumentów znajdują się w załącznikach do tej wiadomości.
+{% endif %}
+
 {% if event == "cancellation" and appointment.payment_status == "paid" %}Anulowanie terminu nie wykonuje automatycznego zwrotu płatności. Sposób rozliczenia zostanie ustalony osobno.
 {% endif %}
 

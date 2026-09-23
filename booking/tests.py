@@ -119,6 +119,7 @@ class PublicBookingTests(BookingTestMixin, TestCase):
                     "visit_type": Appointment.VisitType.ONLINE,
                     "notes": "",
                     "consent_privacy": "on",
+                    "terms_accepted": "on",
                 },
             )
 
@@ -129,6 +130,30 @@ class PublicBookingTests(BookingTestMixin, TestCase):
         self.assertEqual(appointment.status, Appointment.Status.PENDING_PAYMENT)
         self.assertEqual(appointment.payment_status, Appointment.PaymentStatus.PENDING)
         self.assertEqual(appointment.payment_amount, self.service.price)
+        self.assertTrue(appointment.terms_accepted)
+        self.assertIsNotNone(appointment.terms_accepted_at)
+        self.assertTrue(appointment.terms_snapshot)
+        self.assertTrue(appointment.privacy_snapshot)
+
+    def test_booking_requires_terms_acceptance(self):
+        response = self.client.post(
+            reverse("booking:book"),
+            {
+                "service": self.service.pk,
+                "appointment_date": self.day.isoformat(),
+                "appointment_time": "09:00",
+                "first_name": "Jan",
+                "last_name": "Kowalski",
+                "email": "jan@example.com",
+                "phone": "600700800",
+                "visit_type": Appointment.VisitType.ONLINE,
+                "notes": "",
+                "consent_privacy": "on",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "To pole jest wymagane")
+        self.assertFalse(Appointment.objects.exists())
 
     def test_booking_is_not_created_before_stripe_is_configured(self):
         with patch("booking.views.payments_configured", return_value=False):
@@ -145,6 +170,7 @@ class PublicBookingTests(BookingTestMixin, TestCase):
                     "visit_type": Appointment.VisitType.ONLINE,
                     "notes": "",
                     "consent_privacy": "on",
+                    "terms_accepted": "on",
                 },
             )
 
@@ -177,6 +203,7 @@ class PublicBookingTests(BookingTestMixin, TestCase):
                 "visit_type": Appointment.VisitType.ONLINE,
                 "notes": "",
                 "consent_privacy": "on",
+                    "terms_accepted": "on",
             },
         )
 
@@ -321,6 +348,13 @@ class PaymentLifecycleTests(BookingTestMixin, TestCase):
             email="jan@example.com",
             phone="600700800",
             consent_privacy=True,
+            terms_accepted=True,
+            terms_accepted_at=timezone.now(),
+            terms_version="1.0",
+            terms_snapshot="Regulamin testowy",
+            privacy_acknowledged_at=timezone.now(),
+            privacy_version="1.0",
+            privacy_snapshot="Polityka prywatności testowa",
             status=Appointment.Status.PENDING_PAYMENT,
             payment_status=Appointment.PaymentStatus.PENDING,
             payment_amount=self.service.price,

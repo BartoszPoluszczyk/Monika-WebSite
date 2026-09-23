@@ -4,6 +4,14 @@ from .models import Appointment
 
 
 class AppointmentBookingForm(forms.ModelForm):
+    consent_privacy = forms.BooleanField(
+        required=True,
+        label="Potwierdzam, że zapoznałem się z Polityką prywatności.",
+    )
+    terms_accepted = forms.BooleanField(
+        required=True,
+        label="Akceptuję Regulamin świadczenia usług.",
+    )
     appointment_date = forms.DateField(widget=forms.HiddenInput())
     appointment_time = forms.ChoiceField(
         label="Godzina wizyty",
@@ -21,12 +29,12 @@ class AppointmentBookingForm(forms.ModelForm):
             "visit_type",
             "notes",
             "consent_privacy",
+            "terms_accepted",
         ]
         labels = {
             "notes": "Wiadomość (opcjonalnie)",
-            "consent_privacy": (
-                "Wyrażam zgodę na przetwarzanie podanych danych w celu obsługi rezerwacji."
-            ),
+            "consent_privacy": "Potwierdzam, że zapoznałem się z Polityką prywatności.",
+            "terms_accepted": "Akceptuję Regulamin świadczenia usług.",
         }
         help_texts = {
             "notes": "Nie podawaj tutaj szczegółowych informacji o stanie zdrowia.",

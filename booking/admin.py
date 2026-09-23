@@ -132,13 +132,35 @@ class AppointmentAdmin(admin.ModelAdmin):
         "reminder_email_sent_at",
         "cancellation_email_sent_at",
         "reschedule_email_sent_at",
+        "terms_accepted_at",
+        "terms_version",
+        "terms_snapshot",
+        "privacy_acknowledged_at",
+        "privacy_version",
+        "privacy_snapshot",
         "created_at",
         "updated_at",
     )
     fieldsets = (
         ("Termin", {"fields": ("service", "start_at", "end_at", "visit_type", "status")}),
         ("Pacjent", {"fields": ("first_name", "last_name", "email", "phone")}),
-        ("Informacje dodatkowe", {"fields": ("notes", "consent_privacy")}),
+        ("Informacje dodatkowe", {"fields": ("notes",)}),
+        (
+            "Dokumenty prawne zaakceptowane przy rezerwacji",
+            {
+                "fields": (
+                    "consent_privacy",
+                    "privacy_acknowledged_at",
+                    "privacy_version",
+                    "privacy_snapshot",
+                    "terms_accepted",
+                    "terms_accepted_at",
+                    "terms_version",
+                    "terms_snapshot",
+                ),
+                "classes": ("collapse",),
+            },
+        ),
         (
             "Płatność online",
             {

@@ -1,0 +1,20 @@
+{% extends "main/base.html" %}
+
+{% block title %}{{ document.title }} | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="legal-page">
+    <div class="site-container legal-page-card">
+        <header class="legal-page-heading">
+            <p class="section-eyebrow">Dokumenty i zasady</p>
+            <h1 class="section-title">{{ document.title }}</h1>
+            <p class="legal-version">
+                Wersja {{ document.version }} · obowiązuje od {{ document.effective_from|date:"d.m.Y" }}
+            </p>
+        </header>
+        <div class="legal-content">
+            {{ rendered_content|linebreaks }}
+        </div>
+    </div>
+</section>
+{% endblock %}

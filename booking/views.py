@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from main.models import Service
+from main.models import LegalDocument, Service, SiteSettings
 
 from .emails import send_cancellation_notifications, send_reschedule_notifications
 from .forms import AppointmentBookingForm, AppointmentRescheduleForm
@@ -114,6 +114,10 @@ def _calendar_context(
 
 
 def book_appointment(request):
+    terms_document = LegalDocument.current(LegalDocument.DocumentType.TERMS)
+    privacy_document = LegalDocument.current(LegalDocument.DocumentType.PRIVACY)
+    site_settings = SiteSettings.objects.first()
+
     services = Service.objects.filter(
         is_active=True,
         duration_minutes__isnull=False,
@@ -138,7 +142,12 @@ def book_appointment(request):
             initial={"appointment_date": selected_date},
         )
         if request.method == "POST" and form.is_valid():
-            if not payments_configured():
+            if terms_document is None or privacy_document is None:
+                form.add_error(
+                    None,
+                    "Rezerwacja jest chwilowo niedostępna, ponieważ dokumenty prawne nie zostały opublikowane.",
+                )
+            elif not payments_configured():
                 form.add_error(
                     None,
                     "Płatności testowe nie są jeszcze skonfigurowane. Dodaj klucze Stripe i uruchom serwer ponownie.",
@@ -161,6 +170,13 @@ def book_appointment(request):
                         visit_type=form.cleaned_data["visit_type"],
                         notes=form.cleaned_data["notes"],
                         consent_privacy=form.cleaned_data["consent_privacy"],
+                        terms_accepted=form.cleaned_data["terms_accepted"],
+                        terms_accepted_at=timezone.now(),
+                        terms_version=terms_document.version,
+                        terms_snapshot=terms_document.rendered_content(site_settings),
+                        privacy_acknowledged_at=timezone.now(),
+                        privacy_version=privacy_document.version,
+                        privacy_snapshot=privacy_document.rendered_content(site_settings),
                     )
                     checkout_session = create_checkout_session(appointment, request)
                 except ValidationError as error:
@@ -200,6 +216,8 @@ def book_appointment(request):
             "previous_month": previous_month.strftime("%Y-%m"),
             "next_month": next_month.strftime("%Y-%m"),
             "payments_configured": payments_configured(),
+            "terms_document": terms_document,
+            "privacy_document": privacy_document,
         },
     )
 
