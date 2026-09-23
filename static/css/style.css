@@ -2638,3 +2638,40 @@ a {
     width: auto;
     min-width: 260px;
 }
+
+
+/* Strona glowna: sekcje lacza sie bez bialych szczelin i ramek pomiedzy nimi. */
+.site-main-home .home-about,
+.site-main-home .help-section,
+.site-main-home .offer-section,
+.site-main-home .cooperation-section,
+.site-main-home .newsletter-cta-section,
+.site-main-home .testimonials-section {
+    margin: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.site-main-home > section > .site-container {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+}
+
+.site-main-home .home-about-container,
+.site-main-home .help-section > .site-container,
+.site-main-home .offer-section > .site-container,
+.site-main-home .cooperation-section > .site-container,
+.site-main-home .newsletter-cta-card,
+.site-main-home .testimonials-section > .site-container {
+    border-width: 0;
+    border-radius: 0;
+}
+
+.site-main-home .newsletter-cta-section > .site-container {
+    padding: 0;
+}
+
+.site-main-home + .site-footer {
+    margin-top: 0;
+}
