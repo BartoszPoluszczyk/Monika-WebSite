@@ -853,7 +853,7 @@ a {
     padding: clamp(56px, 7vw, 86px) clamp(26px, 5vw, 70px);
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background: var(--color-surface-subtle);
+    background: var(--color-surface-default);
 }
 
 .testimonials-heading { margin-bottom: 44px; }
