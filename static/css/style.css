@@ -1987,6 +1987,14 @@ a {
         text-align: center;
     }
 
+    .cooperation-booking-cta .button-primary {
+        width: min(100%, 190px);
+        min-height: 42px;
+        padding: 0 18px;
+        flex: 0 0 auto;
+        align-self: center;
+    }
+
     .booking-container { padding: 45px 18px; }
     .booking-progress { margin-bottom: 22px; }
     .booking-progress span { gap: 5px; font-size: 0.58rem; }
