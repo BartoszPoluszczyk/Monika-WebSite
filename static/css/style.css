@@ -686,21 +686,11 @@ a {
     overflow: hidden;
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-medium);
-    background:
-        radial-gradient(circle at 92% 12%, rgba(189, 208, 192, 0.9) 0 18%, transparent 18.2%),
-        linear-gradient(125deg, var(--palette-green-pastel) 0 67%, #f7f2ea 67% 100%);
+    background: var(--palette-green-pastel);
 }
 
 .newsletter-cta-card::after {
-    content: "";
-    position: absolute;
-    right: clamp(22px, 5vw, 76px);
-    bottom: -76px;
-    width: 180px;
-    height: 180px;
-    border: 1px solid rgba(111, 143, 116, 0.35);
-    border-radius: 50%;
-    pointer-events: none;
+    content: none;
 }
 
 .newsletter-cta-copy {
