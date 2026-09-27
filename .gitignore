@@ -8,6 +8,7 @@ __pycache__/
 # Django
 *.log
 db.sqlite3
+private_uploads/
 
 # Environment variables
 .env

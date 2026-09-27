@@ -24,6 +24,7 @@ class HomeSectionFlowStylesTests(SimpleTestCase):
             ".site-main-home .cooperation-section",
             ".site-main-home .newsletter-cta-section",
             ".site-main-home .testimonials-section",
+            ".site-main-home .questionnaire-cta-section",
         ):
             self.assertIn(selector, continuity_styles)
 

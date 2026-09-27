@@ -1,7 +1,13 @@
 import uuid
 
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 from django.db import models
+
+from .storage import PrivateDocumentStorage
+
+
+private_document_storage = PrivateDocumentStorage()
 
 
 class SiteSettings(models.Model):
@@ -802,3 +808,40 @@ class LegalDocument(models.Model):
                 name="unique_legal_document_version",
             ),
         ]
+
+
+class PatientQuestionnaireDocument(models.Model):
+    title = models.CharField(
+        max_length=180,
+        default="Ankieta personalna pacjenta",
+        verbose_name="Nazwa ankiety",
+    )
+    file = models.FileField(
+        storage=private_document_storage,
+        upload_to="questionnaires/",
+        validators=[FileExtensionValidator(["pdf"])],
+        verbose_name="Plik PDF",
+        help_text="Plik jest przechowywany poza publicznym katalogiem mediów.",
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Aktywna wersja",
+        help_text="Tylko aktywna wersja jest udostępniana w podglądzie.",
+    )
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="Dodano")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Zmieniono")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.is_active:
+            type(self).objects.exclude(pk=self.pk).filter(is_active=True).update(
+                is_active=False
+            )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Ankieta pacjenta"
+        verbose_name_plural = "Ankiety pacjenta"
+        ordering = ["-is_active", "-updated_at"]
