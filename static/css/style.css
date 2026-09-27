@@ -2061,13 +2061,13 @@ a {
 
 .help-editorial-layout {
     display: grid;
-    grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.68fr);
+    grid-template-columns: minmax(190px, 0.6fr) minmax(0, 1.8fr);
     align-items: center;
-    gap: clamp(34px, 5.8vw, 92px);
+    gap: clamp(24px, 3.2vw, 52px);
 }
 
 .help-editorial-intro {
-    max-width: 305px;
+    max-width: 270px;
     padding: 8px 0;
 }
 
@@ -2080,7 +2080,7 @@ a {
     margin: 0;
     color: var(--color-text-primary);
     font-family: var(--font-heading);
-    font-size: clamp(3rem, 5.3vw, 5.4rem);
+    font-size: clamp(2.75rem, 4.2vw, 4.35rem);
     font-weight: 400;
     letter-spacing: -0.055em;
     line-height: 0.94;
@@ -2240,9 +2240,10 @@ a {
 }
 
 .specializations-editorial {
-    margin-top: clamp(60px, 9vw, 124px);
-    padding: clamp(30px, 4.2vw, 62px) clamp(1px, 0.2vw, 4px) 0;
-    border-top: 1px solid color-mix(in srgb, var(--palette-navy) 16%, var(--palette-white));
+    margin-top: 0;
+    padding: clamp(42px, 5vw, 72px) clamp(30px, 4.6vw, 72px) clamp(48px, 6vw, 86px);
+    border-top: 0;
+    background: #f8f5ef;
 }
 
 .specializations-heading {
@@ -2405,7 +2406,7 @@ a {
     }
 
     .help-editorial-title {
-        font-size: clamp(2.8rem, 16vw, 4.4rem);
+        font-size: clamp(2.5rem, 13vw, 3.75rem);
     }
 
     .help-process-row {
@@ -2446,8 +2447,8 @@ a {
     }
 
     .specializations-editorial {
-        margin-top: 56px;
-        padding-top: 28px;
+        margin-top: 0;
+        padding: 34px 17px 48px;
     }
 
     .specializations-list {
