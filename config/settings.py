@@ -162,6 +162,11 @@ STATICFILES_DIRS = [
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Dokumenty z danymi zdrowotnymi nie mogą być serwowane przez MEDIA_URL.
+PRIVATE_DOCUMENT_ROOT = Path(
+    os.environ.get("DJANGO_PRIVATE_DOCUMENT_ROOT", BASE_DIR / "private_uploads")
+)
+
 # Stripe — wartości ustawiamy poza kodem, osobno dla trybu testowego i produkcyjnego.
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
 STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")

@@ -1,0 +1,63 @@
+{% extends "main/base.html" %}
+{% block title %}Ankieta pacjenta | Dietetyk Monika{% endblock %}
+
+{% block content %}
+<section class="patient-questionnaire-page">
+    <div class="site-container questionnaire-page-card">
+        <header class="questionnaire-page-header">
+            <div>
+                <p class="section-eyebrow">Strefa pacjenta · wersja testowa</p>
+                <h1 class="section-title">Ankieta <span>personalna pacjenta</span></h1>
+                <p class="section-description">
+                    Poniżej możesz przejrzeć dokument przygotowany przez Monikę.
+                    Obecny PDF służy do testów wyglądu i dostępu — nie wysyłaj w nim
+                    jeszcze danych medycznych.
+                </p>
+            </div>
+            {% if questionnaire %}
+            <div class="questionnaire-page-actions">
+                <a
+                    class="button-primary"
+                    href="{% url 'patient_questionnaire_pdf' %}"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    Otwórz PDF <span class="button-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a
+                    class="button-secondary"
+                    href="{% url 'patient_questionnaire_pdf' %}?download=1"
+                    download="ankieta-monika-kulik.pdf"
+                >
+                    Pobierz PDF <span class="button-arrow" aria-hidden="true">↓</span>
+                </a>
+            </div>
+            {% endif %}
+        </header>
+
+        {% if questionnaire %}
+        <div class="questionnaire-preview" aria-label="Podgląd ankiety pacjenta">
+            <object
+                class="questionnaire-document-frame"
+                data="{% url 'patient_questionnaire_pdf' %}"
+                type="application/pdf"
+            >
+                <p>
+                    Ta przeglądarka nie wyświetla plików PDF wewnątrz strony.
+                    <a href="{% url 'patient_questionnaire_pdf' %}" target="_blank" rel="noopener">
+                        Otwórz ankietę w nowej karcie.
+                    </a>
+                </p>
+            </object>
+        </div>
+        {% else %}
+        <div class="questionnaire-empty">
+            <p>Nie dodano jeszcze aktywnego pliku ankiety.</p>
+            <a href="{% url 'admin:main_patientquestionnairedocument_add' %}" class="button-secondary">
+                Dodaj PDF w panelu administratora <span class="button-arrow" aria-hidden="true">→</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

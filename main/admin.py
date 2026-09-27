@@ -11,6 +11,7 @@ from .models import (
     NewsletterCampaign,
     NewsletterDelivery,
     NewsletterSubscriber,
+    PatientQuestionnaireDocument,
     Service,
     SiteSettings,
     Specialization,
@@ -582,6 +583,32 @@ class LegalDocumentAdmin(admin.ModelAdmin):
             "Historia",
             {
                 "fields": ("created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
+    )
+
+
+@admin.register(PatientQuestionnaireDocument)
+class PatientQuestionnaireDocumentAdmin(admin.ModelAdmin):
+    list_display = ("title", "is_active", "updated_at")
+    list_filter = ("is_active",)
+    readonly_fields = ("uploaded_at", "updated_at")
+    fieldsets = (
+        (
+            "Dokument",
+            {
+                "fields": ("title", "file", "is_active"),
+                "description": (
+                    "PDF nie jest dostępny przez publiczny katalog mediów. "
+                    "Może go pobrać wyłącznie uprawniony użytkownik."
+                ),
+            },
+        ),
+        (
+            "Historia",
+            {
+                "fields": ("uploaded_at", "updated_at"),
                 "classes": ("collapse",),
             },
         ),

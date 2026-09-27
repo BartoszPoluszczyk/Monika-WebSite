@@ -860,6 +860,124 @@ a {
 
 .testimonials-carousel { position: relative; }
 
+/* Testowa ankieta pacjenta */
+
+.questionnaire-cta-section { padding: 10px 0 14px; }
+
+.questionnaire-cta-section > .site-container {
+    padding: clamp(48px, 6vw, 76px) clamp(26px, 5vw, 70px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--palette-green-pastel);
+}
+
+.questionnaire-cta-card {
+    max-width: 960px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(28px, 6vw, 80px);
+}
+
+.questionnaire-cta-copy { max-width: 620px; }
+
+.questionnaire-cta-copy h2 {
+    margin: 7px 0 0;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 400;
+    letter-spacing: -0.035em;
+    line-height: 1;
+}
+
+.questionnaire-cta-copy > p:last-child {
+    margin: 18px 0 0;
+    color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.75;
+}
+
+.questionnaire-cta-card .button-primary {
+    flex: 0 0 auto;
+    min-width: 190px;
+}
+
+.patient-questionnaire-page {
+    min-height: calc(100vh - 120px);
+    padding: 10px 0 14px;
+}
+
+.questionnaire-page-card {
+    padding: clamp(42px, 6vw, 76px) clamp(20px, 5vw, 68px);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-medium);
+    background: var(--color-surface-default);
+}
+
+.questionnaire-page-header {
+    margin-bottom: 34px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+}
+
+.questionnaire-page-header > div:first-child { max-width: 720px; }
+
+.questionnaire-page-header .section-title { margin-top: 8px; }
+
+.questionnaire-page-header .section-description {
+    margin: 18px 0 0;
+    text-align: left;
+}
+
+.questionnaire-page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.questionnaire-page-actions .button-primary,
+.questionnaire-page-actions .button-secondary {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.questionnaire-preview {
+    padding: 10px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 12px;
+    background: var(--palette-green-pastel);
+}
+
+.questionnaire-empty {
+    padding: clamp(34px, 5vw, 58px) 24px;
+    border: 1px dashed var(--color-border-emphasis);
+    border-radius: 12px;
+    background: var(--palette-green-pastel);
+    text-align: center;
+}
+
+.questionnaire-empty p {
+    margin: 0 0 20px;
+    color: var(--color-text-secondary);
+}
+
+.questionnaire-empty .button-secondary { display: inline-flex; }
+
+.questionnaire-document-frame {
+    width: 100%;
+    height: min(78vh, 1000px);
+    min-height: 680px;
+    display: block;
+    border: 0;
+    border-radius: 8px;
+    background: var(--palette-white);
+}
+
 .testimonial-card {
     max-width: 640px;
     margin: 0 auto;
@@ -1928,7 +2046,7 @@ a {
         margin: 3px 0 0;
     }
 
-    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container, .newsletter-cta-section > .site-container, .testimonials-section > .site-container {
+    .help-section > .site-container, .offer-section > .site-container, .cooperation-section > .site-container, .newsletter-cta-section > .site-container, .testimonials-section > .site-container, .questionnaire-cta-section > .site-container {
         padding: 48px 20px;
     }
 
@@ -1985,6 +2103,44 @@ a {
         flex-direction: column;
         align-items: stretch;
         text-align: center;
+    }
+
+    .cooperation-booking-cta .button-primary {
+        width: min(100%, 190px);
+        min-height: 42px;
+        padding: 0 18px;
+        flex: 0 0 auto;
+        align-self: center;
+    }
+
+    .questionnaire-cta-card {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 26px;
+    }
+
+    .questionnaire-cta-card .button-primary {
+        width: min(100%, 190px);
+        min-height: 42px;
+        flex: 0 0 auto;
+    }
+
+    .questionnaire-page-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .questionnaire-page-actions { justify-content: flex-start; }
+
+    .questionnaire-page-actions .button-primary,
+    .questionnaire-page-actions .button-secondary {
+        width: min(100%, 200px);
+        flex: 0 0 auto;
+    }
+
+    .questionnaire-document-frame {
+        height: 72vh;
+        min-height: 520px;
     }
 
     .booking-container { padding: 45px 18px; }
@@ -2637,7 +2793,8 @@ a {
 .site-main-home .offer-section,
 .site-main-home .cooperation-section,
 .site-main-home .newsletter-cta-section,
-.site-main-home .testimonials-section {
+.site-main-home .testimonials-section,
+.site-main-home .questionnaire-cta-section {
     margin: 0;
     padding-top: 0;
     padding-bottom: 0;
@@ -2654,7 +2811,8 @@ a {
 .site-main-home .offer-section > .site-container,
 .site-main-home .cooperation-section > .site-container,
 .site-main-home .newsletter-cta-card,
-.site-main-home .testimonials-section > .site-container {
+.site-main-home .testimonials-section > .site-container,
+.site-main-home .questionnaire-cta-section > .site-container {
     border-width: 0;
     border-radius: 0;
 }

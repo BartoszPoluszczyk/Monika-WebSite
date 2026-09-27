@@ -1,7 +1,8 @@
 import uuid
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db import IntegrityError
-from django.http import Http404
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.urls import reverse
@@ -17,6 +18,7 @@ from .models import (
     SiteSettings,
     NEWSLETTER_CONSENT_TEXT,
     NewsletterSubscriber,
+    PatientQuestionnaireDocument,
     Service,
     Specialization,
     Testimonial,
@@ -89,6 +91,43 @@ def about(request):
 @require_GET
 def contact(request):
     return render(request, "main/contact.html")
+
+
+@require_GET
+@staff_member_required
+def patient_questionnaire(request):
+    questionnaire = PatientQuestionnaireDocument.objects.filter(
+        is_active=True
+    ).first()
+    return render(
+        request,
+        "main/patient_questionnaire.html",
+        {"questionnaire": questionnaire},
+    )
+
+
+@require_GET
+@staff_member_required
+def patient_questionnaire_pdf(request):
+    questionnaire = PatientQuestionnaireDocument.objects.filter(
+        is_active=True
+    ).first()
+    if questionnaire is None or not questionnaire.file:
+        raise Http404("Nie znaleziono ankiety pacjenta.")
+
+    try:
+        document = questionnaire.file.open("rb")
+    except FileNotFoundError as exc:
+        raise Http404("Nie znaleziono pliku ankiety pacjenta.") from exc
+
+    response = FileResponse(
+        document,
+        as_attachment=request.GET.get("download") == "1",
+        filename=questionnaire.file.name.rsplit("/", 1)[-1],
+        content_type="application/pdf",
+    )
+    response["Cache-Control"] = "private, no-store"
+    return response
 
 
 def submit_testimonial(request):
